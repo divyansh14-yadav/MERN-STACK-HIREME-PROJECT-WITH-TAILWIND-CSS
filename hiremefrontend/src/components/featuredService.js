@@ -377,7 +377,7 @@ const FeaturedService = () => {
                     <img
                       key={imgIndex}
                       className="rounded-t-[10px] w-full h-[150px]"
-                      src={`https://hireme-gdlb.onrender.com//${imgd}`}
+                      src={`https://hireback-1.onrender.com//${imgd}`}
                       alt="Service"
                     />
                   )
@@ -388,7 +388,7 @@ const FeaturedService = () => {
                 <div className="h-[40px] w-[48px]">
                   <img
                     className="w-[70%] h-[30px] rounded-[45px]"
-                    src={`https://hireme-gdlb.onrender.com//${featuredServices.authId.authProfile}`}
+                    src={`https://hireback-1.onrender.com//${featuredServices.authId.authProfile}`}
                   />
                 </div>
                 <Link
@@ -458,7 +458,7 @@ const FeaturedService = () => {
                     <img
                       key={imgIndex}
                       className="rounded-t-[10px] w-full h-[150px]"
-                      src={`https://hireme-gdlb.onrender.com//${imgd}`}
+                      src={`https://hireback-1.onrender.com//${imgd}`}
                       alt="Service"
                     />
                   )
@@ -469,7 +469,7 @@ const FeaturedService = () => {
                 <div className="h-[40px] w-[48px]">
                   <img
                     className="w-[70%] h-[30px] rounded-[45px]"
-                    src={`https://hireme-gdlb.onrender.com//${subCategoriesData.authId.authProfile}`}
+                    src={`https://hireback-1.onrender.com//${subCategoriesData.authId.authProfile}`}
                   />
                 </div>
                 <Link

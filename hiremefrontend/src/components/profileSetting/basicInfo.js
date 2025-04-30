@@ -132,7 +132,7 @@ const BasicInfo = () => {
       setFolioTitle(portfolioToEdit?.folioTitle || "");
       setDescription(portfolioToEdit?.description || "");
       setImagePreviewForPortfolio(
-        `https://hireme-gdlb.onrender.com//${portfolioToEdit?.portfolioImage}`
+        `https://hireback-1.onrender.com//${portfolioToEdit?.portfolioImage}`
       );
     } else {
       setIsEditMode(false);
@@ -588,7 +588,7 @@ const BasicInfo = () => {
                         {!imagePreview && (
                           <img
                             className="w-32 h-32 sm:w-40 sm:h-40 rounded-full pointer-events-none object-cover"
-                            src={`https://hireme-gdlb.onrender.com//${
+                            src={`https://hireback-1.onrender.com//${
                               userDetails.authProfile || ""
                             }`}
                             alt="Default Profile"
@@ -901,7 +901,7 @@ const BasicInfo = () => {
                                 <td className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap">
                                   <img
                                     className="w-[50px] h-[50px] rounded-full"
-                                    src={`https://hireme-gdlb.onrender.com//${allFolio.portfolioImage}`}
+                                    src={`https://hireback-1.onrender.com//${allFolio.portfolioImage}`}
                                     alt="image"
                                   />
                                 </td>

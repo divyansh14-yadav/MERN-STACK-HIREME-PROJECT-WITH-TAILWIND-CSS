@@ -1444,7 +1444,7 @@ const Gigs = () => {
                                   src={
                                     image.serviceImage.startsWith("data:")
                                       ? image.serviceImage
-                                      : `https://hireme-gdlb.onrender.com//${image.serviceImage}`
+                                      : `https://hireback-1.onrender.com//${image.serviceImage}`
                                   }
                                   alt={`Preview ${index + 1}`}
                                   className="object-cover w-full h-full rounded-md transition duration-300 group-hover:scale-105"

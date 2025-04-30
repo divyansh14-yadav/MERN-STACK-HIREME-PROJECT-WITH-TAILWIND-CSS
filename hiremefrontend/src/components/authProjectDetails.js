@@ -261,7 +261,7 @@ const AuthProjectDetails = () => {
               <div className="w-[185px] h-[135px] p-5 pt-8">
                 <img
                   className="w-[100%] h-[145px] rounded-full"
-                  src={`https://hireme-gdlb.onrender.com//${detailedProject?.serviceId?.serviceImage[0]}`}
+                  src={`https://hireback-1.onrender.com//${detailedProject?.serviceId?.serviceImage[0]}`}
                 />
               </div>
               {serviceAuthId === authId ? (
@@ -390,7 +390,7 @@ const AuthProjectDetails = () => {
                                 <div className="h-[45px] w-[40px] ml-2">
                                   <img
                                     className="w-[100%] h-[40px] rounded-[45px]"
-                                    src={`https://hireme-gdlb.onrender.com//${messages?.messagerId?.authProfile}`}
+                                    src={`https://hireback-1.onrender.com//${messages?.messagerId?.authProfile}`}
                                   />
                                 </div>
 
@@ -519,7 +519,7 @@ const AuthProjectDetails = () => {
                               <div className="h-[45px] w-[40px] ml-2">
                                 <img
                                   className="w-full h-[40px] rounded-full"
-                                  src={`https://hireme-gdlb.onrender.com//${uploadfile?.uploaderId?.authProfile}`}
+                                  src={`https://hireback-1.onrender.com//${uploadfile?.uploaderId?.authProfile}`}
                                   alt="Uploader Profile"
                                 />
                               </div>
@@ -564,12 +564,12 @@ const AuthProjectDetails = () => {
 
                                       <img
                                         className="w-[50px] h-[50px] sm:w-[30px] sm:h-[30px] rounded-md"
-                                        src={`https://hireme-gdlb.onrender.com//${file}`}
+                                        src={`https://hireback-1.onrender.com//${file}`}
                                         alt="Uploaded file"
                                       />
 
                                       <a
-                                        href={`https://hireme-gdlb.onrender.com//${file}`}
+                                        href={`https://hireback-1.onrender.com//${file}`}
                                         download={file}
                                         target="_blank"
                                         rel="noopener noreferrer"

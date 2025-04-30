@@ -100,8 +100,8 @@ const FeaturedTaskSubDetails = () => {
 
   const sessionIds = JSON.parse(localStorage.getItem("session"));
 
-  const fcmToken = JSON.parse(localStorage.getItem("fcmToken"));
-  console.log(fcmToken, "devfcm");
+  // const fcmToken = JSON.parse(localStorage.getItem("fcmToken"));
+  // console.log(fcmToken, "devfcm");
 
   const [loading, setLoading] = useState(true);
 
@@ -246,7 +246,6 @@ const FeaturedTaskSubDetails = () => {
     try {
       const response = await authConfig.patch(`/updateBidStatus/${id}`, {
         status: "Alloted",
-        fcmToken: fcmToken,
       });
       console.log(response, "repo");
 
@@ -995,7 +994,7 @@ const FeaturedTaskSubDetails = () => {
                         </td>
                         <td className="px-3 py-2 whitespace-nowrap text-sm text-[#f78318] sm:px-4">
                           <a
-                            href={`https://hireme-gdlb.onrender.com//${file.uploadFiles}`}
+                            href={`https://hireback-1.onrender.com//${file.uploadFiles}`}
                             download
                             target="_blank"
                             rel="noopener noreferrer"

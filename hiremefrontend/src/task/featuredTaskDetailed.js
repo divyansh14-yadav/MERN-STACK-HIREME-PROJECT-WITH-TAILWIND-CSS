@@ -273,7 +273,7 @@ const FeaturedTaskDetailed = () => {
 
   //                                                   <div className='flex gap-8'>
   //                                                       <div>
-  //                                                           <img className="rounded-md w-[70px] h-[60px] shadow-sm" src={`https://hireme-gdlb.onrender.com//${serach.task_logo}`} alt="Service" />
+  //                                                           <img className="rounded-md w-[70px] h-[60px] shadow-sm" src={`https://hireback-1.onrender.com//${serach.task_logo}`} alt="Service" />
   //                                                       </div>
   //                                                       <div className='text-start'>
   //                                                           <p className='font-semibold text-[1.1rem]'>{serach?.taskTitle}</p>
@@ -323,7 +323,7 @@ const FeaturedTaskDetailed = () => {
 
   //                                                   <div className='flex gap-8'>
   //                                                       <div>
-  //                                                           <img className="rounded-md w-[70px] h-[60px] shadow-sm" src={`https://hireme-gdlb.onrender.com//${allTaskAccordingCategory.task_logo}`} alt="Service" />
+  //                                                           <img className="rounded-md w-[70px] h-[60px] shadow-sm" src={`https://hireback-1.onrender.com//${allTaskAccordingCategory.task_logo}`} alt="Service" />
   //                                                       </div>
   //                                                       <div className='text-start'>
   //                                                           <p className='font-semibold text-[1.1rem]'>{allTaskAccordingCategory.taskTitle}</p>
@@ -498,7 +498,7 @@ const FeaturedTaskDetailed = () => {
                     <div className="flex flex-col md:flex-row md:justify-between md:items-center gap-5">
                       <div className="flex gap-5 items-start">
                         <img
-                          src={`https://hireme-gdlb.onrender.com//${task.task_logo}`}
+                          src={`https://hireback-1.onrender.com//${task.task_logo}`}
                           alt="Task"
                           className="w-16 h-14 rounded-md shadow"
                         />

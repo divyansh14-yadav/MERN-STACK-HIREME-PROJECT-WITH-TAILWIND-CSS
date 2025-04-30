@@ -40,7 +40,7 @@ import Chat from './components/user chat/chat';
 import ChatDashboard from './components/user chat/chatDashboard';
 import { io } from "socket.io-client";
 
-const socket = io("https://hireme-gdlb.onrender.com/api/v1");
+const socket = io("https://hireback-1.onrender.com/api/v1");
 function App() {
   // useEffect(() => {
   //   // Ask for notification permission on first load

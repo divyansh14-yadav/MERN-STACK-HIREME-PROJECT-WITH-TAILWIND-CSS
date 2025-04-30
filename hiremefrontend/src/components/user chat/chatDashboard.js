@@ -12,7 +12,7 @@
 // import authConfig from "../../api/config";
 // import { useLocation, useNavigate, useParams } from "react-router-dom";
 
-// const socket = io("https://hireme-gdlb.onrender.com");
+// const socket = io("https://hireback-1.onrender.com");
 
 // const ChatDashboard = () => {
 //   const [messages, setMessages] = useState([]);
@@ -193,7 +193,7 @@ import { io } from "socket.io-client";
 import authConfig from "../../api/config";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 
-const socket = io("https://hireme-gdlb.onrender.com");
+const socket = io("https://hireback-1.onrender.com");
 
 const ChatDashboard = () => {
   const [messages, setMessages] = useState([]);

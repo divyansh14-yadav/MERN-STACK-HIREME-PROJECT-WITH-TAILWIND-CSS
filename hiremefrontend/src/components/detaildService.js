@@ -29,7 +29,7 @@ import {
 import UserChat from "../components/user chat/userChat";
 import Loder from "./loader/loder";
 
-const socket = io("https://hireme-gdlb.onrender.com//api/v1");
+const socket = io("https://hireback-1.onrender.com//api/v1");
 
 const DetaildService = () => {
   const [serviceDetaildList, setServiceDetaildList] = useState(null);
@@ -301,7 +301,7 @@ const DetaildService = () => {
                 <div className="h-[50px] w-[60px]">
                   <img
                     className="w-[80%] h-[45px] rounded-[45px]"
-                    src={`https://hireme-gdlb.onrender.com//${serviceDetaildList?.authId?.authProfile}`}
+                    src={`https://hireback-1.onrender.com//${serviceDetaildList?.authId?.authProfile}`}
                   />
                 </div>
                 <div>
@@ -341,7 +341,7 @@ const DetaildService = () => {
                     <img
                       key={imgIndex}
                       className="rounded-t-[10px] w-full xl:h-[380px] h-[230px]"
-                      src={`https://hireme-gdlb.onrender.com//${
+                      src={`https://hireback-1.onrender.com//${
                         selectedImage ? selectedImage : imgd
                       }`}
                       alt="Service"
@@ -354,7 +354,7 @@ const DetaildService = () => {
                       onClick={() => setSelectedImage(imgds)}
                       key={imgIndex}
                       className="rounded-t-[10px] w-[30%] mt-5 pb-5"
-                      src={`https://hireme-gdlb.onrender.com//${imgds}`}
+                      src={`https://hireback-1.onrender.com//${imgds}`}
                       alt="Service"
                     />
                   ))}
@@ -1117,7 +1117,7 @@ const DetaildService = () => {
                 <div className="m-auto pt-15 w-[120px]">
                   <img
                     className="w-[100%] h-[110px] rounded-full"
-                    src={`https://hireme-gdlb.onrender.com//${serviceDetaildList?.authId?.authProfile}`}
+                    src={`https://hireback-1.onrender.com//${serviceDetaildList?.authId?.authProfile}`}
                   />
                 </div>
                 <div className="mt-20">
@@ -1180,7 +1180,7 @@ const DetaildService = () => {
                       <div className="h-[50px] w-[80px]">
                         <img
                           className="xl:w-[80%] xl:h-[55px] w-[70%] h-[50px] rounded-[45px]"
-                          src={`https://hireme-gdlb.onrender.com//${reviewRating?.reviewerId?.authProfile}`}
+                          src={`https://hireback-1.onrender.com//${reviewRating?.reviewerId?.authProfile}`}
                         />
                       </div>
 

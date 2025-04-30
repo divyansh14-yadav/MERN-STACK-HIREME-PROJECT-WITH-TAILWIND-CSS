@@ -53,7 +53,7 @@ const AllBlogs = () => {
           >
             <img
               className="rounded-t-[10px] h-[250px] w-full"
-              src={`https://hireme-gdlb.onrender.com//${blog.blog_image}`}
+              src={`https://hireback-1.onrender.com//${blog.blog_image}`}
               alt="Blog"
             />
 

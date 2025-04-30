@@ -122,7 +122,7 @@
 //                 <MenuButton className="relative flex rounded-full bg-gray-800 text-sm focus:outline-none">
 //                   <img
 //                     alt="User Avatar"
-//                     src={`https://hireme-gdlb.onrender.com//${userDetails}`}
+//                     src={`https://hireback-1.onrender.com//${userDetails}`}
 //                     className="size-8 rounded-full"
 //                   />
 //                 </MenuButton>
@@ -355,7 +355,7 @@ const Nav = ({ userDetails, taskId }) => {
                   <span className="sr-only">Open user menu</span>
                   <img
                     className="h-8 w-8 rounded-full"
-                    src={`https://hireme-gdlb.onrender.com//${profile}`}
+                    src={`https://hireback-1.onrender.com//${profile}`}
                     alt="User avatar"
                   />
                 </MenuButton>

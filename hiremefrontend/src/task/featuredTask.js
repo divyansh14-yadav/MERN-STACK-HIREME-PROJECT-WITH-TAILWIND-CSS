@@ -98,7 +98,7 @@ const FeaturedTask = () => {
                   <Link to={`/featuredTaskDetailed/${item?._id}`}>
                     <img
                       className="custom-img w-full xl:h-[65px] h-[65px] object-contain mx-auto"
-                      src={`https://hireme-gdlb.onrender.com/${item.taskCategoryLogo}`}
+                      src={`https://hireback-1.onrender.com/${item.taskCategoryLogo}`}
                       alt={item.task_category_title}
                     />
                     <p className="custom-text mt-3 text-base font-semibold text-gray-800">

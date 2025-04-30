@@ -68,7 +68,7 @@ const UserServicesDetails = () => {
               <div className="w-[150px] h-[150px] m-auto pt-15">
                 <img
                   className="w-[100%] h-[145px] rounded-full"
-                  src={`https://hireme-gdlb.onrender.com//${userDetails?.userDetails?.authId?.authProfile}`}
+                  src={`https://hireback-1.onrender.com//${userDetails?.userDetails?.authId?.authProfile}`}
                 />
               </div>
               <div className="mt-18">
@@ -153,7 +153,7 @@ const UserServicesDetails = () => {
               <div className="w-[90%]  m-auto ">
                 <img
                   className={index < 2 ? "w-[100%] h-[150px]" : "w-[100%]"}
-                  src={`https://hireme-gdlb.onrender.com//${portFolio.portfolioImage}`}
+                  src={`https://hireback-1.onrender.com//${portFolio.portfolioImage}`}
                 />
               </div>
             ))}
@@ -214,7 +214,7 @@ const UserServicesDetails = () => {
                       <img
                         key={imgIndex}
                         className="rounded-t-[10px] w-full h-[150px]"
-                        src={`https://hireme-gdlb.onrender.com//${imgd}`}
+                        src={`https://hireback-1.onrender.com//${imgd}`}
                         alt="Service"
                       />
                     ))}
@@ -224,7 +224,7 @@ const UserServicesDetails = () => {
                     <div className="h-[40px] w-[48px]">
                       <img
                         className="w-[70%] h-[30px] rounded-[45px]"
-                        src={`https://hireme-gdlb.onrender.com//${userDetails.userDetails.authId.authProfile}`}
+                        src={`https://hireback-1.onrender.com//${userDetails.userDetails.authId.authProfile}`}
                       />
                     </div>
                     <Link
@@ -284,7 +284,7 @@ const UserServicesDetails = () => {
                       {/* Avatar */}
                       <div className="min-w-[50px]">
                         <img
-                          src={`https://hireme-gdlb.onrender.com//${review?.reviewerId?.authProfile}`}
+                          src={`https://hireback-1.onrender.com//${review?.reviewerId?.authProfile}`}
                           alt="Reviewer Avatar"
                           className="h-12 w-12 rounded-full object-cover border border-gray-200"
                         />

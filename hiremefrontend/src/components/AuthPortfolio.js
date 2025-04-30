@@ -51,7 +51,7 @@ const AuthPortfolio = () => {
                     </div>
                     <div>
                         <div className='flex gap-5 item xl:mt-0 mt-8'>
-                            <img className='w-[8%] rounded-full' src={`https://hireme-gdlb.onrender.com//${userPortfolio?.authDetails?.authId?.authProfile ? userPortfolio.authDetails?.authId?.authProfile : null}`} />
+                            <img className='w-[8%] rounded-full' src={`https://hireback-1.onrender.com//${userPortfolio?.authDetails?.authId?.authProfile ? userPortfolio.authDetails?.authId?.authProfile : null}`} />
                             <Link  to={`/userServices/${authId}`}>
                                 <div className='flex gap-1 underline font-semibold'>
                                     <p>{userPortfolio?.authDetails?.authId?.firstName}</p>
@@ -69,7 +69,7 @@ const AuthPortfolio = () => {
                             <Link to={`/detailedPortfolio/${allPortfolio._id}/${authId}`}>
                                 <div className='border-1 border-[#0000001a] pb-4 rounded-md'>
                                     <p className='text-start font-bold mt-4 ml-4'>{allPortfolio.folioTitle}</p>
-                                    <img className='w-[90%] mt-6 m-auto rounded-xl' src={`https://hireme-gdlb.onrender.com//${allPortfolio.portfolioImage}`} />
+                                    <img className='w-[90%] mt-6 m-auto rounded-xl' src={`https://hireback-1.onrender.com//${allPortfolio.portfolioImage}`} />
                                 </div>
                             </Link>
                         ))
