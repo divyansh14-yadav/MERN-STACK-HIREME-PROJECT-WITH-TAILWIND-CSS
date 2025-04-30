@@ -1,0 +1,1177 @@
+import React, { useEffect, useRef, useState } from "react";
+import Nav from "./nav";
+import OtherNav from "./otherNav";
+import Footer from "./footer";
+import { Box, Stepper, Step, StepLabel, Button, Typography, Dialog } from "@mui/material";
+import { Editor } from 'primereact/editor';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+// import { faCircleCheck } from '@fortawesome/free-regular-svg-icons';
+import { faCircleCheck } from '@fortawesome/free-regular-svg-icons';
+import authConfig from "../api/config";
+import { useParams } from "react-router-dom";
+import { faEllipsisVertical } from '@fortawesome/free-solid-svg-icons';
+
+const Gigs = () => {
+    const steps = ["Overview", "Pricing", "Requirement", "FAQ", "Gallery", "Publish"];
+    const [activeStep, setActiveStep] = useState(0);
+    const [open, setOpen] = useState(false);
+    const [description, setDescription] = useState("")
+    const [FAQ, setFAQ] = useState([{ question: "", answer: "" }]);
+
+    console.log(FAQ, "FAQ");
+
+    const [images, setImages] = useState([{ file: null, serviceImage: "" }]);
+    console.log(images, "imagessssss");
+
+
+    const [createServiceId, setCreateServiceId] = useState("")
+    console.log(createServiceId, "idservice");
+    const [serviceDetails, setServiceDetails] = useState({})
+    console.log(serviceDetails, "service details");
+
+    const [serviceDetailsAll, setServiceDetailsAll] = useState([])
+    console.log(serviceDetailsAll, "allservicesdataaaaaaaaaa");
+
+
+    const [updatedData, setUpdatedData] = useState(false)
+    // for overview
+    const [title, setTitle] = useState("")
+    // const [descriptions,setDescriptions] = useState("")
+    const [searchTags, setSearchTags] = useState("")
+
+    // for price
+    // for basic
+    const [Basic_price, setBasic_price] = useState([
+        {
+            b_Name: "",
+            b_description: "",
+            b_vector_file: "",
+            b_printable_file: "",
+            b_mockup: "",
+            b_source_file: "",
+            b_social_media_kit: "",
+            b_number_of_concept: "",
+            b_revisions: "",
+            b_price: "",
+        },
+    ]);
+    console.log(Basic_price, "bprice");
+    const [Standard_price, setStandard_price] = useState([
+        {
+            s_Name: "",
+            s_description: "",
+            s_vector_file: "",
+            s_printable_file: "",
+            s_mockup: "",
+            s_source_file: "",
+            s_social_media_kit: "",
+            s_number_of_concept: "",
+            s_revisions: "",
+            s_price: "",
+        },
+    ]);
+    console.log(Standard_price, "sprice");
+
+    const [Premium_price, setPremium_price] = useState([
+        {
+            p_Name: "",
+            p_description: "",
+            p_vector_file: "",
+            p_printable_file: "",
+            p_mockup: "",
+            p_source_file: "",
+            p_social_media_kit: "",
+            p_number_of_concept: "",
+            p_revisions: "",
+            p_price: "",
+        },
+    ]);
+
+    console.log(Premium_price, "Premium_price");
+
+    const [requirement, setRequirement] = useState("")
+
+    const [valueee, setValueee] = useState("")
+    console.log(valueee, "valuesssssssssssss");
+
+    const [openDropdown, setOpenDropdown] = useState(null);
+
+
+    const quillRefForDescription = useRef(null)
+
+    const quillRefForRequirement = useRef(null)
+
+    const authId = JSON.parse(localStorage.getItem("authId"))
+
+    const handleNext = () => {
+        setActiveStep((prevStep) => prevStep + 1);
+    };
+
+    const handleBack = () => {
+        setActiveStep((prevStep) => prevStep - 1);
+    };
+
+    const handleReset = () => {
+        setActiveStep(0);
+        setOpen(false);
+        setTitle("");
+        setDescription("");
+        setSearchTags("");
+        setBasic_price([]);
+        setStandard_price([]);
+        setPremium_price([]);
+        setRequirement("");
+        setFAQ([{ question: "", answer: "" }]);
+        setImages([{ file: null, serviceImage: "" }]);
+        setCreateServiceId("");
+    };
+
+
+    const handleTextChangeForDescription = () => {
+        if (quillRefForDescription.current) {
+            const quillInstance = quillRefForDescription.current.getQuill();
+            const plainText = quillInstance.getText();
+            setDescription(plainText);
+        }
+    };
+
+    const handleTextChangeRequirement = () => {
+        if (quillRefForRequirement.current) {
+            const quillInstance = quillRefForRequirement.current.getQuill();
+            const plainText = quillInstance.getText();
+            setRequirement(plainText)
+        }
+    };
+
+    const customToolbar = (
+        <span className="ql-formats">
+            <button className="ql-bold"></button>
+            <button className="ql-italic"></button>
+            <button className="ql-underline"></button>
+            <button className="ql-strike"></button>
+            <button className="ql-blockquote"></button>
+            <button className="ql-code-block"></button>
+            <button className="ql-list" value="ordered"></button>
+            <button className="ql-list" value="bullet"></button>
+            <button className="ql-script" value="sub"></button>
+            <button className="ql-script" value="super"></button>
+            <button className="ql-indent" value="-1"></button>
+            <button className="ql-indent" value="+1"></button>
+            <select className="ql-header">
+                <option value="1"></option>
+                <option value="2"></option>
+                <option value="3"></option>
+                <option value="4"></option>
+                <option value="5"></option>
+                <option value="6"></option>
+                <option selected></option>
+            </select>
+            <select className="ql-color"></select>
+            <select className="ql-background"></select>
+            <select className="ql-align"></select>
+            <button className="ql-clean"></button>
+        </span>
+    );
+
+
+    const handleFaqChange = (index, field, value) => {
+        const updatedFaqs = [...FAQ];
+        updatedFaqs[index][field] = value;
+        setFAQ(updatedFaqs);
+    };
+
+    const addFaq = () => {
+        setFAQ([...FAQ, { question: "", answer: "" }]);
+    };
+
+
+    const removeFaq = (index) => {
+        if (index !== 0) {
+            setFAQ(FAQ.filter((_, i) => i !== index));
+        }
+    };
+    // const addImage = () => {
+    //     // setImages([...images, { file: null, preview: "" }]);
+    //     setImages(prev => Array.isArray(prev) ? [...prev, { file: null, serviceImage: "" }] : [{ file: null, serviceImage: "" }]);
+
+    // };
+
+
+    const addImage = () => {
+        setImages(prev => Array.isArray(prev)
+            ? [...prev, { file: null, serviceImage: "" }]
+            : [{ file: null, serviceImage: "" }]
+        );
+    };
+
+
+    const removeImage = (index) => {
+        if (index !== 0) {
+            setImages(images.filter((_, i) => i !== index));
+        }
+    };
+
+    const handleImageChange = (event, index) => {
+        const file = event.target.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onloadend = () => {
+                setImages((prevImages) => {
+                    if (!Array.isArray(prevImages)) prevImages = [];
+                    const updatedImages = [...prevImages];
+                    updatedImages[index] = { file, serviceImage: reader.result };
+                    return updatedImages;
+                });
+            };
+            reader.readAsDataURL(file);
+        }
+    };
+
+    useEffect(() => {
+        if (authId) {
+            const showService = async () => {
+                try {
+                    const response = await authConfig.get(`draft_details/${authId}`);
+                    if (response.status === 200) {
+                        setServiceDetails(response.data);
+                        setCreateServiceId(response.data._id);
+                        setUpdatedData(false)
+                    }
+                } catch (error) {
+                    console.error("Error fetching detaild services:", error);
+                }
+            };
+
+            showService();
+        }
+    }, [authId, updatedData]);
+
+    const handlePriceChange = (type, field, value) => {
+        if (type === "basic") {
+            setBasic_price((prev) =>
+                prev.length > 0
+                    ? prev.map((item, index) => (index === 0 ? { ...item, [field]: value } : item))
+                    : [{ [field]: value }]
+            );
+        } else if (type === "standard") {
+            setStandard_price((prev) =>
+                prev.length > 0
+                    ? prev.map((item, index) => (index === 0 ? { ...item, [field]: value } : item))
+                    : [{ [field]: value }]
+            );
+        } else if (type === "premium") {
+            setPremium_price((prev) =>
+                prev.length > 0
+                    ? prev.map((item, index) => (index === 0 ? { ...item, [field]: value } : item))
+                    : [{ [field]: value }]
+            );
+        }
+    };
+
+    const handleServiceCreate = async () => {
+        try {
+            const formData = new FormData();
+            console.log(formData, "formdata1121212");
+            formData.append("Basic_price", JSON.stringify(Basic_price));
+            formData.append("Standard_price", JSON.stringify(Standard_price));
+            formData.append("Premium_price", JSON.stringify(Premium_price));
+            formData.append("title", title);
+            formData.append("description", description);
+            formData.append("searchTags", searchTags);
+            formData.append("requirement", requirement);
+            formData.append("FAQ", JSON.stringify(FAQ))
+            // Array.isArrayimages?.forEach((image, index) => {
+            Array.isArray(images) && images.forEach((image, index) => {
+                if (image.file) {
+                    return formData.append(`serviceImage`, image.file);
+                }
+            });
+
+            if (createServiceId) {
+                const response = await authConfig.put(`update-service-draft/${createServiceId}`, formData);
+                handleNext();
+                alert("Data updated successfully!");
+            }
+            else {
+                const formData2 = new FormData()
+                formData2.append("title", title)
+                formData2.append("description", description)
+                formData2.append("searchTags", searchTags)
+                const response = await authConfig.post(`create-service/${authId}`, formData2, {
+                    headers: { "Content-Type": "multipart/form-data" },
+                })
+                setTitle("")
+                setDescription("")
+                setSearchTags("")
+                setUpdatedData(true)
+                setCreateServiceId(response.data._id);
+                alert("data created")
+                handleNext()
+            }
+        } catch (error) {
+            console.error("Error submitting form data:", error);
+        }
+    };
+
+    let data = "public"
+    const handlePublicData = async () => {
+        const response = await authConfig.put(`update-service-public/${createServiceId}`, {
+            in_pubhish: "public"
+        });
+        handleNext();
+        alert("Data public");
+    }
+
+    useEffect(() => {
+        if (serviceDetails) {
+            setTitle(serviceDetails.title || "");
+            setDescription(serviceDetails.description || "");
+            setSearchTags(serviceDetails.searchTags || "");
+            setRequirement(serviceDetails.requirement || "")
+            // Set Basic_price
+            setBasic_price(serviceDetails.Basic_price || [{
+                b_Name: "",
+                b_description: "",
+                b_vector_file: "",
+                b_printable_file: "",
+                b_mockup: "",
+                b_source_file: "",
+                b_social_media_kit: "",
+                b_number_of_concept: "",
+                b_revisions: "",
+                b_price: "",
+            }]);
+
+            // Set Standard_price
+            setStandard_price(serviceDetails.Standard_price || [{
+                s_Name: "",
+                s_description: "",
+                s_vector_file: "",
+                s_printable_file: "",
+                s_mockup: "",
+                s_source_file: "",
+                s_social_media_kit: "",
+                s_number_of_concept: "",
+                s_revisions: "",
+                s_price: "",
+            }]);
+
+            // Set Premium_price
+            setPremium_price(serviceDetails.Premium_price || [{
+                p_Name: "",
+                p_description: "",
+                p_vector_file: "",
+                p_printable_file: "",
+                p_mockup: "",
+                p_source_file: "",
+                p_social_media_kit: "",
+                p_number_of_concept: "",
+                p_revisions: "",
+                p_price: "",
+            }]);
+            setFAQ(
+                serviceDetails.FAQ && serviceDetails.FAQ.length > 0
+                    ? serviceDetails.FAQ
+                    : [{ question: "", answer: "" }]
+            );
+            setImages(
+                serviceDetails.serviceImage && serviceDetails.serviceImage.length > 0
+                    ? serviceDetails.serviceImage.map(img => ({ file: null, serviceImage: img }))
+                    : [{ file: null, serviceImage: "" }]
+            );
+        }
+    }, [serviceDetails]);
+
+    useEffect(() => {
+        const showServiceAll = async () => {
+            try {
+                const response = await authConfig.get(`draft_details_all/${authId}`);
+                if (response.status === 200) {
+                    setServiceDetailsAll(response.data);
+                }
+            } catch (error) {
+                console.error("Error fetching detaild services:", error);
+            }
+        };
+
+        showServiceAll();
+    }, []);
+
+    const toggleDropdown = (index) => {
+        setOpenDropdown(openDropdown === index ? null : index);
+    };
+
+
+    return (
+        <div className="bg-[#eef2f8]">
+            <Nav />
+            <OtherNav />
+            <div className="w-[80%] mt-10 m-auto rounded-md bg-white">
+                <div className="flex justify-between items-center border-b-1 border-[#0000001a] p-4 pb-5">
+                    <h1 className="text-[1rem] text-[#495463] font-bold">My Gigs</h1>
+                    <button
+                        className="border-2 border-[#f78318] text-[1rem] p-2 font-bold text-white bg-[#f78318] rounded-md"
+                        onClick={() => setOpen(true)}
+                    >
+                        + Create Gigs
+                    </button>
+                </div>
+                <div>
+
+                    <div>
+                        <div class="flex flex-col">
+                            <div class="overflow-x-auto sm:-mx-6 lg:-mx-8">
+                                <div class="inline-block min-w-full py-2 sm:px-6 lg:px-8">
+                                    <div class="overflow-hidden">
+                                        <table
+                                            class="min-w-full text-left text-sm font-light text-surface dark:text-white">
+                                            <thead
+                                                class="border-b border-neutral-200 font-medium dark:border-white/10">
+                                                <tr>
+                                                    <th scope="col" class="px-6 py-4">Service Title</th>
+                                                    <th scope="col" class="px-6 py-4">Service Views</th>
+                                                    <th scope="col" class="px-6 py-4">Category</th>
+                                                    <th scope="col" class="px-6 py-4">Ispublished</th>
+                                                    {/* <th scope="col" class="px-6 py-4">Status</th> */}
+                                                    <th scope="col" class="px-6 py-4">Action</th>
+                                                </tr>
+                                            </thead>
+                                            {
+                                                serviceDetailsAll.length ?
+                                                    serviceDetailsAll.map((serviceDetail, index) => (
+                                                        <tbody>
+                                                            <tr
+                                                                class="border-b border-neutral-200 transition duration-300 ease-in-out hover:bg-neutral-100 dark:border-white/10 dark:hover:bg-neutral-600">
+                                                                <div className="flex gap-2 items-center w-[20%]">
+                                                                    <td class="whitespace-nowrap px-6 py-4 font-medium">
+                                                                        {serviceDetail.title}
+                                                                    </td>
+                                                                </div>
+                                                                <td class="whitespace-nowrap px-6 py-4">
+                                                                    <p className="text-[#007bff] bg-[#d9ebff] text-center w-[20%] rounded-full">0</p>
+                                                                </td>
+                                                                <td class="whitespace-nowrap px-6 py-4 font-semibold">logo design</td>
+                                                                <td class="whitespace-nowrap px-6 py-4">
+                                                                    <p className="bg-[#fff3dd] text-[#ffab1a] p-1 w-[35%] text-center font-semibold rounded-md">{serviceDetail.in_pubhish}</p>
+                                                                </td>
+                                                                <div className="border-2 border-[#0000001a] w-[22%] m-auto rounded-full cursor-pointer" onClick={() => toggleDropdown(index)} >
+                                                                    <td class="px-3.5 py-1">
+                                                                        <FontAwesomeIcon className="cursor-pointer text-[#0000001a]" icon={faEllipsisVertical}>
+
+                                                                        </FontAwesomeIcon>
+                                                                    </td>
+                                                                </div>
+                                                                {openDropdown === index && (
+                                                                    <div className="absolute right-32 mt-2 w-32 bg-white border rounded-lg shadow-lg z-10">
+                                                                        <ul className="py-2 px-2 text-sm text-gray-700 font-bold">
+                                                                            <li>
+                                                                                <button className="block px-4 py-2 w-full text-left hover:bg-gray-100">
+                                                                                    Edit
+                                                                                </button>
+                                                                            </li>
+                                                                            <li>
+                                                                                <button className="block px-4 py-2 w-full text-left hover:bg-gray-100">
+                                                                                    Publish
+                                                                                </button>
+                                                                            </li>
+                                                                        </ul>
+                                                                    </div>
+                                                                )}
+                                                            </tr>
+                                                        </tbody>
+                                                    ))
+                                                    : <div className='pb-7'>
+                                                        <img className="w-[5%] mt-4 m-auto" src='https://script.viserlab.com/metalance/assets/templates/basic//images/empty_list.png' />
+                                                        <h1 className='mt-3 text-[#cfcfcf]'>No services found</h1>
+                                                    </div>
+                                            }
+                                        </table>
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+            {/* Popup gigs create ke liye */}
+            <Dialog open={open} onClose={() => setOpen(false)} maxWidth="lg" fullWidth>
+                <Box sx={{ p: 3 }}>
+                    <Stepper activeStep={activeStep} alternativeLabel>
+                        {steps.map((label, index) => (
+                            <Step key={index} sx={{ color: activeStep >= index ? "#f78318" : "grey" }} >
+
+                                <StepLabel>
+                                    {label}
+                                </StepLabel>
+                            </Step>
+                        ))}
+                    </Stepper>
+
+                    <Box sx={{ mt: 4 }}>
+                        {activeStep === steps.length ? (
+                            <>
+                                <Typography>All steps completed!</Typography>
+                                <Button onClick={handleReset} variant="contained" sx={{ mt: 2, bgcolor: "#f78318", "&:hover": { bgcolor: "#d96c14" } }}>
+                                    Close
+                                </Button>
+                            </>
+                        ) : (
+                            <>
+                                <Typography sx={{ mb: 2 }}>
+                                    {activeStep === 0 && (
+                                        <div>
+                                            <h1 className="text-[1.2rem] text-[#495463] font-bold border-b-1 pb-4 border-[#0000001a]">Gig Overview</h1>
+                                            <div className="flex gap-30 justify-between">
+                                                <div className="mt-6 font-bold text-[1rem] text-[#495463] w-[20%]">
+                                                    <h1 className="mt-4">Gig Title</h1>
+                                                    <h1 className="mt-21">Gig Description</h1>
+                                                    <h1 className="mt-36">Category</h1>
+                                                    <h1 className="mt-16">Search Tags</h1>
+                                                </div>
+                                                <div className="mt-6">
+                                                    <input type="text" placeholder="I will..." className="border-1 border-[#0000001a] p-2 w-full" value={title || ""} onChange={(e) => setTitle(e.target.value)} />
+                                                    <div className="mt-2 text-[0.875rem] text-[#495463]">
+                                                        <p>As your Gig storefront, <span className="font-bold">your title is the most important place</span> to include keywords that buyers would likely use to search for a service like yours</p>
+                                                    </div>
+                                                    <div className="mt-5">
+                                                        <Editor onChange={(e) => setDescription(e.target.value)} ref={quillRefForDescription} value={description || ""} headerTemplate={customToolbar} name="description" onTextChange={handleTextChangeForDescription} style={{ height: '100px' }} />
+                                                    </div>
+                                                    <div>
+                                                        <div className="flex gap-10 justify-between mt-8">
+                                                            <div className="w-[50%]">
+                                                                <select className="border-1 border-[#0000001a] w-full p-2">
+                                                                    <option>SelectCategories</option>
+                                                                    <option>SelectCategories</option>
+                                                                </select>
+                                                            </div>
+                                                            <div className="w-[50%]">
+                                                                <select className="border-1 border-[#0000001a] w-full p-2">
+                                                                    <option>select One</option>
+                                                                    <option>SelectCategories</option>
+                                                                </select>
+                                                            </div>
+                                                        </div>
+                                                        <p className="mt-3 text-[1rem] text-[#495463]">
+                                                            Choose the category and subcategory most suitable for your service.
+                                                        </p>
+                                                    </div>
+                                                    <div className="mt-4">
+                                                        <input type="text" className="border-2 w-full p-2 border-[#0000001a]" value={searchTags || ""} onChange={(e) => setSearchTags(e.target.value)} />
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    )}
+                                    {activeStep === 1 && (
+                                        <div>
+                                            <h1 className="text-[1.2rem] text-[#495463] font-bold border-b-1 pb-4 border-[#0000001a]">Gig Pricing</h1>
+                                            <div className="flex justify-between w-[80%] mt-8 font-bold text-[#495463]">
+                                                <h1>Packages</h1>
+                                                <h1>Basic</h1>
+                                                <h1>Standard</h1>
+                                                <h1>Premium</h1>
+                                            </div>
+
+                                            <div className="mt-6">
+
+                                                <div className=" border-b-1 flex justify-between w-[90%] pb-8 border-[#0000001a]">
+                                                    <h1 className="text-[0.875rem]">Name</h1>
+                                                    <div className="flex justify-between w-[80%]">
+                                                        <input className="border-1 p-2.5 w-[250px] border-[#0000001a] rounded-md" placeholder="Name your package" value={Basic_price[0]?.b_Name} onChange={(e) => handlePriceChange("basic", "b_Name", e.target.value)} />
+                                                        <input className="border-1 p-2.5 w-[250px] border-[#0000001a] rounded-md" placeholder="Name your package" value={Standard_price[0]?.s_Name} onChange={(e) => handlePriceChange("standard", "s_Name", e.target.value)} />
+                                                        <input className="border-1 p-2.5 w-[250px] border-[#0000001a] rounded-md" placeholder="Name your package" value={Premium_price[0]?.p_Name} onChange={(e) => handlePriceChange("premium", "p_Name", e.target.value)} />
+                                                    </div>
+
+                                                </div>
+
+                                                <div className=" border-b-1 flex justify-between w-[90%] mt-6 pb-8 border-[#0000001a]">
+                                                    <h1 className="text-[0.875rem]">Describe</h1>
+                                                    <div className="flex justify-between w-[80%]">
+                                                        <textarea className="border-1 h-30 p-2.5 w-[250px] border-[#0000001a] rounded-md" placeholder="Describe the details of your offering" value={Basic_price[0]?.b_description} onChange={(e) => handlePriceChange("basic", "b_description", e.target.value)} />
+                                                        <textarea className="border-1 h-30 p-2.5 w-[250px] border-[#0000001a] rounded-md" placeholder="Describe the details of your offering" value={Standard_price[0]?.s_description} onChange={(e) => handlePriceChange("standard", "s_description", e.target.value)} />
+                                                        <textarea className="border-1 h-30 p-2.5 w-[250px] border-[#0000001a] rounded-md" placeholder="Describe the details of your offering" value={Premium_price[0]?.p_description} onChange={(e) => handlePriceChange("premium", "p_description", e.target.value)} />
+                                                    </div>
+
+                                                </div>
+
+                                                <div className=" border-b-1 flex justify-between w-[90%] mt-6 pb-8 border-[#0000001a]">
+                                                    <h1 className="text-[0.875rem]">Vector File</h1>
+
+                                                    <div className="flex justify-between w-[80%]">
+                                                        <div className="block w-[30%]">
+                                                            <div className="mt-2 block">
+                                                                <div>
+                                                                    <input
+                                                                        type="radio"
+                                                                        name="basic_vector_file"
+                                                                        value="yes"
+                                                                        checked={Basic_price[0]?.b_vector_file === "yes"}
+                                                                        onChange={(e) => handlePriceChange("basic", "b_vector_file", e.target.value)}
+                                                                    />
+                                                                    <label className="ml-2">Yes</label>
+                                                                </div>
+
+                                                                <div>
+                                                                    <input
+                                                                        type="radio"
+                                                                        name="basic_vector_file"
+                                                                        value="no"
+                                                                        checked={Basic_price[0]?.b_vector_file === "no"}
+                                                                        onChange={(e) => handlePriceChange("basic", "b_vector_file", e.target.value)}
+                                                                    />
+                                                                    <label className="ml-2">No</label>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+
+                                                        <div className="block w-[30%] ">
+                                                            <div className="mt-2 block">
+                                                                <div>
+                                                                    <input
+                                                                        type="radio"
+                                                                        name="standard_vector_file"
+                                                                        value="yes"
+                                                                        checked={Standard_price[0]?.s_vector_file === "yes"}
+                                                                        onChange={(e) => handlePriceChange("standard", "s_vector_file", e.target.value)}
+                                                                    />
+                                                                    <label className="ml-2">Yes</label>
+                                                                </div>
+
+                                                                <div>
+                                                                    <input
+                                                                        type="radio"
+                                                                        name="standard_vector_file"
+                                                                        value="no"
+                                                                        checked={Standard_price[0]?.s_vector_file === "no"}
+                                                                        onChange={(e) => handlePriceChange("standard", "s_vector_file", e.target.value)}
+                                                                    />
+                                                                    <label className="ml-2">No</label>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+
+                                                        <div className="block w-[30%]">
+                                                            <div className="mt-2 block">
+                                                                <div>
+                                                                    <input
+                                                                        type="radio"
+                                                                        name="premium_vector_file"
+                                                                        value="yes"
+                                                                        checked={Premium_price[0]?.p_vector_file === "yes"}
+                                                                        onChange={(e) => handlePriceChange("premium", "p_vector_file", e.target.value)}
+                                                                    />
+                                                                    <label className="ml-2">Yes</label>
+                                                                </div>
+
+                                                                <div>
+                                                                    <input
+                                                                        type="radio"
+                                                                        name="premium_vector_file"
+                                                                        value="no"
+                                                                        checked={Premium_price[0]?.p_vector_file === "no"}
+                                                                        onChange={(e) => handlePriceChange("premium", "p_vector_file", e.target.value)}
+                                                                    />
+                                                                    <label className="ml-2">No</label>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <div className=" border-b-1 flex justify-between w-[90%] mt-6 pb-8 border-[#0000001a]">
+                                                    <h1 className="text-[0.875rem]">Printable file</h1>
+
+                                                    <div className="flex justify-between w-[80%]">
+                                                        <div className="block w-[30%]">
+                                                            <div>
+
+                                                                <input
+                                                                    type="radio"
+                                                                    name="basic_printable_file"
+                                                                    value="yes"
+                                                                    checked={Basic_price[0]?.b_printable_file === "yes"}
+                                                                    onChange={(e) => handlePriceChange("basic", "b_printable_file", e.target.value)}
+                                                                />
+                                                                <label className="ml-2">Yes</label>
+                                                            </div>
+
+                                                            <div>
+                                                                <input
+                                                                    type="radio"
+                                                                    name="basic_printable_file"
+                                                                    value="no"
+                                                                    checked={Basic_price[0]?.b_printable_file === "no"}
+                                                                    onChange={(e) => handlePriceChange("basic", "b_printable_file", e.target.value)}
+                                                                />
+                                                                <label className="ml-2">No</label>
+                                                            </div>
+                                                        </div>
+
+                                                        <div className="block w-[30%] ">
+                                                            <div className="mt-2 block">
+                                                                <div>
+                                                                    <input
+                                                                        type="radio"
+                                                                        name="standard_printable_file"
+                                                                        value="yes"
+                                                                        checked={Standard_price[0]?.s_printable_file === "yes"}
+                                                                        onChange={(e) => handlePriceChange("standard", "s_printable_file", e.target.value)}
+                                                                    />
+                                                                    <label className="ml-2">Yes</label>
+                                                                </div>
+
+                                                                <div>
+                                                                    <input
+                                                                        type="radio"
+                                                                        name="standard_printable_file"
+                                                                        value="no"
+                                                                        checked={Standard_price[0]?.s_printable_file === "no"}
+                                                                        onChange={(e) => handlePriceChange("standard", "s_printable_file", e.target.value)}
+                                                                    />
+                                                                    <label className="ml-2">No</label>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+
+                                                        <div className="block w-[30%]">
+                                                            <div className="mt-2 block">
+                                                                <div>
+                                                                    <input
+                                                                        type="radio"
+                                                                        name="premium_printable_file"
+                                                                        value="yes"
+                                                                        checked={Premium_price[0]?.p_printable_file === "yes"}
+                                                                        onChange={(e) => handlePriceChange("premium", "p_printable_file", e.target.value)}
+                                                                    />
+                                                                    <label className="ml-2">Yes</label>
+                                                                </div>
+
+                                                                <div>
+                                                                    <input
+                                                                        type="radio"
+                                                                        name="premium_printable_file"
+                                                                        value="no"
+                                                                        checked={Premium_price[0]?.p_printable_file === "no"}
+                                                                        onChange={(e) => handlePriceChange("premium", "p_printable_file", e.target.value)}
+                                                                    />
+                                                                    <label className="ml-2">No</label>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <div className=" border-b-1 flex justify-between w-[90%] mt-6 pb-8 border-[#0000001a]">
+                                                    <h1 className="text-[0.875rem]">3D mockup</h1>
+
+                                                    <div className="flex justify-between w-[80%]">
+                                                        <div className="block w-[30%]">
+                                                            <div className="mt-2 block">
+                                                                <div>
+                                                                    <input
+                                                                        type="radio"
+                                                                        name="basic_b_mockup"
+                                                                        value="yes"
+                                                                        checked={Basic_price[0]?.b_mockup === "yes"}
+                                                                        onChange={(e) => handlePriceChange("basic", "b_mockup", e.target.value)}
+                                                                    />
+                                                                    <label className="ml-2">Yes</label>
+                                                                </div>
+
+                                                                <div>
+                                                                    <input
+                                                                        type="radio"
+                                                                        name="basic_b_mockup"
+                                                                        value="no"
+                                                                        checked={Basic_price[0]?.b_mockup === "no"}
+                                                                        onChange={(e) => handlePriceChange("basic", "b_mockup", e.target.value)}
+                                                                    />
+                                                                    <label className="ml-2">No</label>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+
+                                                        <div className="block w-[30%] ">
+                                                            <div className="mt-2 block">
+                                                                <div>
+                                                                    <input
+                                                                        type="radio"
+                                                                        name="standard_s_mockup"
+                                                                        value="yes"
+                                                                        checked={Standard_price[0]?.s_mockup === "yes"}
+                                                                        onChange={(e) => handlePriceChange("standard", "s_mockup", e.target.value)}
+                                                                    />
+                                                                    <label className="ml-2">Yes</label>
+                                                                </div>
+
+                                                                <div>
+                                                                    <input
+                                                                        type="radio"
+                                                                        name="standard_s_mockup"
+                                                                        value="no"
+                                                                        checked={Standard_price[0]?.s_mockup === "no"}
+                                                                        onChange={(e) => handlePriceChange("standard", "s_mockup", e.target.value)}
+                                                                    />
+                                                                    <label className="ml-2">No</label>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+
+                                                        <div className="block w-[30%]">
+                                                            <div className="mt-2 block">
+                                                                <div>
+                                                                    <input
+                                                                        type="radio"
+                                                                        name="premium_p_mockup"
+                                                                        value="yes"
+                                                                        checked={Premium_price[0]?.p_mockup === "yes"}
+                                                                        onChange={(e) => handlePriceChange("premium", "p_mockup", e.target.value)}
+                                                                    />
+                                                                    <label className="ml-2">Yes</label>
+                                                                </div>
+
+                                                                <div>
+                                                                    <input
+                                                                        type="radio"
+                                                                        name="premium_p_mockup"
+                                                                        value="no"
+                                                                        checked={Premium_price[0]?.p_mockup === "no"}
+                                                                        onChange={(e) => handlePriceChange("premium", "p_mockup", e.target.value)}
+                                                                    />
+                                                                    <label className="ml-2">No</label>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <div className=" border-b-1 flex justify-between w-[90%] mt-6 pb-8 border-[#0000001a]">
+                                                    <h1 className="text-[0.875rem]">Source File</h1>
+                                                    <div className="flex justify-between w-[80%]">
+                                                        <select
+                                                            className="border-1 p-2.5 w-[250px] border-[#0000001a] rounded-md"
+                                                            value={Basic_price[0]?.b_source_file || "Select One"}
+                                                            onChange={(e) => handlePriceChange("basic", "b_source_file", e.target.value)}
+                                                        >
+                                                            <option value="Select One" disabled>Select One</option>
+                                                            <option value="yes">Yes</option>
+                                                            <option value="no">No</option>
+                                                        </select>
+                                                        <div>
+                                                            <select
+                                                                className="border-1 p-2.5 w-[250px] border-[#0000001a] rounded-md"
+                                                                value={Standard_price[0]?.s_source_file || "Select One"}
+                                                                onChange={(e) => handlePriceChange("standard", "s_source_file", e.target.value)}
+                                                            >
+                                                                <option value="Select One" disabled>Select One</option>
+                                                                <option value="yes">Yes</option>
+                                                                <option value="no">No</option>
+                                                            </select>
+                                                        </div>
+                                                        <div>
+                                                            <select
+                                                                className="border-1 p-2.5 w-[250px] border-[#0000001a] rounded-md"
+                                                                value={Premium_price[0]?.p_source_file || "Select One"}
+                                                                onChange={(e) => handlePriceChange("premium", "p_source_file", e.target.value)}
+                                                            >
+                                                                <option value="Select One" disabled>Select One</option>
+                                                                <option value="yes">Yes</option>
+                                                                <option value="no">No</option>
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <div className=" border-b-1 flex justify-between w-[90%] mt-6 pb-8 border-[#0000001a]">
+                                                    <h1 className="text-[0.875rem]">Social media kit</h1>
+
+                                                    <div className="flex justify-between w-[80%]">
+                                                        <div className="block w-[30%]">
+                                                            <div className="mt-2 block">
+                                                                <div>
+                                                                    <input
+                                                                        type="radio"
+                                                                        name="basic_b_social_media_kit"
+                                                                        value="yes"
+                                                                        checked={Basic_price[0]?.b_social_media_kit === "yes"}
+                                                                        onChange={(e) => handlePriceChange("basic", "b_social_media_kit", e.target.value)}
+                                                                    />
+                                                                    <label className="ml-2">Yes</label>
+                                                                </div>
+
+                                                                <div>
+                                                                    <input
+                                                                        type="radio"
+                                                                        name="basic_b_social_media_kit"
+                                                                        value="no"
+                                                                        checked={Basic_price[0]?.b_social_media_kit === "no"}
+                                                                        onChange={(e) => handlePriceChange("basic", "b_social_media_kit", e.target.value)}
+                                                                    />
+                                                                    <label className="ml-2">No</label>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+
+                                                        <div className="block w-[30%]">
+                                                            <div className="mt-2 block">
+                                                                <div>
+                                                                    <input
+                                                                        type="radio"
+                                                                        name="s_social_media_kit"
+                                                                        value="yes"
+                                                                        checked={Standard_price[0]?.s_social_media_kit === "yes"}
+                                                                        onChange={(e) => handlePriceChange("standard", "s_social_media_kit", e.target.value)}
+                                                                    />
+                                                                    <label className="ml-2">Yes</label>
+                                                                </div>
+
+                                                                <div>
+                                                                    <input
+                                                                        type="radio"
+                                                                        name="s_social_media_kit"
+                                                                        value="no"
+                                                                        checked={Standard_price[0]?.s_social_media_kit === "no"}
+                                                                        onChange={(e) => handlePriceChange("standard", "s_social_media_kit", e.target.value)}
+                                                                    />
+                                                                    <label className="ml-2">No</label>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+
+                                                        <div className="block w-[30%]">
+                                                            <div className="mt-2 block">
+                                                                <div>
+                                                                    <input
+                                                                        type="radio"
+                                                                        name="p_social_media_kit"
+                                                                        value="yes"
+                                                                        checked={Premium_price[0]?.p_social_media_kit === "yes"}
+                                                                        onChange={(e) => handlePriceChange("premium", "p_social_media_kit", e.target.value)}
+                                                                    />
+                                                                    <label className="ml-2">Yes</label>
+                                                                </div>
+
+                                                                <div>
+                                                                    <input
+                                                                        type="radio"
+                                                                        name="p_social_media_kit"
+                                                                        value="no"
+                                                                        checked={Premium_price[0]?.p_social_media_kit === "no"}
+                                                                        onChange={(e) => handlePriceChange("premium", "p_social_media_kit", e.target.value)}
+                                                                    />
+                                                                    <label className="ml-2">No</label>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <div className=" border-b-1 flex justify-between w-[90%] mt-6 pb-8 border-[#0000001a]">
+                                                    <h1 className="text-[0.875rem]">Number of concepts includes</h1>
+                                                    <div className="flex justify-between w-[80%]">
+                                                        <input className="border-1 p-2.5 w-[250px] border-[#0000001a] rounded-md" placeholder="Number of concepts included" value={Basic_price[0]?.b_number_of_concept} onChange={(e) => handlePriceChange("basic", "b_number_of_concept", e.target.value)} />
+                                                        <input className="border-1 p-2.5 w-[250px] border-[#0000001a] rounded-md" placeholder="Number of concepts included" value={Standard_price[0]?.s_number_of_concept} onChange={(e) => handlePriceChange("standard", "s_number_of_concept", e.target.value)} />
+                                                        <input className="border-1 p-2.5 w-[250px] border-[#0000001a] rounded-md" placeholder="Number of concepts included" value={Premium_price[0]?.p_number_of_concept} onChange={(e) => handlePriceChange("premium", "p_number_of_concept", e.target.value)} />
+                                                    </div>
+                                                </div>
+
+                                                <div className=" border-b-1 flex justify-between w-[90%] mt-6 pb-8 border-[#0000001a]">
+                                                    <h1 className="text-[0.875rem]">Revisions</h1>
+                                                    <div className="flex justify-between w-[80%]">
+                                                        <input className="border-1 p-2.5 w-[250px] border-[#0000001a] rounded-md" placeholder="Revisons" value={Basic_price[0]?.b_revisions} onChange={(e) => handlePriceChange("basic", "b_revisions", e.target.value)} />
+                                                        <input className="border-1 p-2.5 w-[250px] border-[#0000001a] rounded-md" placeholder="Revisons" value={Standard_price[0]?.s_revisions} onChange={(e) => handlePriceChange("standard", "s_revisions", e.target.value)} />
+                                                        <input className="border-1 p-2.5 w-[250px] border-[#0000001a] rounded-md" placeholder="Revisons" value={Premium_price[0]?.p_revisions} onChange={(e) => handlePriceChange("premium", "p_revisions", e.target.value)} />
+                                                    </div>
+                                                </div>
+
+                                                <div className=" border-b-1 flex justify-between w-[90%] mt-6 pb-8 border-[#0000001a]">
+                                                    <h1 className="text-[0.875rem]">Price</h1>
+                                                    <div className="flex justify-between w-[80%]">
+                                                        <input className="border-1 p-2.5 w-[250px] border-[#0000001a] rounded-md" placeholder="Enter Package Price" value={Basic_price[0]?.b_price} onChange={(e) => handlePriceChange("basic", "b_price", e.target.value)} />
+                                                        <input className="border-1 p-2.5 w-[250px] border-[#0000001a] rounded-md" placeholder="Enter Package Price" value={Standard_price[0]?.s_price} onChange={(e) => handlePriceChange("standard", "s_price", e.target.value)} />
+                                                        <input className="border-1 p-2.5 w-[250px] border-[#0000001a] rounded-md" placeholder="Enter Package Price" value={Premium_price[0]?.p_price} onChange={(e) => handlePriceChange("premium", "p_price", e.target.value)} />
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    )}
+                                    {activeStep === 2 && (
+                                        <div>
+                                            <h1 className="text-[1.2rem] text-[#495463] font-bold border-b-1 pb-4 border-[#0000001a]">Service Requirement</h1>
+
+                                            <div className="mt-5">
+                                                <h1 className="font-bold text-[1.5rem] text-[#495463]">Get all The information you need form buyers to get started</h1>
+                                                <p className="text-[1rem] text-[#495463] mt-2">Please provide your relevant requirements for your gig in a clear and understandable manner</p>
+                                            </div>
+                                            <div className="mt-6">
+                                                <Editor onChange={(e) => setRequirement(e.target.value)} ref={quillRefForRequirement} value={requirement} headerTemplate={customToolbar} name="requirement" onTextChange={handleTextChangeRequirement} style={{ height: '115px' }} />
+
+                                            </div>
+                                        </div>
+                                    )}
+
+                                    {activeStep === 3 && (
+                                        <div>
+                                            <h1 className="text-[1.2rem] text-[#495463] font-bold border-b-1 pb-4 border-[#0000001a]">Service FAQ</h1>
+                                            <div className="grid gap-10 grid-cols-3">
+                                                {FAQ.map((faq, index) => (
+                                                    <div className="mt-8" key={index}>
+                                                        <div>
+                                                            <label className="text-[#495463]">Question</label>
+                                                            <div className="mt-2 w-[100%]">
+                                                                <input
+                                                                    type="text"
+                                                                    className="border-1 border-[#0000001a] p-2 w-full rounded-md"
+                                                                    value={faq.question}
+                                                                    onChange={(e) => handleFaqChange(index, "question", e.target.value)}
+                                                                />
+                                                            </div>
+                                                        </div>
+                                                        <div className="mt-5">
+                                                            <label className="text-[#495463]">Answer</label>
+                                                            <div className="w-[100%] mt-2">
+                                                                <textarea
+                                                                    type="text"
+                                                                    className="border-1 border-[#0000001a] rounded-md w-full h-35"
+                                                                    value={faq.answer}
+                                                                    onChange={(e) => handleFaqChange(index, "answer", e.target.value)}
+                                                                />
+                                                            </div>
+                                                        </div>
+                                                        <div className="mt-5 w-[100%]">
+                                                            <button
+                                                                type="button"
+                                                                className="bg-[#fc8787] hover:bg-[#fb4646] text-white w-full cursor-pointer p-2 rounded-md font-bold"
+                                                                onClick={() => removeFaq(index)}
+                                                            >
+                                                                Remove
+                                                            </button>
+                                                        </div>
+                                                    </div>
+                                                ))}
+
+                                                <div className="mt-5">
+                                                    <button
+                                                        type="button"
+                                                        className="hover:bg-[#cacaca73] border-1 border-[#0000001a] rounded-md text-[#495463] p-37.5 rounded-md font-bold cursor-pointer"
+                                                        onClick={addFaq}
+                                                    >
+                                                        + Add New
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    )}
+
+                                    {activeStep === 4 && (
+                                        <div>
+                                            <h1 className="text-[1.2rem] text-[#495463] font-bold border-b-1 pb-4 border-[#0000001a]">
+                                                Service Gallery
+                                            </h1>
+                                            <div className="grid grid-cols-3 gap-10">
+                                                {Array.isArray(images) && images.map((image, index) => (
+                                                    <div key={index} className="mt-5">
+
+                                                        <div className="flex justify-center relative">
+                                                            <input
+                                                                type="file"
+                                                                className="hidden"
+                                                                id={`fileInput-${index}`}
+                                                                onChange={(e) => handleImageChange(e, index)}
+                                                                accept="image/*"
+                                                            />
+
+                                                            <label
+                                                                htmlFor={`fileInput-${index}`}
+                                                                className="border-2 border-[#f78318] w-90 h-70 mt-8 flex items-center justify-center cursor-pointer"
+                                                                style={{
+                                                                    backgroundImage: image.serviceImage ? `url(${image.serviceImage})` : "none",
+                                                                    backgroundSize: "cover",
+                                                                    backgroundPosition: "center",
+                                                                }}
+                                                            >
+                                                                {!image.preview && (
+
+                                                                    <img className="w-40 h-40 rounded-full" src={image.serviceImage || ""} />
+
+                                                                )}
+                                                            </label>
+                                                        </div>
+                                                        <div className="mt-5 w-[100%]">
+                                                            {index !== 0 && (
+                                                                <button
+                                                                    type="button"
+                                                                    className="bg-[#fc8787] hover:bg-[#fb4646] text-white w-full cursor-pointer p-2 rounded-md font-bold"
+                                                                    onClick={() => removeImage(index)}
+                                                                >
+                                                                    Remove
+                                                                </button>
+                                                            )}
+                                                        </div>
+
+                                                    </div>
+
+                                                ))}
+                                                <div className="mt-5">
+                                                    <button
+                                                        type="button"
+                                                        className="hover:bg-[#cacaca73] border-1 border-[#0000001a] rounded-md text-[#495463] p-37 mt-7 rounded-md font-bold cursor-pointer"
+                                                        onClick={addImage}
+                                                    >
+                                                        + Add New
+                                                    </button>
+                                                </div>
+                                            </div>
+
+                                        </div>
+                                    )}
+
+                                    {activeStep === 5 && (
+                                        <div>
+                                            <div className="flex justify-between items-center border-b-1 pb-4 border-[#0000001a]">
+                                                <h1 className="text-[1.2rem] text-[#495463] font-bold">
+                                                    Publish the service
+                                                </h1>
+                                                <button onClick={handleServiceCreate} className="border-2 mt-4 p-2 bg-[#f78318] text-white font-semibold text-[0.875rem] rounded-md cursor-pointer" type="submit">Save as Draft</button>
+                                            </div>
+                                            <div className="w-30 m-auto">
+                                                <FontAwesomeIcon icon={faCircleCheck} className="text-[130px] mt-10 text-[#12d001]" />
+
+                                            </div>
+                                            <div className="text-center mt-6" >
+                                                <h1 className="text-[1.25rem] text-[#495463] font-bold">Almost Ready for Publishing</h1>
+                                                <p className="text-[1rem] text-[#495463] mt-3 w-[65%] m-auto">Your anticipation is appreciated as we put the finishing touches on our project. Exciting things are on the horizon. Are you ready to publish?</p>
+                                                <button onClick={handlePublicData} type="submit" className="border-2 mt-4 p-3 bg-[#f78318] text-white font-semibold text-[0.875rem] rounded-md cursor-pointer">Publish Your Service Now</button>
+                                            </div>
+
+                                        </div>
+                                    )}
+                                </Typography>
+
+                                <Box sx={{ display: "flex", justifyContent: "space-between", marginTop: "60px" }}>
+                                    <Button disabled={activeStep === 0} onClick={handleBack} variant="outlined" sx={{ color: "#f78318", borderColor: "#f78318", "&:hover": { borderColor: "#d96c14", bgcolor: "#fff3e0" } }}>
+                                        Back
+                                    </Button>
+                                    <Button onClick={handleServiceCreate} variant="contained" sx={{ bgcolor: "#f78318", "&:hover": { bgcolor: "#d96c14" } }}>
+                                        {activeStep === steps.length - 1 ? "Finish" : "Save & continue"}
+                                    </Button>
+                                </Box>
+                            </>
+                        )}
+                    </Box>
+                </Box>
+            </Dialog>
+
+
+            <Footer />
+        </div>
+    );
+};
+
+export default Gigs;
+
+
+

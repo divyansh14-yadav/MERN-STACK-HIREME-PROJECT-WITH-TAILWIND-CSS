@@ -1,0 +1,33 @@
+{
+  "name": "hiremeproject",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "start": "nodemon --signal SIGUSR2 index.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@paypal/checkout-server-sdk": "^1.0.3",
+    "bcrypt": "^5.1.1",
+    "body-parser": "^2.2.0",
+    "cors": "^2.8.5",
+    "crypto": "^1.0.1",
+    "dotenv": "^16.4.7",
+    "express": "^4.21.2",
+    "firebase-admin": "^13.2.0",
+    "jsonwebtoken": "^9.0.2",
+    "mongoose": "^8.10.0",
+    "morgan": "^1.10.0",
+    "multer": "^1.4.5-lts.1",
+    "nodemailer": "^6.10.0",
+    "nodemon": "^3.1.9",
+    "razorpay": "^2.9.6",
+    "socket.io": "^4.8.1",
+    "stripe": "^17.7.0",
+    "supervisor": "^0.12.0"
+  }
+}

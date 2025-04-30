@@ -1,0 +1,719 @@
+// export const popular_review_rating = async (req, res) => {
+//     try {
+//         const { categoryId } = req.params;
+//         const { bestRating, bestReviewed, title } = req.query;
+
+
+//         let services = await Service.find({ categoryId }).populate('ratings.reviewerId', 'firstName')
+//             .select("-about_Gig -requirement")
+//             .populate({
+//                 path: "sub_categoryId",
+//                 select: "feature_SubCategories_name"
+//             })
+//             .populate({
+//                 path: "authId",
+//                 select: "firstName lastName authProfile"
+//             }).populate({
+//                 path: "categoryId",
+//                 select: "featureCategoriesName"
+//             }).sort({ createdAt: -1 });
+
+//         if (!services || services.length === 0) {
+//             return res.status(400).json({
+//                 message: "No services found for this category"
+//             });
+//         }
+
+//         // search ke ley 
+//         if (title) {
+//             services = services.filter(service => service.title && service.title.toLowerCase().includes(title.toLowerCase()));
+//         }
+
+//         let filteredServices = [];
+
+//         if (bestRating) {
+//             const servicesWithAverageRating = services.map(service => {
+//                 let totalStars = 0;
+//                 let totalRatings = service.ratings.length;
+//                 service.ratings.forEach(rating => {
+//                     totalStars += rating.rating;
+//                 });
+
+//                 const averageRating = service.ratings.length > 0 ? totalStars / service.ratings.length : 0;
+
+//                 return {
+//                     ...service.toObject(),
+//                     averageRating,
+//                     totalRatings
+//                 };
+//             });
+//             // jisko average rating zero ho wh data show ni hoga
+//             filteredServices = servicesWithAverageRating.filter(service => service.averageRating > 0);
+//             filteredServices.sort((a, b) => b.averageRating - a.averageRating);
+
+//         } else {
+//             // average rating ke ley wps se map lagaya
+//             filteredServices = services.map(service => {
+//                 let totalStars = 0;
+//                 let totalRatings = service.ratings.length;
+
+//                 service.ratings.forEach(rating => {
+//                     totalStars += rating.rating;
+//                 });
+
+//                 const averageRating = service.ratings.length > 0 ? totalStars / service.ratings.length : 0;
+
+//                 return {
+//                     ...service.toObject(),
+//                     averageRating,
+//                     totalRatings
+//                 };
+//             });
+//         }
+
+//         if (bestReviewed) {
+//             // jisko average rating zero ho wh data show ni hoga
+//             const servicesWithReviews = filteredServices.filter(service => service.ratings.length > 0);
+
+//             servicesWithReviews.sort((a, b) => b.ratings.length - a.ratings.length);
+
+//             filteredServices = servicesWithReviews;
+//         }
+
+//         let num_of_service = filteredServices.length;
+
+//         res.status(200).send({ services: filteredServices, num_of_service });
+
+//     } catch (error) {
+//         res.status(500).send({ message: error.message });
+//     }
+// };
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+export const perticular_sub_cat_service = async (req, res) => {
+
+    try {
+        // const { sub_categoryId } = req.params
+
+        // const checkService = await Service.find({ sub_categoryId }).select("-about_Gig -requirement")
+        //     .populate({
+        //         path: "sub_categoryId",
+        //         select: "feature_SubCategories_name"
+        //     })
+        //     .populate({
+        //         path: "authId",
+        //         select: "firstName lastName"
+        //     })
+        //     .populate({
+        //         path: "categoryId",
+        //         select: "featureCategoriesName"
+        //     })
+        // let num_of_service = checkService.length
+
+        // // rating popular service start
+        // const servicesWithAverageRating = checkService.map(service => {
+
+        //     let totalStars = 0;
+        //     let totalRatings = service.ratings.length;
+
+        //     service.ratings.forEach(rating => {
+        //         totalStars += rating.rating;
+        //     });
+
+        //     const averageRating = service.ratings.length > 0 ? totalStars / service.ratings.length : 0;
+
+        //     return {
+        //         ...service.toObject(),
+        //         averageRating,
+        //         totalRatings
+        //     };
+        // })
+
+        // servicesWithAverageRating.sort((a, b) => b.averageRating - a.averageRating);  //sort kara rating ko decending order mee
+        // // rating popular service end
+
+        // if (checkService) {
+        //     res.status(200).json({
+        //         message: "perticular sub_categories_services",
+        //         subCategories_Service: servicesWithAverageRating,
+        //         num_of_service
+        //     })
+        // }
+
+        // else {
+        //     res.status(404).json({
+        //         message: "not found this sub-categories services"
+        //     })
+        // }
+        // ------------------------------------------
+
+
+        const { sub_categoryId } = req.params;
+        const { bestRating, bestReviewed, title, minRating, maxRating } = req.query;
+
+        let services = await Service.find({ sub_categoryId }).populate('ratings.reviewerId', 'firstName')
+            .select("-about_Gig -requirement")
+            .populate({
+                path: "sub_categoryId",
+                select: "feature_SubCategories_name"
+            })
+            .populate({
+                path: "authId",
+                select: "firstName lastName authProfile"
+            }).populate({
+                path: "categoryId",
+                select: "featureCategoriesName"
+            }).sort({ createdAt: -1 });
+
+        if (!services || services.length === 0) {
+            return res.status(400).json({
+                message: "No services found for this category"
+            });
+        }
+
+        // search ke ley 
+        if (title) {
+            services = services.filter(service => service.title && service.title.toLowerCase().includes(title.toLowerCase()));
+        }
+
+        let filteredServices = [];
+
+        if (bestRating) {
+            const servicesWithAverageRating = services.map(service => {
+                let totalStars = 0;
+                let totalRatings = service.ratings.length;
+                service.ratings.forEach(rating => {
+                    totalStars += rating.rating;
+                });
+
+                const averageRating = service.ratings.length > 0 ? totalStars / service.ratings.length : 0;
+
+                return {
+                    ...service.toObject(),
+                    averageRating,
+                    totalRatings
+                };
+            });
+
+            filteredServices = servicesWithAverageRating.filter(service => service.averageRating > 0);
+            filteredServices.sort((a, b) => b.averageRating - a.averageRating);
+
+        } else {
+            filteredServices = services.map(service => {
+                let totalStars = 0;
+                let totalRatings = service.ratings.length;
+
+                service.ratings.forEach(rating => {
+                    totalStars += rating.rating;
+                });
+
+                const averageRating = service.ratings.length > 0 ? totalStars / service.ratings.length : 0;
+
+                return {
+                    ...service.toObject(),
+                    averageRating,
+                    totalRatings
+                };
+            });
+        }
+
+        // Apply the minRating and maxRating filter 
+        if (minRating || maxRating) {
+            filteredServices = filteredServices.filter(service => {
+                const averageRating = service.averageRating;
+                if (minRating && maxRating) {
+                    return averageRating >= parseFloat(minRating) && averageRating <= parseFloat(maxRating);
+                }
+                if (minRating) {
+                    return averageRating >= parseFloat(minRating);
+                }
+                if (maxRating) {
+                    return averageRating <= parseFloat(maxRating);
+                }
+                return true;
+            });
+        }
+
+        if (bestReviewed) {
+            // jisko average rating zero ho wh data show ni hoga
+            const servicesWithReviews = filteredServices.filter(service => service.ratings.length > 0);
+
+            servicesWithReviews.sort((a, b) => b.ratings.length - a.ratings.length);
+
+            filteredServices = servicesWithReviews;
+        }
+
+        let num_of_service = filteredServices.length;
+
+        res.status(200).send({
+            message: "perticular sub_categories_services", 
+            subCategories_Service: filteredServices, num_of_service
+             });
+    } catch (error) {
+        res.status(500).json({
+            message: "internal server error"
+        })
+    }
+}
+
+
+
+--------
+
+
+// export const createProject = async (req, res) => {
+
+//     try {
+
+//         const { authId } = req.params
+
+//         const { serviceId } = req.params
+
+//         const {serviceAuthId} = req.params
+
+//         const { order_quotes, dead_line, status } = req.body
+
+//         const checkService = await Service.findOne({ _id: serviceId })
+
+//         if (!checkService) {
+//             return res.status(404).json({
+//                 message: "not found this service"
+//             })
+//         }
+
+//         const checkQuote = await Project.findOne({ order_quotes })
+
+//         if (checkQuote) {
+//             return res.status(400).json({
+//                 message: "same as old quote"
+//             })
+//         }
+
+//         const newProject = new Project({
+//             order_quotes, serviceId, authId, dead_line, status, serviceAuthId
+//         })
+
+//         await newProject.save()
+
+//         res.status(200).json({
+//             message: "new project is created",
+//             newProject
+
+//         })
+
+//     } catch (error) {
+//         res.status(500).json({
+//             message: "internal server error"
+//         })
+//     }
+// }
+------------------------
+
+
+
+export const found_allProjects = async (req, res) => {
+
+    try {
+        const { authId } = req.params
+
+        const checkAuth = await Project.find({ authId })
+
+        if (!checkAuth) {
+            return res.status(404).json({
+                message: "not found this auth profile"
+            })
+        }
+
+        const allProjects = await Project.find({authId}).select("-messages -uploadfiles -authId")
+
+            .populate({
+                path: "serviceId",
+                select: "title",
+                //alg table se populate krne ke ley like service se meko authId chy tha
+                populate: {
+                    path: "authId",
+                    select: "firstName"
+                }
+            })
+
+        if (allProjects.length > 0) {
+            res.status(200).json({
+                message: "all found projects",
+                allProjects: allProjects
+            })
+        }
+
+        else {
+            res.status(404).json({
+                message: "not found any projects"
+            })
+        }
+
+    } catch (error) {
+        res.status(500).json({
+            message: "Internal server error"
+        })
+    }
+}
+
+
+
+
+
+
+
+// export const createProject = async (req, res) => {
+//     try {
+//         const { authId, serviceId } = req.params;
+//         const { order_quotes, dead_line, status } = req.body;
+
+//         // Check if the service exists
+//         const service = await Service.findById(serviceId);
+//         if (!service) {
+//             return res.status(404).json({ message: "Service not found" });
+//         }
+
+//         // Check if a quote already exists
+//         const existingQuote = await Project.findOne({ order_quotes, serviceId });
+//         if (existingQuote) {
+//             return res.status(400).json({ message: "This order quote already exists" });
+//         }
+
+//         // Create a new quote
+//         const newProject = new Project({
+//             order_quotes,
+//             serviceId,
+//             authId,
+//             dead_line,
+//             status,
+//             serviceAuthId: service.authId, // Owner of the service
+//         });
+
+//         await newProject.save();
+
+//         res.status(200).json({
+//             message: "Quote sent successfully",
+//             newProject,
+//         });
+//     } catch (error) {
+//         res.status(500).json({ message: "Internal server error", error: error.message });
+//     }
+// };
+
+
+
+
+// // Get quotes sent by a user
+// export const getSentQuotes = async (req, res) => {
+//     try {
+//         const { authId } = req.params;
+//         const sentQuotes = await Project.find({ authId }).populate("serviceId");
+//         res.status(200).json(sentQuotes);
+//     } catch (error) {
+//         res.status(500).json({ message: "Internal server error", error: error.message });
+//     }
+// };
+
+
+
+// export const found_allProjects = async (req, res) => {
+
+//     try {
+//         const { authId } = req.params
+
+//         const checkAuth = await Project.find({ authId })
+
+//         if (!checkAuth) {
+//             return res.status(404).json({
+//                 message: "not found this auth profile"
+//             })
+//         }
+
+//         const allProjects = await Project.find({authId}).select("-messages -uploadfiles -authId")
+
+//             .populate({
+//                 path: "serviceId",
+//                 select: "title",
+//                 //alg table se populate krne ke ley like service se meko authId chy tha
+//                 populate: {
+//                     path: "authId",
+//                     select: "firstName"
+//                 }
+//             })
+
+//         if (allProjects.length > 0) {
+//             res.status(200).json({
+//                 message: "all found projects",
+//                 allProjects: allProjects
+//             })
+//         }
+
+//         else {
+//             res.status(404).json({
+//                 message: "not found any projects"
+//             })
+//         }
+
+//     } catch (error) {
+//         res.status(500).json({
+//             message: "Internal server error"
+//         })
+//     }
+// }
+
+
+
+// export const found_allProjects_again = async (req, res) => {
+
+//     try {
+
+//         const { serviceId, ownerId } = req.params;
+
+//         // Check if the service exists and belongs to the owner
+//         const checkService = await Service.findOne({ _id: serviceId, authId: ownerId });
+        
+//         if (!checkService) {
+//             return res.status(404).json({ message: "Service not found or unauthorized access" });
+//         }
+
+//         // Get all order quotes for this service
+//         const orders = await Project.find({ serviceId }).populate("authId", "name email")
+//            .populate({
+//             path: "serviceId",
+//             select: "title",
+//             //alg table se populate krne ke ley like service se meko authId chy tha
+//             populate: {
+//                 path: "authId",
+//                 select: "firstName"
+//             }
+//         })
+
+//         res.status(200).json({
+//             message: "Orders retrieved successfully",
+//             allProjects: orders,
+        
+//         });
+//     } catch (error) {
+//         res.status(500).json({ message: "Internal server error", error: error.message });
+//     }
+// }
+
+
+
+
+
+
+
+
+
+
+// create project quote
+
+
+
+// export const createProject = async (req, res) => {
+    
+//     try {
+//         const { authId, serviceId } = req.params;
+
+//         const { order_quotes, dead_line, status } = req.body;
+
+//         // Check if the service exists
+//         const checkService = await Service.findById(serviceId);
+
+//         if (!checkService) {
+//             return res.status(404).json({ message: "Service not found" });
+//         }
+
+//         // Check if the same order quote already exists
+//         const checkQuote = await Project.findOne({ order_quotes, serviceId });
+
+//         if (checkQuote) {
+//             return res.status(400).json({ message: "This order quote already exists" });
+//         }
+
+//         // Create a new project
+//         const newProject = new Project({
+//             order_quotes,
+//             serviceId,
+//             authId,
+//             dead_line,
+//             status,
+//             serviceAuthId: checkService.authId, // Owner of the service
+//         });
+
+//         await newProject.save();
+
+//         res.status(200).json({
+//             message: "New project created successfully",
+//             newProject,
+//         });
+//     } catch (error) {
+//         res.status(500).json({ message: "Internal server error", error: error.message });
+//     }
+// };
+
+
+
+
+
+
+
+
+
+
+
+
+
+// export const deatils_On_Task_MileStone = async (req, res) => {
+//     try {
+//         const { taskId, loginAuthId } = req.params;
+//         const { session_id } = req.query; // session_id frontend se send hoga
+
+//         // Step 1: Retrieve session from Stripe
+//         let session;
+//         if (session_id) {
+//             session = await stripe.checkout.sessions.retrieve(session_id);
+//         }
+
+//         // Step 2: Update milestone if session is paid
+//         if (session && session.payment_status === "paid") {
+//             const milestoneId = session.metadata?.milestoneId;
+
+//             if (milestoneId) {
+//                 await MileStone.findByIdAndUpdate(milestoneId, {
+//                     mileStatus: "Paid",
+//                 });
+
+//                 await Deposit.findOneAndUpdate(
+//                     { session_id: session_id },
+//                     { status: "paid" }
+//                 );
+//             }
+//         }
+
+
+       
+        
+
+//         // Step 3: Fetch milestones
+//         const milestones = await MileStone.find({ taskId })
+//             .populate({
+//                 path: "taskId",
+//                 select: "taskTitle"
+//             })
+//             .populate({
+//                 path: "loginAuthId",
+//                 select: "firstName _id"
+//             })
+//             .populate({
+//                 path: "bidId",
+//                 select: "TaskCreaterId",
+//                 populate: {
+//                     path: "TaskCreaterId",
+//                     select: "firstName _id"
+//                 }
+//             });
+
+//         if (!milestones || milestones.length === 0) {
+//             return res.status(404).json({
+//                 message: "Milestone not found"
+//             });
+//         }
+
+//         const isAuthorized = milestones.some(milestone =>
+//             milestone.loginAuthId?._id.toString() === loginAuthId ||
+//             milestone.bidId?.TaskCreaterId?._id.toString() === loginAuthId
+//         );
+
+//         if (!isAuthorized) {
+//             return res.status(403).json({
+//                 message: "You are not authorized to view these milestones"
+//             });
+//         }
+
+//         res.status(200).json({
+//             message: "Found milestones",
+//             foundMileStone: milestones
+//         });
+
+//     } catch (error) {
+//         res.status(500).json({
+//             message: "Internal server error",
+//             error: error.message
+//         });
+//     }
+// };
+
+
+
+
+
+
+
+
+
+// export const deatils_On_Task_MileStone = async (req, res) => {
+//     try {
+//         const { taskId, loginAuthId } = req.params;
+
+//         const milestones = await MileStone.find({ taskId })
+//             .populate({
+//                 path: "taskId",
+//                 select: "taskTitle"
+//             })
+//             .populate({
+//                 path: "loginAuthId",
+//                 select: "firstName _id"
+//             })
+//             .populate({
+//                 path: "bidId",
+//                 select: "TaskCreaterId",
+//                 populate: {
+//                     path: "TaskCreaterId",
+//                     select: "firstName _id"
+//                 }
+//             });
+
+//         if (!milestones || milestones.length === 0) {
+//             return res.status(404).json({
+//                 message: "Milestone not found"
+//             });
+//         }
+
+//         // Check authorization: user must be either the creator of the milestone or task owner
+//         const isAuthorized = milestones.some(milestone =>
+//             milestone.loginAuthId?._id.toString() === loginAuthId ||
+//             milestone.bidId?.TaskCreaterId?._id.toString() === loginAuthId
+//         );
+
+//         if (!isAuthorized) {
+//             return res.status(403).json({
+//                 message: "You are not authorized to view these milestones"
+//             });
+//         }
+
+//         res.status(200).json({
+//             message: "Found milestones",
+//             foundMileStone: milestones
+//         });
+
+//     } catch (error) {
+//         res.status(500).json({
+//             message: "Internal server error",
+//             error: error.message
+//         });
+//     }
+// };

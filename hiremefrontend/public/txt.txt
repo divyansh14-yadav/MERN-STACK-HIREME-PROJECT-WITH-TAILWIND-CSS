@@ -1,0 +1,331 @@
+// yeh category slider ka code hai
+
+import React, { useRef } from "react";
+import Slider from "react-slick";
+import "slick-carousel/slick/slick.css";
+import "slick-carousel/slick/slick-theme.css";
+import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
+
+const categories = [
+    "Graphics & Design",
+    "Programming Tech",
+    "Digital Marketing",
+    "Writing & Translation",
+    "Video & Animation",
+    "Lifestyle",
+    "Business",
+    "Data Science",
+    "Legal Service"
+];
+
+const CategorySlider = () => {
+    const sliderRef = useRef(null);
+
+    return (
+        <div className="relative w-[80%] mx-auto mt-5">
+            <h2 className="text-center text-2xl font-bold mb-4">Featured Categories</h2>
+
+            <div className="relative">
+
+                <FaChevronLeft className="absolute left-[-40px] top-[29.5px]" onClick={() => sliderRef.current.slickPrev()} />
+
+                <Slider
+                    ref={sliderRef}
+                    dots={true}
+                    infinite={true}
+                    speed={500}
+                    slidesToShow={5}
+                >
+                    {categories.map((name, index) => (
+                        <div key={index} className="p-4 text-center">
+                            <p className="mt-2 font-medium">{name}</p>
+                        </div>
+                    ))}
+                </Slider>
+
+                {/* Right Button */}
+                {/* <button 
+                    className="absolute right-[-40px] top-1/2 transform -translate-y-1/2 bg-gray-800 text-white p-2 rounded-full shadow-lg z-10"
+                    onClick={() => sliderRef.current.slickNext()}
+                > */}
+                <FaChevronRight className="absolute right-[-40px] top-[29.5px] " onClick={() => sliderRef.current.slickNext()} />
+                {/* </button> */}
+            </div>
+        </div>
+    );
+};
+
+export default CategorySlider;
+
+
+
+// otp
+
+
+import { useState, useRef } from "react";
+
+export default function OTPInput() {
+  const [otp, setOtp] = useState(["", "", "", "", "", ""]);
+  const inputRefs = useRef([]);
+
+  const handleChange = (index, e) => {
+    const value = e.target.value;
+    if (/^\d?$/.test(value)) {
+      const newOtp = [...otp];
+      newOtp[index] = value;
+      setOtp(newOtp);
+
+      // Move to the next input box automatically
+      if (value && index < 5) {
+        inputRefs.current[index + 1].focus();
+      }
+    }
+  };
+
+  const handleKeyDown = (index, e) => {
+    if (e.key === "Backspace" && !otp[index] && index > 0) {
+      inputRefs.current[index - 1].focus();
+    }
+  };
+
+  return (
+    <div className="flex justify-center items-center h-screen gap-2">
+      {otp.map((digit, index) => (
+        <input
+          key={index}
+          ref={(el) => (inputRefs.current[index] = el)}
+          type="text"
+          value={digit}
+          onChange={(e) => handleChange(index, e)}
+          onKeyDown={(e) => handleKeyDown(index, e)}
+          maxLength="1"
+          className="w-12 h-12 text-center text-2xl border-2 border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+        />
+      ))}
+    </div>
+  );
+}
+
+// category ki id se get karna services ko 
+    // services data using category id
+
+    // useEffect(() => {
+    //     const fetchFeatureService = async () => {
+    //         try {
+    //             // const queryParam = ServiceTitle ? `title=${ServiceTitle}` : `categoryId=${categoryId}`;
+    //             const response = await authConfig.get(`services-category/${categoryId}`);
+    //             if (response.status === 200) {
+    //                 setAllFeaturedCategoryService(response.data.services);
+    //                 // setDataLoad(true)
+    //             } else {
+    //                 console.log("Error fetching all blog");
+    //             }
+    //         } catch (error) {
+    //             console.error("Error fetching all blog:", error);
+    //         }
+    //     };
+
+    //     fetchFeatureService();
+    // }, [categoryId]);
+
+// ratings filter wala 
+
+    // useEffect(() => {
+    //     const fetchFeatureService = async () => {
+    //         try {
+    //             let url = `all-review-rating/${categoryId}`;
+    //             // Add query parameters based on user selection
+    //             if (bestRatingData) {
+    //                 url += `?bestRating=true`;
+    //             } else if (bestRatingData === 'mostReviewed') {
+    //                 url += `?bestReviewed=true`;
+    //             }
+    
+    //             const response = await authConfig.get(url);
+    //             if (response.status === 200) {
+    //                 setAllFeaturedCategoryService(response.data.services);
+    //             } else {
+    //                 console.log("Error fetching all services");
+    //             }
+    //         } catch (error) {
+    //             console.error("Error fetching all services:", error);
+    //         }
+    //     };
+    
+    //     fetchFeatureService();
+    // }, [categoryId, bestRatingData]); // Re-fetch when `categoryId` or `bestRatingData` changes
+
+
+    register component return se
+
+
+
+     // return (
+    //     <div>
+    //         <div className='flex'>
+    //             <div className='w-[50%]'>
+    //                 <img src='https://script.viserlab.com/metalance/assets/images/frontend/register/6638784de34751714976845.jpg' />
+    //                 <div className="absolute top-[340px] w-[50%] m-auto" >
+    //                     <h1 className='text-white text-[2.3rem] font-bold w-[90%] text-center ml-5 text-justify'>Join Now to Start Your Freelance Journey!</h1>
+    //                     <p className='text-[1rem] text-[#ffffffcc] font-normal mt-[15px] w-[90%] ml-5 text-justify'>Craft Your Professional Identity. Showcase Your Skills and Expertise to Attract Clients and Opportunities.</p>
+    //                     <div className="absolute top-50 ml-[20px] flex gap-3">
+    //                         <a href="" className="text-white p-1 rounded-lg font-semibold bg-[#ffffff1a] border-2 border-[#ffffff1a] hover:bg-red-500">Logo Design</a>
+    //                         <a href="" className="text-white p-1 rounded-lg font-semibold bg-[#ffffff1a] border-2 border-[#ffffff1a] hover:bg-red-500">Illustration</a>
+    //                         <a href="" className="text-white p-1 rounded-lg font-semibold bg-[#ffffff1a] border-2 border-[#ffffff1a] hover:bg-red-500">Website Development</a>
+    //                         <a href="" className="text-white p-1 rounded-lg font-semibold bg-[#ffffff1a] border-2 border-[#ffffff1a] hover:bg-red-500">Social Media Marketing</a>
+    //                     </div>
+
+    //                     <marquee width="80%" direction="rigth" height="140px" Scrolldelay="100 ">
+    //                         <div className="flex h-[140px] mt-12 items-center gap-12">
+    //                             <img className="w-[20%]" src="https://script.viserlab.com/metalance/assets/images/frontend/partner/662f399ef03071714370974.png" />
+    //                             <img className="w-[20%]" src="https://script.viserlab.com/metalance/assets/images/frontend/partner/662f39d272ab81714371026.png" />
+    //                             <img className="w-[20%]" src="https://script.viserlab.com/metalance/assets/images/frontend/partner/662f39e2d4e771714371042.png" />
+    //                             <img className="w-[20%]" src="https://script.viserlab.com/metalance/assets/images/frontend/partner/662f39a6a80d91714370982.png" />
+    //                             <img className="w-[20%]" src="https://script.viserlab.com/metalance/assets/images/frontend/partner/662f39943ae351714370964.png" />
+    //                             <img className="w-[20%]" src="https://script.viserlab.com/metalance/assets/images/frontend/partner/662f39db6d1a91714371035.png" />
+    //                             <img className="w-[20%]" src="https://script.viserlab.com/metalance/assets/images/frontend/partner/662f39ad8af6c1714370989.png" />
+    //                         </div>
+    //                     </marquee>
+    //                 </div>
+    //             </div>
+    //             <div className='w-[50%]'>
+
+    //                 <div>
+    //                     <div className='flex justify-between items-center mt-8'>
+    //                         <Link to='/'><img className="w-[50%] ml-6" src="https://script.viserlab.com/metalance/assets/images/logo_icon/logo_dark.png" /></Link>
+    //                         <p className='w-[48%] mr-7 font-medium text-[1.05rem] text-[#000000b3]'>Already have an account?<Link className='ml-1 text-[#f78318]' to='/signIn'>SignIn</Link></p>
+    //                     </div>
+    //                 </div>
+
+    //                 <div className='mt-14'>
+    //                     <h1 className=' w-[260px] ml-8 text-start text-[1.875rem] text-[#000000b3] font-bold'>Sign Up <span className='text-[#f78318]'>Now</span></h1>
+    //                     <p className='mt-3  w-[465px] text-justify ml-8 text-[1rem] font-normal text-[#5c5c5c]'>Unlock Your Potential and Connect with Endless Freelance Possibilities.</p>
+    //                 </div>
+
+    //                 <form onSubmit={handleSubmit}>
+    //                     <div className='w-[90%] m-auto '>
+
+    //                         <div className='flex gap-8 mt-8 w-[100%] m-auto'>
+    //                             <div className='grid'>
+    //                                 <label className='w-[120px] flex font-medium text-[#000000b3]'>First Name <span className='ml-2 text-[red]' >*</span></label>
+    //                                 <input className='border-1 rounded-[8px] p-[12px] w-[250px] text-[#000000] font-normal border-[#00000021] mt-2' value={firstName} onChange={(e) => setFirstName(e.target.value)} type='text' required />
+    //                             </div>
+    //                             <div className='grid'>
+    //                                 <label className='w-[120px] flex font-medium text-[#000000b3]'>Last Name <span className='ml-2 text-[red]' >*</span></label>
+    //                                 <input className='border-1 rounded-[8px] p-[12px] w-[250px] text-[#000000] font-normal border-[#00000021] mt-2' value={lastName} onChange={(e) => setLastName(e.target.value)} type='text' required />
+    //                             </div>
+    //                         </div>
+
+    //                         <div className='grid mt-6 w-[89%]'>
+    //                             <label className='w-[126px] flex font-medium text-[#000000b3]'>Email Address <span className='ml-2 text-[red]' >*</span></label>
+    //                             <input className='border-1 rounded-[8px] p-[12px] w-[87.5%] text-[#000000] font-normal border-[#00000021] mt-2' value={email} onChange={(e) => setEmail(e.target.value)} type='text' required />
+    //                         </div>
+
+    //                         <div className='flex gap-8 mt-6 w-[100%] m-auto'>
+    //                             <div className='grid'>
+    //                                 <label className='w-[120px] flex font-medium text-[#000000b3]'>Password <span className='ml-2 text-[red]' >*</span></label>
+    //                                 <input className='border-1 rounded-[8px] p-[12px] w-[250px] text-[#000000] font-normal border-[#00000021] mt-2' value={password} onChange={(e) => setPassword(e.target.value)} type='password' required />
+    //                             </div>
+    //                             <div className='grid'>
+    //                                 <label className='w-[160px] flex font-medium text-[#000000b3]'>Confirm Password <span className='ml-2 text-[red]' >*</span></label>
+    //                                 <input className='border-1 rounded-[8px] p-[12px] w-[250px] text-[#000000] font-normal border-[#00000021] mt-2' value={confirm_password} onChange={(e) => setConfirm_password(e.target.value)} type='password' required />
+    //                             </div>
+    //                         </div>
+    //                         <div className='flex  w-[100%] m-auto items-center'>
+    //                             <input className='mt-2 ml-1' type='checkbox' required></input>
+    //                             <p className='text-[0.875rem] font-medium cursur-pointer text-[#000000b3] mt-7 w-[80%] mr-[90px] m-auto text-justify'>By proceeding, you agree to the <a className='text-[#f78318]'>Privacy Policy</a> ,<a className='text-[#f78318]'> Terms of Service</a> , <a className='text-[#f78318]'>Refund Policy</a></p>
+    //                         </div>
+    //                         <div className='w-[100%] m-auto flex justify-start'>
+    //                         <button type='submit' className='mt-7 font-semibold bg-[#f78318] w-[90%] text-white p-[12px] rounded-[8px] cursor-pointer'>Sign Up</button>
+    //                         </div>
+    //                     </div>
+    //                 </form>
+    //             </div>
+    //         </div>
+    //     </div>
+    // )
+
+
+
+    // login component return se
+
+      // return (
+    //     <div>
+    //         <div className='flex'>
+    //             <div className='w-[50%]'>
+    //                 <div className='w-[95%]'>
+    //                     <img className='w-full' src='https://script.viserlab.com/metalance/assets/images/frontend/register/6638784de34751714976845.jpg' />
+
+    //                 </div>
+    //                 <div className="absolute top-[340px] w-[50%] m-auto" >
+    //                     <h1 className='text-white text-[2.3rem] font-bold w-[90%] text-center ml-5 text-justify'>Welcome Back! Let's Dive In Sign In Now</h1>
+    //                     <p className='text-[1rem] text-[#ffffffcc] font-normal mt-[15px] w-[90%] ml-5 text-justify'>Explore a myriad of limitless opportunities, embrace adaptable work structures, and enjoy peace of mind with our secure payment solutions – all seamlessly integrated within our esteemed freelance ecosystem.</p>
+    //                     <div className="absolute top-58 ml-[20px] flex gap-3">
+    //                         <a href="" className="text-white p-1 rounded-lg font-semibold bg-[#ffffff1a] border-2 border-[#ffffff1a] hover:bg-red-500">Logo Design</a>
+    //                         <a href="" className="text-white p-1 rounded-lg font-semibold bg-[#ffffff1a] border-2 border-[#ffffff1a] hover:bg-red-500">Illustration</a>
+    //                         <a href="" className="text-white p-1 rounded-lg font-semibold bg-[#ffffff1a] border-2 border-[#ffffff1a] hover:bg-red-500">Website Development</a>
+    //                         <a href="" className="text-white p-1 rounded-lg font-semibold bg-[#ffffff1a] border-2 border-[#ffffff1a] hover:bg-red-500">Social Media Marketing</a>
+    //                     </div>
+
+    //                     <marquee width="80%" direction="rigth" height="140px" Scrolldelay="100 ">
+    //                         <div className="flex h-[140px] mt-12 items-center gap-12">
+    //                             <img className="w-[20%]" src="https://script.viserlab.com/metalance/assets/images/frontend/partner/662f399ef03071714370974.png" />
+    //                             <img className="w-[20%]" src="https://script.viserlab.com/metalance/assets/images/frontend/partner/662f39d272ab81714371026.png" />
+    //                             <img className="w-[20%]" src="https://script.viserlab.com/metalance/assets/images/frontend/partner/662f39e2d4e771714371042.png" />
+    //                             <img className="w-[20%]" src="https://script.viserlab.com/metalance/assets/images/frontend/partner/662f39a6a80d91714370982.png" />
+    //                             <img className="w-[20%]" src="https://script.viserlab.com/metalance/assets/images/frontend/partner/662f39943ae351714370964.png" />
+    //                             <img className="w-[20%]" src="https://script.viserlab.com/metalance/assets/images/frontend/partner/662f39db6d1a91714371035.png" />
+    //                             <img className="w-[20%]" src="https://script.viserlab.com/metalance/assets/images/frontend/partner/662f39ad8af6c1714370989.png" />
+    //                         </div>
+    //                     </marquee>
+    //                 </div>
+    //             </div>
+    //             <div className='w-[50%]'>
+
+    //                 <div>
+    //                     <div className='flex justify-between items-center mt-8'>
+    //                         <Link to='/'><img className="w-[50%] ml-6" src="https://script.viserlab.com/metalance/assets/images/logo_icon/logo_dark.png" /></Link>
+    //                         <p className='w-[48%] mr-7 font-medium text-[1.05rem] text-[#000000b3]'>Don't have an account?<Link className='ml-1 text-[#f78318]' to='/signUp'>SignUp</Link></p>
+    //                     </div>
+    //                 </div>
+
+    //                 <div className='w-[90%] m-auto mt-14'>
+    //                     <h1 className='text-start text-[1.875rem] text-[#000000b3] font-bold'>Sign In <span className='text-[#f78318]'>Now</span></h1>
+    //                     <p className='mt-3 text-start text-justify text-[1rem] font-normal text-[#5c5c5c]'>Enter a realm of endless possibilities, flexible work options, and secure transactions within our freelance hub.</p>
+    //                 </div>
+
+    //                 <form onSubmit={handleSubmit}>
+    //                     <div className='w-[90%] m-auto'>
+
+    //                         <div className='grid mt-8 w-[100%] m-auto'>
+    //                             <label className='w-[170px] flex font-medium text-[#000000b3]'>Username & Email<span className='ml-2 text-[red]' >*</span></label>
+    //                             <input className='border-1 rounded-[8px] p-[12px] w-[90%] text-[#000000] font-normal border-[#00000021] mt-3' value={email} onChange={(e) => setEmail(e.target.value)} type='text' placeholder='' />
+
+    //                             <div className='grid mt-6'>
+    //                                 <label className='w-[120px] flex font-medium text-[#000000b3]'>Password <span className='ml-2 text-[red]' >*</span></label>
+    //                                 <input className='border-1 rounded-[8px] p-[12px] w-[90%] text-[#000000] font-normal border-[#00000021] mt-3' value={password} onChange={(e) => setPassword(e.target.value)} type='password' placeholder='' />
+    //                             </div>
+
+    //                         </div>
+
+    //                         {/* <div className='flex gap-8 mt-8 w-[80%] m-auto'> */}
+
+    //                         {/* </div> */}
+    //                         <div className='w-[100%] m-auto mt-6 items-center'>
+    //                             <div className='flex justify-between items-center'>
+    //                                 <div className='flex'>
+    //                                     <input className='mt-2' type='checkbox' required></input>
+    //                                     <p className='text-[0.9375rem] font-medium cursur-pointer text-[#000000b3] ml-2 mt-2 w-[80%] mr-[67px] m-auto text-justify'>Remember Me</p>
+    //                                 </div>
+    //                                 <div>
+    //                                     <Link to="/forgetPassword" className='text-[0.9375rem] font-medium text-[#f78318] underline mr-16' href=''>Forgot your password?</Link>
+    //                                 </div>
+    //                             </div>
+    //                         </div>
+    //                         <button type='submit' className='mt-8 font-semibold bg-[#f78318] mr-[55px] w-[91%] text-white p-[12px] rounded-[8px] cursor-pointer'>Sign In</button>
+    //                     </div>
+    //                 </form>
+    //             </div>
+    //         </div>
+    //     </div>
+    // )
