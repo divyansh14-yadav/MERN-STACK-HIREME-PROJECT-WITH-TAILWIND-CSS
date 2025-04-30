@@ -4,12 +4,6 @@ import bcrypt from "bcrypt"
 import jwt from "jsonwebtoken"
 import nodemailer from 'nodemailer';
 import crypto from 'crypto';
-import Temp from "../../models/Temp-M/tempSchema.js";
-import bcrypt from "bcrypt"
-import jwt from "jsonwebtoken"
-import nodemailer from 'nodemailer';
-import crypto from 'crypto';
-
 export const temp = async (req, res) => {
 
     try {
