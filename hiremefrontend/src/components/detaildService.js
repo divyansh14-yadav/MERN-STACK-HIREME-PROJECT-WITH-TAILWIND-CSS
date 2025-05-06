@@ -29,7 +29,7 @@ import {
 import UserChat from "../components/user chat/userChat";
 import Loder from "./loader/loder";
 
-const socket = io("http://192.168.1.2:8000//api/v1");
+const socket = io("https://hireback-1.onrender.com//api/v1");
 
 const DetaildService = () => {
   const [serviceDetaildList, setServiceDetaildList] = useState(null);

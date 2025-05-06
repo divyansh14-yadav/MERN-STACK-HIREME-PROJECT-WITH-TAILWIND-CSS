@@ -12,7 +12,7 @@
 // import authConfig from "../../api/config";
 // import { useLocation, useNavigate, useParams } from "react-router-dom";
 
-// const socket = io("http://192.168.1.2:8000");
+// const socket = io("https://hireback-1.onrender.com");
 
 // const ChatDashboard = () => {
 //   const [messages, setMessages] = useState([]);
@@ -194,7 +194,7 @@ import authConfig from "../../api/config";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 import Loder from "../loader/loder";
 
-const socket = io("http://192.168.1.2:8000");
+const socket = io("https://hireback-1.onrender.com");
 
 const ChatDashboard = () => {
   const [messages, setMessages] = useState([]);

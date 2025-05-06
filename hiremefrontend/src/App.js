@@ -43,9 +43,11 @@ import { messaging, getToken, onMessage } from "./firebase";
 import axios from "axios";
 import authConfig from './api/config';
 
-const socket = io("http://192.168.1.2:8000/api/v1");
+const socket = io("https://hireback-1.onrender.com/api/v1");
 function App() {
+
   const [profileImage, setProfileImage] = useState("");
+
   console.log(profileImage,"cloudimageprofile");
   
   // for socket io
