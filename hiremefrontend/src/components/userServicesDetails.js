@@ -59,7 +59,7 @@ const UserServicesDetails = () => {
 
   return (
     <div>
-      <Nav />
+      
       <CategorySlider />
       <div className="xl:mt-23 mt-10 xl:w-[85%] w-full m-auto xl:flex block justify-between">
         <div className="xl:w-[33%] w-full">
@@ -68,7 +68,7 @@ const UserServicesDetails = () => {
               <div className="w-[150px] h-[150px] m-auto pt-15">
                 <img
                   className="w-[100%] h-[145px] rounded-full"
-                  src={`https://hireback-1.onrender.com//${userDetails?.userDetails?.authId?.authProfile}`}
+                  src={userDetails?.userDetails?.authId?.authProfile}
                 />
               </div>
               <div className="mt-18">
@@ -153,7 +153,13 @@ const UserServicesDetails = () => {
               <div className="w-[90%]  m-auto ">
                 <img
                   className={index < 2 ? "w-[100%] h-[150px]" : "w-[100%]"}
-                  src={`https://hireback-1.onrender.com//${portFolio.portfolioImage}`}
+                  // src={portFolio.portfolioImage}
+                  src={
+                    typeof portFolio.portfolioImage ===
+                    "object"
+                      ? portFolio.portfolioImage.url
+                      : portFolio.portfolioImage
+                  }
                 />
               </div>
             ))}
@@ -210,11 +216,11 @@ const UserServicesDetails = () => {
                     speed={500}
                     slidesToShow={1}
                   >
-                    {userCreateServices?.serviceImage?.map((imgd, imgIndex) => (
+                    {userCreateServices?.serviceImage?.url?.map((imgd, imgIndex) => (
                       <img
                         key={imgIndex}
                         className="rounded-t-[10px] w-full h-[150px]"
-                        src={`https://hireback-1.onrender.com//${imgd}`}
+                        src={imgd}
                         alt="Service"
                       />
                     ))}
@@ -224,7 +230,7 @@ const UserServicesDetails = () => {
                     <div className="h-[40px] w-[48px]">
                       <img
                         className="w-[70%] h-[30px] rounded-[45px]"
-                        src={`https://hireback-1.onrender.com//${userDetails.userDetails.authId.authProfile}`}
+                        src={userDetails.userDetails.authId.authProfile}
                       />
                     </div>
                     <Link
@@ -284,7 +290,7 @@ const UserServicesDetails = () => {
                       {/* Avatar */}
                       <div className="min-w-[50px]">
                         <img
-                          src={`https://hireback-1.onrender.com//${review?.reviewerId?.authProfile}`}
+                          src={review?.reviewerId?.authProfile}
                           alt="Reviewer Avatar"
                           className="h-12 w-12 rounded-full object-cover border border-gray-200"
                         />

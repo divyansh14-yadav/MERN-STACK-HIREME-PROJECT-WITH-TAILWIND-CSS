@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import CategorySlider from '../../components/category'
 import axios from 'axios'
-import { useNavigate } from 'react-router-dom'
+import { useLocation, useNavigate } from 'react-router-dom'
 import authConfig from '../../api/config'
 import { toast } from "react-toastify";
 import Nav from '../../components/nav'
@@ -9,6 +9,8 @@ import Footer from '../../components/footer'
 import { RegisterProfileValidation } from '../../validations/RegisterValidation'
 
 const SignUpProfile = (data) => {
+  console.log(data,"123");
+  
     const [firstName, setFirstName] = useState("")
     const [country, setCountry] = useState("")
     const [mobile_number, setMobile] = useState("")
@@ -18,13 +20,17 @@ const SignUpProfile = (data) => {
     const [zip_code, setZipCode] = useState("")
 
     const navigate = useNavigate()
+    const location = useLocation();
+    
+      const firstNames = location.state?.firstName;
+      console.log(firstNames,"name");
+    
 
     const handleSubmit = async (event) => {
         event.preventDefault()
 
         try {
             await RegisterProfileValidation.validate({
-                firstName,
                 country,
                 mobile_number,
                 address,
@@ -33,7 +39,7 @@ const SignUpProfile = (data) => {
                 zip_code
             },{ abortEarly: false })
             const response = await authConfig.post("registerAuth", {
-                firstName,
+                firstName:firstNames,
                 country,
                 mobile_number,
                 address,
@@ -74,7 +80,7 @@ const SignUpProfile = (data) => {
 
     return (
         <div className="min-h-screen flex flex-col">
-          <Nav />
+          
           <CategorySlider />
       
           <div className="flex flex-1 items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
@@ -91,11 +97,11 @@ const SignUpProfile = (data) => {
                   </label>
                   <input
                     type="text"
-                    value={firstName}
-                    onChange={(e) => setFirstName(e.target.value)}
-                    className="appearance-none rounded-md border border-gray-300 px-4 py-3 w-full text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-[#f78318] focus:border-[#f78318]"
+                    value={firstNames}
+                    // onChange={(e) => setFirstName(e.target.value)}
+                    className="appearance-none rounded-md border  bg-[#cccccc] border-gray-300 px-4 py-3 w-full text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-[#f78318] focus:border-[#f78318]"
                     placeholder="Enter username"
-                    required
+                    readOnly
                   />
                 </div>
       

@@ -74,7 +74,22 @@ const CreateTask = () => {
 
   const [asClintRejectProject, setasClintRejectProject] = useState([]);
 
-  const handleOpenModalForCreateTask = () => setOpenModalForCreateTask(true);
+  const handleOpenModalForCreateTask = () => {
+    
+    setOpenModalForCreateTask(true);
+    setTaskTitle("")
+    setLocation("");
+    setTaskDescription("");
+    setTask_Max_Budget("");
+    setTask_Min_Budget("");
+    set_task_logo("");
+    setfixed_Task_type("");
+    setTask_Skill_Required("");
+    setTaskCategoryId("");
+    setTaskIdForUpdatedTask("");
+    setUploadedFileName("")
+
+  }
 
   const handleCloseModalForCreateTask = () => setOpenModalForCreateTask(false);
 
@@ -321,9 +336,7 @@ const CreateTask = () => {
   useEffect(() => {
     const fetchasClintRuningProject = async () => {
       try {
-        const response = await authConfig.get(
-          `/running/${authId}`
-        );
+        const response = await authConfig.get(`/running/${authId}`);
         if (response.status === 200) {
           setasClintRuningProject(response.data.runningTask);
           setasClintRejectProject(response.data.rejectedTask);
@@ -337,225 +350,90 @@ const CreateTask = () => {
     fetchasClintRuningProject();
   }, [authId]);
 
-  if (loading) {
-    return <Loder />;
-  }
+  // if (loading) {
+  //   return <Loder />;
+  // }
 
   return (
-    <div>
-      <div className="bg-[#eef2f8] pb-10">
-        <Nav />
-        <OtherNav />
-        {/* <div className="flex justify-between bg-white mt-8 shadow-xl rounded-t-md w-[80%] m-auto items-center">
-          <div className="xl:w-[60%] w-full xl:ml-70 rounded-md py-4 flex justify-center gap-7">
-            {headingsForTask.map((heading, index) => (
-              <button
-                key={index}
-                onClick={() => setActiveStep(index)}
-                className={
-                  activeStep === index
-                    ? "text-[#F78318] bg-[#f8f9fa] cursor-pointer font-semibold text-[1.1rem] p-1.5 w-[180px] rounded-md"
-                    : "text-[#888686] cursor-pointer bg-[#f8f9fa] font-semibold text-[1.1rem] p-1.5 w-[180px] rounded-md"
-                }
-              >
-                {heading}
-              </button>
-            ))}
-          </div>
+    <div className="bg-[#eef2f8] pb-10">
+      
+      <OtherNav />
+      {loading ? (
+        <Loder />
+      ) : (
+        <>
+         <div className="container mx-auto px-4 py-6 w-[90%] md:w-[82%]">
+  {/* Top Header Section */}
+  <div className="flex sm:flex-row items-center bg-white shadow-xl rounded-t-md mb-6 xl:pb-0 pb-4 overflow-x-auto w-full">
+   {/* Navigation Buttons */}
+   <div className="flex gap-2 min-w-max p-1">
+    {headingsForTask.map((heading, index) => (
+     <button
+      key={index}
+      onClick={() => setActiveStep(index)}
+      className={`transition-all duration-300 ease-in-out ${
+       activeStep === index ? "text-[#F78318]" : "text-[#4b5563]"
+      } font-semibold text-sm sm:text-base md:text-[1rem] p-2 sm:p-3 w-[140px] sm:w-[160px] md:w-[180px] rounded-md cursor-pointer flex items-center justify-center gap-2`}
+     >
+      {index === 0 && <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V7m-16 0l-4 4m0 0l4 4m-4-4h14m-2-4h.01M17 16h.01"></path></svg>} {/* Briefcase/User Icon for "As freelancer" */}
+      {index === 1 && <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h.01m9-4h1m-1 4h.01m3-4h.01m-3 4h.01"></path></svg>} {/* Building/User Group Icon for "As client" */}
+      {heading}
+     </button>
+    ))}
+   </div>
 
-          <div className="w-[10%] mr-5">
-            {activeStep === 1 ? (
-              <button
-                className="border-2 border-[#f78318] text-[1rem] w-full p-2 font-bold text-white bg-[#f78318] rounded-md cursor-pointer"
-                onClick={handleOpenModalForCreateTask}
-              >
-                + Create Task
-              </button>
-            ) : null}
-          </div>
-        </div>
+   {/* Create Task Button */}
+   <div className="ml-auto flex-shrink-0 pr-4">
+    {activeStep === 1 && (
+     <button
+      className="bg-[#F78318] text-white font-semibold py-2 px-4 rounded-md shadow hover:bg-orange-600 transition duration-300 text-sm sm:text-base flex items-center gap-2"
+      onClick={handleOpenModalForCreateTask}
+     >
+      <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path></svg> {/* Plus Icon */}
+     Create Task
+     </button>
+    )}
+   </div>
+  </div>
 
-        <div className="xl:w-[80%] w-[80%] overflow-x-auto bg-white  m-auto rounded-b-md justify-center flex gap-7 pb-3">
-          <button
-            onClick={() => setActiveStepforSubTab(null)}
-            className={
-              activeStepforSubTab === null
-                ? "text-[#F78318] bg-[#f8f9fa] cursor-pointer font-semibold text-[1.1rem] xl:p-1.5 p-1 xl:w-[180px] w-full rounded-md"
-                : "text-[#888686] cursor-pointer bg-[#f8f9fa] font-semibold text-[1.1rem] xl:p-1.5 p-1 xl:w-[180px] w-full rounded-md"
-            }
-          >
-            All Projects
-          </button>
-
-          {headingsForSubTask.map((heading, index) => (
-            <button
-              key={index}
-              onClick={() => setActiveStepforSubTab(index)}
-              className={
-                activeStepforSubTab === index
-                  ? "text-[#F78318] bg-[#f8f9fa] cursor-pointer font-semibold text-[1.1rem] p-1.5 w-[180px] rounded-md"
-                  : "text-[#888686] cursor-pointer bg-[#f8f9fa] font-semibold text-[1.1rem] p-1.5 w-[180px] rounded-md"
-              }
-            >
-              {heading}
-            </button>
-          ))}
-        </div> */}
-
-        <div className="container mx-auto px-4 py-6 w-[90%] md:w-[82%]">
-          {/* Top Header Section */}
-          <div className="flex flex-col sm:flex-row justify-between items-center bg-white shadow-xl rounded-t-md mb-6 xl:pb-0 pb-4">
-            {/* Navigation Buttons */}
-            <div className="flex flex-wrap justify-center sm:justify-start gap-2 sm:gap-4 md:gap-7 w-full sm:w-3/5 p-4">
-              {headingsForTask.map((heading, index) => (
-                <button
-                  key={index}
-                  onClick={() => setActiveStep(index)}
-                  className={`transition-all duration-300 ease-in-out ${
-                    activeStep === index
-                      ? "text-[#F78318] bg-[#F8F9FA] shadow-md scale-105"
-                      : "text-[#888686] bg-[#F8F9FA] hover:bg-gray-100"
-                  } font-semibold text-sm sm:text-base md:text-[1.1rem] p-2 sm:p-3 w-[140px] sm:w-[160px] md:w-[180px] rounded-md cursor-pointer`}
-                >
-                  {heading}
-                </button>
-              ))}
-            </div>
-            {/* Create Task Button */}
-            <div className="w-full sm:w-1/5 xl:p-4 flex justify-center sm:justify-end mt-4 sm:mt-0">
-              {activeStep === 1 && (
-                <button
-                  className="bg-[#F78318] text-white font-semibold py-2 px-4 rounded-md shadow hover:bg-orange-600 transition duration-300 text-sm sm:text-base"
-                  onClick={handleOpenModalForCreateTask}
-                >
-                  + Create Task
-                </button>
-              )}
-            </div>
-          </div>
-          {/* Sub Tab Section */}
-          <div className="flex flex-row justify-start bg-white rounded-b-md shadow-md mb-8 overflow-x-auto xl:pt-0 pt-[14px] px-4 pb-4">
-            {/* All Projects Button */}
-            <button
-              onClick={() => setActiveStepforSubTab(null)}
-              className={`transition-all duration-300 whitespace-nowrap ${
-                activeStepforSubTab === null
-                  ? "text-[#F78318] bg-[#F8F9FA] shadow-md scale-105"
-                  : "text-[#888686] bg-[#F8F9FA] hover:bg-gray-100"
-              } font-semibold text-sm sm:text-base md:text-[1.1rem] p-2 sm:p-3 rounded-md cursor-pointer mr-2`}
-              style={{ minWidth: "140px" }}
-            >
-              All Projects
-            </button>
-            {/* Sub Tasks Buttons */}
-            {headingsForSubTask.map((heading, index) => (
-              <button
-                key={index}
-                onClick={() => setActiveStepforSubTab(index)}
-                className={`transition-all duration-300 whitespace-nowrap ${
-                  activeStepforSubTab === index
-                    ? "text-[#F78318] bg-[#F8F9FA] shadow-md scale-105"
-                    : "text-[#888686] bg-[#F8F9FA] hover:bg-gray-100"
-                } font-semibold text-sm sm:text-base md:text-[1.1rem] p-2 sm:p-3 rounded-md cursor-pointer mr-2`}
-                style={{ minWidth: "140px" }}
-              >
-                {heading}
-              </button>
-            ))}
-          </div>
-        </div>
-        <div className="w-[80%] m-auto rounded-md bg-white overflow-x-auto">
-          {activeStep === 0 &&
-          (activeStepforSubTab === null ||
-            activeStepforSubTab === undefined) ? (
-            <table className="min-w-full text-left text-sm font-light">
-              <thead className="border-b text-[0.875rem]">
-                <tr>
-                  <th className="px-6 py-4">Project Title</th>
-                  <th className="px-6 py-4">Bid Description</th>
-                  <th className="px-6 py-4">Project Owner</th>
-                  <th className="px-6 py-4">Bid Amount</th>
-                  <th className="px-6 py-4">Delivery Status</th>
-                  <th className="px-6 py-4">Days/hrs</th>
-                  <th className="px-6 py-4">Client Status</th>
-                  <th className="px-6 py-4">Your Status</th>
-                </tr>
-              </thead>
-              <tbody>
-                {filteredtask.length ? (
-                  filteredtask.map((bid, index) => (
-                    <tr key={index} className="border-b">
-                      <td className="px-6 py-4 text-[#F78318] font-semibold">
-                        <Link to={`/taskSubDetailed/${bid.taskId?._id}`}>
-                          {bid?.taskId?.taskTitle?.substring(0, 80) ||
-                            "No Title"}
-                          ...
-                        </Link>
-                      </td>
-                      <td className="px-6 py-4 font-semibold">
-                        {bid?.description?.substring(0, 80) || "Unknown"}
-                      </td>
-                      <td className="px-6 py-6 text-[#F78318] font-bold">
-                        <Link to={`/userServices/${bid?.TaskCreaterId?._id}`}>
-                          {bid?.TaskCreaterId?.firstName || "N/A"}
-                        </Link>
-                      </td>
-                      <td className="px-6 py-4 font-bold">
-                        {bid?.minimalRate || "N/A"}
-                      </td>
-                      <td className="px-6 py-4 font-bold">
-                        {bid?.deliveryTime || "N/A"}
-                      </td>
-                      <td className="px-6 py-4">
-                        <p className="p-1.5 w-full text-center font-bold rounded-md">
-                          {bid?.deliveryDays}
-                        </p>
-                      </td>
-                      <td className="px-6 py-4 font-bold">
-                        {bid?.status || "N/A"}
-                      </td>
-                      <td className="px-6 py-4 font-bold flex gap-2">
-                        <button
-                          className="text-[#F78318] cursor-pointer"
-                          onClick={() =>
-                            handleCreateAcceptOrrejectStatus(
-                              "Accepted",
-                              bid._id
-                            )
-                          }
-                        >
-                          Accepted
-                        </button>
-                        <button
-                          className="text-[#F78318] cursor-pointer"
-                          onClick={() =>
-                            handleCreateAcceptOrrejectStatus(
-                              "Rejected",
-                              bid._id
-                            )
-                          }
-                        >
-                          Rejected
-                        </button>
-                      </td>
-                    </tr>
-                  ))
-                ) : (
-                  <tr>
-                    <td colSpan={8} className="text-center py-10">
-                      <img
-                        className="w-[9%] m-auto"
-                        src="https://script.viserlab.com/metalance/assets/templates/basic/images/empty_list.png"
-                        alt="No Projects"
-                      />
-                      <h1 className="mt-3 text-[#CFCFCF]">No projects found</h1>
-                    </td>
-                  </tr>
-                )}
-              </tbody>
-            </table>
-          ) : activeStep === 0 && activeStepforSubTab === 0 ? (
-            <div className="overflow-x-auto">
+  {/* Sub Tab Section */}
+  <div className="flex flex-row justify-start bg-white rounded-b-md shadow-md mb-8 overflow-x-auto xl:pt-0 pt-[14px] px-4">
+   {/* All Projects Button */}
+   <button
+    onClick={() => setActiveStepforSubTab(null)}
+    className={`transition-all duration-300 whitespace-nowrap ${
+     activeStepforSubTab === null
+      ? "text-[#F78318]"
+      : "text-[#4b5563]"
+    } font-semibold text-sm sm:text-base md:text-[1rem] p-2 sm:p-3 rounded-md cursor-pointer mr-2 flex items-center justify-center gap-2`}
+    style={{ minWidth: "140px" }}
+   >
+    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V7m-16 0l-4 4m0 0l4 4m-4-4h14m-2-4h.01M17 16h.01"></path></svg> {/* Folder/List Icon */}
+    All Projects
+   </button>
+   {/* Sub Tasks Buttons */}
+   {headingsForSubTask.map((heading, index) => (
+    <button
+     key={index}
+     onClick={() => setActiveStepforSubTab(index)}
+     className={`transition-all duration-300 whitespace-nowrap ${
+      activeStepforSubTab === index
+       ? "text-[#F78318]"
+       : "text-[#4b5563]"
+     } font-semibold text-sm sm:text-base md:text-[1rem] p-2 sm:p-3 rounded-md cursor-pointer mr-2 flex items-center justify-center gap-2`}
+     style={{ minWidth: "140px" }}
+    >
+     {index === 0 && <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>} {/* Checkmark/Play Icon for "Running Project" */}
+     {index === 1 && <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>} {/* Cross/Ban Icon for "Past/Reject Project" */}
+     {heading}
+    </button>
+   ))}
+  </div>
+ </div>
+          <div className="w-[80%] m-auto rounded-md bg-white overflow-x-auto">
+            {activeStep === 0 &&
+            (activeStepforSubTab === null ||
+              activeStepforSubTab === undefined) ? (
               <table className="min-w-full text-left text-sm font-light">
                 <thead className="border-b text-[0.875rem]">
                   <tr>
@@ -570,50 +448,64 @@ const CreateTask = () => {
                   </tr>
                 </thead>
                 <tbody>
-                  {bid.length ? (
-                    bid
-                      .filter(
-                        (project) =>
-                          project.confirmation_bid_user === "Accepted"
-                      )
-                      .map((bid, index) => (
-                        <tr key={index} className="border-b">
-                          <td className="px-6 py-4 text-[#F78318] font-semibold">
-                            <Link to={`/taskSubDetailed/${bid.taskId?._id}`}>
-                              {bid?.taskId?.taskTitle?.substring(0, 80) ||
-                                "No Title"}
-                              ...
-                            </Link>
-                          </td>
-                          <td className="px-6 py-4 font-semibold">
-                            {bid?.description?.substring(0, 80) || "Unknown"}
-                          </td>
-                          <td className="px-6 py-6 text-[#F78318] font-bold">
-                            <Link
-                              to={`/userServices/${bid?.TaskCreaterId?._id}`}
-                            >
-                              {bid?.TaskCreaterId?.firstName || "N/A"}
-                            </Link>
-                          </td>
-                          <td className="px-6 py-4 font-bold">
-                            {bid?.minimalRate || "N/A"}
-                          </td>
-                          <td className="px-6 py-4 font-bold">
-                            {bid?.deliveryTime || "N/A"}
-                          </td>
-                          <td className="px-6 py-4">
-                            <p className="p-1.5 w-full text-center font-bold rounded-md">
-                              {bid?.deliveryDays}
-                            </p>
-                          </td>
-                          <td className="px-6 py-4 font-bold">
-                            {bid?.status || "N/A"}
-                          </td>
-                          <td className="px-6 py-4 font-bold">
-                            {bid?.confirmation_bid_user}
-                          </td>
-                        </tr>
-                      ))
+                  {filteredtask.length ? (
+                    filteredtask.map((bid, index) => (
+                      <tr key={index} className="border-b">
+                        <td className="px-6 py-4 text-[#F78318] font-semibold">
+                          <Link to={`/taskSubDetailed/${bid.taskId?._id}`}>
+                            {bid?.taskId?.taskTitle?.substring(0, 80) ||
+                              "No Title"}
+                            ...
+                          </Link>
+                        </td>
+                        <td className="px-6 py-4 font-semibold">
+                          {bid?.description?.substring(0, 80) || "Unknown"}
+                        </td>
+                        <td className="px-6 py-6 text-[#F78318] font-bold">
+                          <Link to={`/userServices/${bid?.TaskCreaterId?._id}`}>
+                            {bid?.TaskCreaterId?.firstName || "N/A"}
+                          </Link>
+                        </td>
+                        <td className="px-6 py-4 font-bold">
+                          {bid?.minimalRate || "N/A"}
+                        </td>
+                        <td className="px-6 py-4 font-bold">
+                          {bid?.deliveryTime || "N/A"}
+                        </td>
+                        <td className="px-6 py-4">
+                          <p className="p-1.5 w-full text-center font-bold rounded-md">
+                            {bid?.deliveryDays}
+                          </p>
+                        </td>
+                        <td className="px-6 py-4 font-bold">
+                          {bid?.status || "N/A"}
+                        </td>
+                        <td className="px-6 py-4 font-bold flex gap-2">
+                          <button
+                            className="text-[#F78318] cursor-pointer"
+                            onClick={() =>
+                              handleCreateAcceptOrrejectStatus(
+                                "Accepted",
+                                bid._id
+                              )
+                            }
+                          >
+                            Accepted
+                          </button>
+                          <button
+                            className="text-[#F78318] cursor-pointer"
+                            onClick={() =>
+                              handleCreateAcceptOrrejectStatus(
+                                "Rejected",
+                                bid._id
+                              )
+                            }
+                          >
+                            Rejected
+                          </button>
+                        </td>
+                      </tr>
+                    ))
                   ) : (
                     <tr>
                       <td colSpan={8} className="text-center py-10">
@@ -630,16 +522,14 @@ const CreateTask = () => {
                   )}
                 </tbody>
               </table>
-            </div>
-          ) : activeStep === 0 && activeStepforSubTab === 1 ? (
-            <>
+            ) : activeStep === 0 && activeStepforSubTab === 0 ? (
               <div className="overflow-x-auto">
                 <table className="min-w-full text-left text-sm font-light">
                   <thead className="border-b text-[0.875rem]">
                     <tr>
                       <th className="px-6 py-4">Project Title</th>
                       <th className="px-6 py-4">Bid Description</th>
-                      <th className="px-6 py-4">Project owner</th>
+                      <th className="px-6 py-4">Project Owner</th>
                       <th className="px-6 py-4">Bid Amount</th>
                       <th className="px-6 py-4">Delivery Status</th>
                       <th className="px-6 py-4">Days/hrs</th>
@@ -652,7 +542,7 @@ const CreateTask = () => {
                       bid
                         .filter(
                           (project) =>
-                            project.confirmation_bid_user === "Rejected"
+                            project.confirmation_bid_user === "Accepted"
                         )
                         .map((bid, index) => (
                           <tr key={index} className="border-b">
@@ -666,13 +556,13 @@ const CreateTask = () => {
                             <td className="px-6 py-4 font-semibold">
                               {bid?.description?.substring(0, 80) || "Unknown"}
                             </td>
-                            <Link
-                              to={`/userServices/${bid?.TaskCreaterId?._id}`}
-                            >
-                              <td className="px-6 py-6 text-[#F78318] font-bold">
+                            <td className="px-6 py-6 text-[#F78318] font-bold">
+                              <Link
+                                to={`/userServices/${bid?.TaskCreaterId?._id}`}
+                              >
                                 {bid?.TaskCreaterId?.firstName || "N/A"}
-                              </td>
-                            </Link>
+                              </Link>
+                            </td>
                             <td className="px-6 py-4 font-bold">
                               {bid?.minimalRate || "N/A"}
                             </td>
@@ -687,7 +577,6 @@ const CreateTask = () => {
                             <td className="px-6 py-4 font-bold">
                               {bid?.status || "N/A"}
                             </td>
-
                             <td className="px-6 py-4 font-bold">
                               {bid?.confirmation_bid_user}
                             </td>
@@ -695,7 +584,7 @@ const CreateTask = () => {
                         ))
                     ) : (
                       <tr>
-                        <td colSpan={5} className="text-center py-10">
+                        <td colSpan={8} className="text-center py-10">
                           <img
                             className="w-[9%] m-auto"
                             src="https://script.viserlab.com/metalance/assets/templates/basic/images/empty_list.png"
@@ -710,10 +599,92 @@ const CreateTask = () => {
                   </tbody>
                 </table>
               </div>
-            </>
-          ) : null}
+            ) : activeStep === 0 && activeStepforSubTab === 1 ? (
+              <>
+                <div className="overflow-x-auto">
+                  <table className="min-w-full text-left text-sm font-light">
+                    <thead className="border-b text-[0.875rem]">
+                      <tr>
+                        <th className="px-6 py-4">Project Title</th>
+                        <th className="px-6 py-4">Bid Description</th>
+                        <th className="px-6 py-4">Project owner</th>
+                        <th className="px-6 py-4">Bid Amount</th>
+                        <th className="px-6 py-4">Delivery Status</th>
+                        <th className="px-6 py-4">Days/hrs</th>
+                        <th className="px-6 py-4">Client Status</th>
+                        <th className="px-6 py-4">Your Status</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {bid.length ? (
+                        bid
+                          .filter(
+                            (project) =>
+                              project.confirmation_bid_user === "Rejected"
+                          )
+                          .map((bid, index) => (
+                            <tr key={index} className="border-b">
+                              <td className="px-6 py-4 text-[#F78318] font-semibold">
+                                <Link
+                                  to={`/taskSubDetailed/${bid.taskId?._id}`}
+                                >
+                                  {bid?.taskId?.taskTitle?.substring(0, 80) ||
+                                    "No Title"}
+                                  ...
+                                </Link>
+                              </td>
+                              <td className="px-6 py-4 font-semibold">
+                                {bid?.description?.substring(0, 80) ||
+                                  "Unknown"}
+                              </td>
+                              <Link
+                                to={`/userServices/${bid?.TaskCreaterId?._id}`}
+                              >
+                                <td className="px-6 py-6 text-[#F78318] font-bold">
+                                  {bid?.TaskCreaterId?.firstName || "N/A"}
+                                </td>
+                              </Link>
+                              <td className="px-6 py-4 font-bold">
+                                {bid?.minimalRate || "N/A"}
+                              </td>
+                              <td className="px-6 py-4 font-bold">
+                                {bid?.deliveryTime || "N/A"}
+                              </td>
+                              <td className="px-6 py-4">
+                                <p className="p-1.5 w-full text-center font-bold rounded-md">
+                                  {bid?.deliveryDays}
+                                </p>
+                              </td>
+                              <td className="px-6 py-4 font-bold">
+                                {bid?.status || "N/A"}
+                              </td>
 
-          {/* {activeStep === 1 &&
+                              <td className="px-6 py-4 font-bold">
+                                {bid?.confirmation_bid_user}
+                              </td>
+                            </tr>
+                          ))
+                      ) : (
+                        <tr>
+                          <td colSpan={5} className="text-center py-10">
+                            <img
+                              className="w-[9%] m-auto"
+                              src="https://script.viserlab.com/metalance/assets/templates/basic/images/empty_list.png"
+                              alt="No Projects"
+                            />
+                            <h1 className="mt-3 text-[#CFCFCF]">
+                              No projects found
+                            </h1>
+                          </td>
+                        </tr>
+                      )}
+                    </tbody>
+                  </table>
+                </div>
+              </>
+            ) : null}
+
+            {/* {activeStep === 1 &&
           (activeStepforSubTab === null ||
             activeStepforSubTab === undefined) ? (
             <div className="overflow-x-auto">
@@ -886,239 +857,95 @@ const CreateTask = () => {
             ) : null
           )  : null} */}
 
-          {activeStep === 1 ? (
-            activeStepforSubTab === null ||
-            activeStepforSubTab === undefined ? (
-              // Block 1: Default view (no subtabs selected)
-              <div className="overflow-x-auto">
-                <table className="min-w-full text-left text-sm font-light">
-                  <thead className="border-b text-[0.875rem]">
-                    <tr>
-                      <th className="px-6 py-4">Task Title</th>
-                      <th className="px-6 py-4">Task Description</th>
-                      <th className="px-6 py-4">Location</th>
-                      <th className="px-6 py-4">Max Budget</th>
-                      <th className="px-6 py-4">Min Budget</th>
-                      <th className="px-6 py-4">Status</th>
-                      <th className="px-6 py-4">Action</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {task.length ? (
-                      task.map((task, index) => (
-                        <tr key={index} className="border-b">
-                          <td className="px-6 py-4 text-[#F78318] font-semibold">
-                            <Link to={`/taskSubDetailed/${task._id}`}>
-                              {task?.taskTitle?.substring(0, 80) || "No Title"}
-                              ...
-                            </Link>
-                          </td>
-                          <td className="px-6 py-4 text-[#F78318] font-semibold">
-                            <Link to={`/taskSubDetailed/${task._id}`}>
-                              {task?.taskDescription.substring(0, 80) ||
-                                "Unknown"}
-                            </Link>
-                          </td>
-                          <td className="px-6 py-4 font-bold">
-                            {task?.location || "N/A"}
-                          </td>
-                          <td className="px-6 py-4 font-bold">
-                            {task?.Task_Max_Budget || "N/A"}
-                          </td>
-                          <td className="px-6 py-4 font-bold">
-                            {task?.Task_Min_Budget || "N/A"}
-                          </td>
-                          <td className="px-6 py-4">
-                            <p className="bg-[#ffab1a26] text-[#FFAB1A] p-1.5 w-full text-center font-semibold rounded-md">
-                              {task?.taskVerify ? "verified" : "not verified"}
-                            </p>
-                          </td>
-                          <td className="px-6 py-4">
-                            <div className="border-1 w-[55%] h-8 border-[#0000001a] rounded-full">
-                              <FontAwesomeIcon
-                                className="cursor-pointer px-2.5 py-2"
-                                onClick={() => toggleDropdown(index)}
-                                icon={faEllipsisVertical}
-                              />
-                              {openDropdown === index && (
-                                <div
-                                  ref={dropdownRef}
-                                  className="absolute right-32 mt-2 w-32 bg-white border rounded-lg shadow-lg z-10"
-                                >
-                                  <ul className="py-2 px-2 text-sm text-gray-700">
-                                    <li>
-                                      <button
-                                        onClick={() => handleEditClick(task)}
-                                        className="block px-4 py-2 w-full text-left hover:bg-gray-100"
-                                      >
-                                        Edit
-                                      </button>
-                                    </li>
-                                    <li>
-                                      <button
-                                        onClick={() =>
-                                          handleDeleteTask(task._id)
-                                        }
-                                        className="block px-4 py-2 w-full text-left hover:bg-gray-100"
-                                      >
-                                        Delete
-                                      </button>
-                                    </li>
-                                  </ul>
-                                </div>
-                              )}
-                            </div>
-                          </td>
-                        </tr>
-                      ))
-                    ) : (
-                      <tr>
-                        <td colSpan={7} className="text-center py-10">
-                          <img
-                            className="w-[9%] m-auto"
-                            src="https://script.viserlab.com/metalance/assets/templates/basic/images/empty_list.png"
-                            alt="No Projects"
-                          />
-                          <h1 className="mt-3 text-[#CFCFCF]">
-                            No projects found
-                          </h1>
-                        </td>
-                      </tr>
-                    )}
-                  </tbody>
-                </table>
-              </div>
-            ) : Number(activeStepforSubTab) === 0 && authId ? (
-              // Block 2: Running projects
-              <div className="overflow-x-auto">
-                <table className="min-w-full text-left text-sm font-light">
-                  <thead className="border-b text-[0.875rem]">
-                    <tr>
-                      <th className="px-6 py-4">Project Title</th>
-                      <th className="px-6 py-4">Freelancer</th>
-                      <th className="px-6 py-4">Project Owner</th>
-                      <th className="px-6 py-4">Bid Amount</th>
-                      <th className="px-6 py-4">Delivery Status</th>
-                      <th className="px-6 py-4">Days/hrs</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {asClintRuningProject.length ? (
-                      asClintRuningProject.map((clientRunning, index) => (
-                        <tr key={index} className="border-b">
-                          <td className="px-6 py-4 text-[#F78318] font-semibold">
-                            <Link
-                              to={`/taskSubDetailed/${clientRunning.taskId?._id}`}
-                            >
-                              {clientRunning?.taskId?.taskTitle?.substring(
-                                0,
-                                80
-                              ) || "No Title"}
-                              ...
-                            </Link>
-                          </td>
-                          <td className="px-6 py-4 font-semibold">
-                            {clientRunning?.loginAuthId?.firstName || "Unknown"}
-                          </td>
-                          <td className="px-6 py-6 text-[#F78318] font-bold">
-                            <Link
-                              to={`/userServices/${clientRunning?.TaskCreaterId?._id}`}
-                            >
-                              {clientRunning?.TaskCreaterId?.firstName || "N/A"}
-                            </Link>
-                          </td>
-                          <td className="px-6 py-4 font-bold">
-                            {clientRunning?.minimalRate || "N/A"}
-                          </td>
-                          <td className="px-6 py-4 font-bold">
-                            {clientRunning?.deliveryTime || "N/A"}
-                          </td>
-                          <td className="px-6 py-4">
-                            <p className="p-1.5 w-full text-center font-bold rounded-md">
-                              {clientRunning?.deliveryDays}
-                            </p>
-                          </td>
-                        </tr>
-                      ))
-                    ) : (
-                      <tr>
-                        <td colSpan={6} className="text-center py-10">
-                          <img
-                            className="w-[9%] m-auto"
-                            src="https://script.viserlab.com/metalance/assets/templates/basic/images/empty_list.png"
-                            alt="No Projects"
-                          />
-                          <h1 className="mt-3 text-[#CFCFCF]">
-                            No projects found
-                          </h1>
-                        </td>
-                      </tr>
-                    )}
-                  </tbody>
-                </table>
-              </div>
-            ) : Number(activeStepforSubTab) === 1 ? (
-              // Block 3: Rejected projects
-              <div>
-                <div className="overflow-hidden">
+            {activeStep === 1 ? (
+              activeStepforSubTab === null ||
+              activeStepforSubTab === undefined ? (
+                // Block 1: Default view (no subtabs selected)
+                <div className="overflow-x-auto">
                   <table className="min-w-full text-left text-sm font-light">
                     <thead className="border-b text-[0.875rem]">
                       <tr>
-                        <th className="px-6 py-4">Project Title</th>
-                        <th className="px-6 py-4">Freelancer</th>
-                        <th className="px-6 py-4">Project Owner</th>
-                        <th className="px-6 py-4">Bid Amount</th>
-                        <th className="px-6 py-4">Delivery Status</th>
-                        <th className="px-6 py-4">Days/hrs</th>
+                        <th className="px-6 py-4">Task Title</th>
+                        <th className="px-6 py-4">Task Description</th>
+                        <th className="px-6 py-4">Location</th>
+                        <th className="px-6 py-4">Max Budget</th>
+                        <th className="px-6 py-4">Min Budget</th>
+                        <th className="px-6 py-4">Status</th>
+                        <th className="px-6 py-4">Action</th>
                       </tr>
                     </thead>
                     <tbody>
-                      {asClintRejectProject.length ? (
-                        asClintRejectProject?.map(
-                          (rejectedtaskclient, index) => (
-                            <tr key={index} className="border-b">
-                              <td className="px-6 py-4 text-[#F78318] font-semibold">
-                                <Link
-                                  to={`/taskSubDetailed/${rejectedtaskclient.taskId?._id}`}
-                                >
-                                  {rejectedtaskclient?.taskId?.taskTitle?.substring(
-                                    0,
-                                    80
-                                  ) || "No Title"}
-                                  ...
-                                </Link>
-                              </td>
-                              <td className="px-6 py-4 font-semibold">
-                                {rejectedtaskclient?.description?.substring(
-                                  0,
-                                  80
-                                ) || "Unknown"}
-                              </td>
-                              <Link
-                                to={`/userServices/${rejectedtaskclient?.TaskCreaterId?._id}`}
-                              >
-                                <td className="px-6 py-6 text-[#F78318] font-bold">
-                                  {rejectedtaskclient?.TaskCreaterId
-                                    ?.firstName || "N/A"}
-                                </td>
+                      {task.length ? (
+                        task.map((task, index) => (
+                          <tr key={index} className="border-b">
+                            <td className="px-6 py-4 text-[#F78318] font-semibold">
+                              <Link to={`/taskSubDetailed/${task._id}`}>
+                                {task?.taskTitle?.substring(0, 80) ||
+                                  "No Title"}
+                                ...
                               </Link>
-                              <td className="px-6 py-4 font-bold">
-                                {rejectedtaskclient?.minimalRate || "N/A"}
-                              </td>
-                              <td className="px-6 py-4 font-bold">
-                                {rejectedtaskclient?.deliveryTime || "N/A"}
-                              </td>
-                              <td className="px-6 py-4">
-                                <p className="p-1.5 w-full text-center font-bold rounded-md">
-                                  {rejectedtaskclient?.deliveryDays}
-                                </p>
-                              </td>
-                            </tr>
-                          )
-                        )
+                            </td>
+                            <td className="px-6 py-4 text-[#F78318] font-semibold">
+                              <Link to={`/taskSubDetailed/${task._id}`}>
+                                {task?.taskDescription?.substring(0, 80) ||
+                                  "Unknown"}
+                              </Link>
+                            </td>
+                            <td className="px-6 py-4 font-bold">
+                              {task?.location || "N/A"}
+                            </td>
+                            <td className="px-6 py-4 font-bold">
+                              {task?.Task_Max_Budget || "N/A"}
+                            </td>
+                            <td className="px-6 py-4 font-bold">
+                              {task?.Task_Min_Budget || "N/A"}
+                            </td>
+                            <td className="px-6 py-4">
+                              <p className="bg-[#ffab1a26] text-[#FFAB1A] p-1.5 w-full text-center font-semibold rounded-md">
+                                {task?.taskVerify ? "verified" : "not verified"}
+                              </p>
+                            </td>
+                            <td className="px-6 py-4">
+                              <div className="border-1 w-[55%] h-8 border-[#0000001a] rounded-full">
+                                <FontAwesomeIcon
+                                  className="cursor-pointer px-2.5 py-2"
+                                  onClick={() => toggleDropdown(index)}
+                                  icon={faEllipsisVertical}
+                                />
+                                {openDropdown === index && (
+                                  <div
+                                    ref={dropdownRef}
+                                    className="absolute right-32 mt-2 w-32 bg-white border rounded-lg shadow-lg z-10"
+                                  >
+                                    <ul className="py-2 px-2 text-sm text-gray-700">
+                                      <li>
+                                        <button
+                                          onClick={() => handleEditClick(task)}
+                                          className="block px-4 py-2 w-full text-left hover:bg-gray-100"
+                                        >
+                                          Edit
+                                        </button>
+                                      </li>
+                                      <li>
+                                        <button
+                                          onClick={() =>
+                                            handleDeleteTask(task._id)
+                                          }
+                                          className="block px-4 py-2 w-full text-left hover:bg-gray-100"
+                                        >
+                                          Delete
+                                        </button>
+                                      </li>
+                                    </ul>
+                                  </div>
+                                )}
+                              </div>
+                            </td>
+                          </tr>
+                        ))
                       ) : (
                         <tr>
-                          <td colSpan={5} className="text-center py-10">
+                          <td colSpan={7} className="text-center py-10">
                             <img
                               className="w-[9%] m-auto"
                               src="https://script.viserlab.com/metalance/assets/templates/basic/images/empty_list.png"
@@ -1133,11 +960,159 @@ const CreateTask = () => {
                     </tbody>
                   </table>
                 </div>
-              </div>
-            ) : null
-          ) : null}
-        </div>
-      </div>
+              ) : Number(activeStepforSubTab) === 0 && authId ? (
+                // Block 2: Running projects
+                <div className="overflow-x-auto">
+                  <table className="min-w-full text-left text-sm font-light">
+                    <thead className="border-b text-[0.875rem]">
+                      <tr>
+                        <th className="px-6 py-4">Project Title</th>
+                        <th className="px-6 py-4">Freelancer</th>
+                        <th className="px-6 py-4">Project Owner</th>
+                        <th className="px-6 py-4">Bid Amount</th>
+                        <th className="px-6 py-4">Delivery Status</th>
+                        <th className="px-6 py-4">Days/hrs</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {asClintRuningProject.length ? (
+                        asClintRuningProject.map((clientRunning, index) => (
+                          <tr key={index} className="border-b">
+                            <td className="px-6 py-4 text-[#F78318] font-semibold">
+                              <Link
+                                to={`/taskSubDetailed/${clientRunning.taskId?._id}`}
+                              >
+                                {clientRunning?.taskId?.taskTitle?.substring(
+                                  0,
+                                  80
+                                ) || "No Title"}
+                                ...
+                              </Link>
+                            </td>
+                            <td className="px-6 py-4 font-semibold">
+                              {clientRunning?.loginAuthId?.firstName ||
+                                "Unknown"}
+                            </td>
+                            <td className="px-6 py-6 text-[#F78318] font-bold">
+                              <Link
+                                to={`/userServices/${clientRunning?.TaskCreaterId?._id}`}
+                              >
+                                {clientRunning?.TaskCreaterId?.firstName ||
+                                  "N/A"}
+                              </Link>
+                            </td>
+                            <td className="px-6 py-4 font-bold">
+                              {clientRunning?.minimalRate || "N/A"}
+                            </td>
+                            <td className="px-6 py-4 font-bold">
+                              {clientRunning?.deliveryTime || "N/A"}
+                            </td>
+                            <td className="px-6 py-4">
+                              <p className="p-1.5 w-full text-center font-bold rounded-md">
+                                {clientRunning?.deliveryDays}
+                              </p>
+                            </td>
+                          </tr>
+                        ))
+                      ) : (
+                        <tr>
+                          <td colSpan={6} className="text-center py-10">
+                            <img
+                              className="w-[9%] m-auto"
+                              src="https://script.viserlab.com/metalance/assets/templates/basic/images/empty_list.png"
+                              alt="No Projects"
+                            />
+                            <h1 className="mt-3 text-[#CFCFCF]">
+                              No projects found
+                            </h1>
+                          </td>
+                        </tr>
+                      )}
+                    </tbody>
+                  </table>
+                </div>
+              ) : Number(activeStepforSubTab) === 1 ? (
+                // Block 3: Rejected projects
+                <div>
+                  <div className="overflow-hidden">
+                    <table className="min-w-full text-left text-sm font-light">
+                      <thead className="border-b text-[0.875rem]">
+                        <tr>
+                          <th className="px-6 py-4">Project Title</th>
+                          <th className="px-6 py-4">Freelancer</th>
+                          <th className="px-6 py-4">Project Owner</th>
+                          <th className="px-6 py-4">Bid Amount</th>
+                          <th className="px-6 py-4">Delivery Status</th>
+                          <th className="px-6 py-4">Days/hrs</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {asClintRejectProject.length ? (
+                          asClintRejectProject?.map(
+                            (rejectedtaskclient, index) => (
+                              <tr key={index} className="border-b">
+                                <td className="px-6 py-4 text-[#F78318] font-semibold">
+                                  <Link
+                                    to={`/taskSubDetailed/${rejectedtaskclient.taskId?._id}`}
+                                  >
+                                    {rejectedtaskclient?.taskId?.taskTitle?.substring(
+                                      0,
+                                      80
+                                    ) || "No Title"}
+                                    ...
+                                  </Link>
+                                </td>
+                                <td className="px-6 py-4 font-semibold">
+                                  {rejectedtaskclient?.description?.substring(
+                                    0,
+                                    80
+                                  ) || "Unknown"}
+                                </td>
+                                <Link
+                                  to={`/userServices/${rejectedtaskclient?.TaskCreaterId?._id}`}
+                                >
+                                  <td className="px-6 py-6 text-[#F78318] font-bold">
+                                    {rejectedtaskclient?.TaskCreaterId
+                                      ?.firstName || "N/A"}
+                                  </td>
+                                </Link>
+                                <td className="px-6 py-4 font-bold">
+                                  {rejectedtaskclient?.minimalRate || "N/A"}
+                                </td>
+                                <td className="px-6 py-4 font-bold">
+                                  {rejectedtaskclient?.deliveryTime || "N/A"}
+                                </td>
+                                <td className="px-6 py-4">
+                                  <p className="p-1.5 w-full text-center font-bold rounded-md">
+                                    {rejectedtaskclient?.deliveryDays}
+                                  </p>
+                                </td>
+                              </tr>
+                            )
+                          )
+                        ) : (
+                          <tr>
+                            <td colSpan={5} className="text-center py-10">
+                              <img
+                                className="w-[9%] m-auto"
+                                src="https://script.viserlab.com/metalance/assets/templates/basic/images/empty_list.png"
+                                alt="No Projects"
+                              />
+                              <h1 className="mt-3 text-[#CFCFCF]">
+                                No projects found
+                              </h1>
+                            </td>
+                          </tr>
+                        )}
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              ) : null
+            ) : null}
+          </div>
+        </>
+      )}
       {/* create task pop up */}
       <Dialog
         open={openModalForCreateTask}
@@ -1175,6 +1150,7 @@ const CreateTask = () => {
                             value={taskTitle}
                             name="title"
                             onChange={(e) => setTaskTitle(e.target.value)}
+                            placeholder="Enter Task"
                           />
                         </div>
                         <div className="w-full">
@@ -1205,6 +1181,7 @@ const CreateTask = () => {
                             value={location}
                             name="location"
                             onChange={(e) => setLocation(e.target.value)}
+                            placeholder="Enter Location"
                           />
                         </div>
                       </div>
@@ -1292,6 +1269,7 @@ const CreateTask = () => {
                           className="w-full xl:h-50 h-30 border-1 border-[#00000021] p-3 mt-[10px] outline-none rounded-[5px]"
                           value={taskDescription}
                           onChange={(e) => setTaskDescription(e.target.value)}
+                          placeholder="Enter Description"
                         ></textarea>
                       </div>
                       <div className="xl:flex block gap-5 items-center">

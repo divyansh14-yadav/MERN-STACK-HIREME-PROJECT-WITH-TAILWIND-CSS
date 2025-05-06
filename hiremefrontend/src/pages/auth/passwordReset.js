@@ -59,7 +59,7 @@ const PasswordReset = () => {
 
     return (
         <div className="min-h-screen flex flex-col">
-          <Nav />
+          
           <CategorySlider />
       
           <div className="flex flex-1 items-center justify-center py-12 px-4 sm:px-6 lg:px-8">

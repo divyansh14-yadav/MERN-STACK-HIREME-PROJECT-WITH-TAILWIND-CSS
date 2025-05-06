@@ -10,21 +10,25 @@ import {
 } from "@headlessui/react";
 import authConfig from "../../api/config";
 import { toast } from "react-toastify";
+import Loder from "../loader/loder";
+import { useLocation } from "react-router-dom";
 
 const PaymentDeposit = () => {
+  
   const [openModalForDeposit, setOpenModalForDeposit] = useState(false);
   const [deposit, setDeposit] = useState("");
-  const [paymentMethod, setPaymentMethod] = useState("razorpay"); 
+  const [paymentMethod, setPaymentMethod] = useState("razorpay");
   const authId = JSON.parse(localStorage.getItem("authId"));
+  const [loading, setLoading] = useState(true);
+    const [dashboardData, setDashboardData] = useState({})
 
   const handleOpenModal = () => {
     setOpenModalForDeposit(true);
   };
-  
+
   const handleCloseModal = () => {
     setOpenModalForDeposit(false);
   };
-  
 
   const loadRazorpayScript = () => {
     return new Promise((resolve) => {
@@ -41,16 +45,15 @@ const PaymentDeposit = () => {
       toast.warning("Please enter a valid amount.");
       return;
     }
-  
+
     try {
       const response = await authConfig.put(`/addtocardStripe/${authId}`, {
         amountUSD: deposit,
       });
-  
+
       const data = response.data;
-  
+
       if (data.success && data.checkoutUrl) {
-        // Redirect user to Stripe checkout
         window.location.href = data.checkoutUrl;
       } else {
         toast.error("Failed to create Stripe session.");
@@ -64,25 +67,28 @@ const PaymentDeposit = () => {
   useEffect(() => {
     const urlParams = new URLSearchParams(window.location.search);
     const sessionId = urlParams.get("session_id");
-  
+
     if (sessionId) {
-      authConfig.get(`/verifyStripe/${sessionId}`)
+      authConfig
+        .get(`/verifyStripe/${sessionId}`)
         .then((res) => {
           if (res.data.success) {
             toast.success("Wallet funded successfully!");
-            
           } else {
             toast.error(res.data.message || "Payment failed!");
           }
+          setLoading(false);
         })
         .catch((err) => {
           console.error("Verification error:", err);
           toast.error("Something went wrong during verification.");
+          setLoading(false);
         });
+    } else {
+      setLoading(false); // ensure loader stops if no session ID
     }
   }, []);
-  
-  
+
   const handleRazorpayPayment = async () => {
     const res = await loadRazorpayScript();
     if (!res) {
@@ -158,29 +164,52 @@ const PaymentDeposit = () => {
     }
   };
 
+  useEffect(() => {
+    const fetchdashboardData = async () => {
+      setLoading(true); 
+      try {
+        const response = await authConfig.get(`deshboard-details/${authId}`);
+        if (response.status === 200) {
+          setDashboardData(response.data);
+        setLoading(false); 
+        }
+      } catch (error) {
+        console.error("Error fetching dashboard data:", error);
+      } 
+    };
+    fetchdashboardData();
+  }, [authId]);
+
   return (
     <div>
       <div className="bg-[#eef2f8] pb-10 min-h-screen">
-        <Nav />
+        
         <OtherNav />
-        <div className="w-[90%] md:w-[80%] m-auto bg-white text-start rounded-md p-6 mt-10 shadow-md">
-            <h1 className="border-b border-b-neutral-200 pb-3 text-[1.5rem] text-[#495463] font-bold">
-                Deposit Funds
-            </h1>
-            <div className="flex gap-5 items-center mt-5 flex-wrap">
-                <button
-                    className="bg-[#f78318] rounded-md px-4 py-2 text-white font-semibold hover:bg-[#e27000]"
-                    onClick={handleOpenModal}
-                >
-                    + Add Amount
-                </button>
-                <h1 className="font-semibold text-gray-700">
-                    Transfer amount to your wallet
-                </h1>
-            </div>
+    {
+      loading ? <Loder/> :
+      <div className="w-[90%] md:w-[80%] m-auto bg-white text-start rounded-md p-6 mt-10 shadow-md">
+      <div className="flex justify-between items-center border-b border-b-neutral-200">
+      <h1 className="pb-3 text-[1.5rem] text-[#495463] font-bold">
+        Deposit Funds
+      </h1>
+      <p className="pb-3 text-[1.5rem] text-[#495463] font-bold">${" "+dashboardData?.totalDepositAmount?dashboardData?.totalDepositAmount:0}</p>
       </div>
+      <div className="flex gap-5 items-center mt-5 flex-wrap">
+        <button
+          className="bg-[#f78318] rounded-md px-4 py-2 text-white font-semibold hover:bg-[#e27000]"
+          onClick={handleOpenModal}
+        >
+          + Add Amount
+        </button>
+        <h1 className="font-semibold text-gray-700">
+          Transfer amount to your wallet
+        </h1>
       </div>
-
+    </div>
+    }
+    
+       
+      </div>
 
       {/* Deposit Modal */}
       <Dialog
@@ -197,7 +226,9 @@ const PaymentDeposit = () => {
               </DialogTitle>
 
               <div className="mt-4">
-                <label className="font-medium text-gray-700">Amount In $</label>
+                <label className="font-medium text-gray-700">
+                  Amount In $
+                </label>
                 <input
                   type="number"
                   placeholder="Enter deposit amount $"

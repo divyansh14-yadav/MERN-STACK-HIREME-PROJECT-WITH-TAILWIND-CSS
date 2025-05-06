@@ -12,7 +12,7 @@
 // import authConfig from "../../api/config";
 // import { useLocation, useNavigate, useParams } from "react-router-dom";
 
-// const socket = io("https://hireback-1.onrender.com");
+// const socket = io("http://192.168.1.2:8000");
 
 // const ChatDashboard = () => {
 //   const [messages, setMessages] = useState([]);
@@ -132,7 +132,7 @@
 
 //   return (
 //     <div className="bg-[#eef2f8] pb-10">
-//       <Nav />
+//       
 //       <OtherNav />
 //       <div className="w-[90%] md:w-[80%] m-auto xl:flex block justify-between gap-10 bg-white text-start rounded-md p-6 mt-10 shadow-md">
 
@@ -192,8 +192,9 @@ import UserChat from "../../components/user chat/userChat";
 import { io } from "socket.io-client";
 import authConfig from "../../api/config";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
+import Loder from "../loader/loder";
 
-const socket = io("https://hireback-1.onrender.com");
+const socket = io("http://192.168.1.2:8000");
 
 const ChatDashboard = () => {
   const [messages, setMessages] = useState([]);
@@ -203,11 +204,11 @@ const ChatDashboard = () => {
   const [messageUpdated, setMessageUpdated] = useState(false);
   const [serviceDetaildList, setServiceDetaildList] = useState(null);
   const [typingUsers, setTypingUsers] = useState("");
+  const [loadingUsers, setLoadingUsers] = useState(true); // State to manage loading of chat users
   console.log(typingUsers,"type");
-   
 
   const messageListRef = useRef(null);
-  const [hasSelectedUser, setHasSelectedUser] = useState(false); 
+  const [hasSelectedUser, setHasSelectedUser] = useState(false);
 
   const location = useLocation();
   const { serviceId } = useParams();
@@ -220,9 +221,11 @@ const ChatDashboard = () => {
         if (response.status === 200) {
           const users = response.data.chatUsers;
           setAllChatUser(users);
+          setLoadingUsers(false); // Set loading to false once users are fetched
         }
       } catch (error) {
         console.error("Error fetching chat users:", error);
+        setLoadingUsers(false); // Set loading to false even on error to avoid infinite loading
       }
     };
     fetchChatUser();
@@ -349,12 +352,16 @@ const ChatDashboard = () => {
 
   return (
     <div className="bg-[#eef2f8] pb-10">
-      <Nav />
+      
       <OtherNav />
+     {
+      loadingUsers ? <Loder/> :
       <div className="w-[90%] md:w-[80%] m-auto xl:flex block justify-between gap-10 bg-white text-start rounded-md p-6 mt-10 shadow-md">
-        {/* Left section - User List */}
-        <div className="xl:w-[30%] w-full overflow-y-scroll border-r border-gray-200">
-          {allChatUser.map((user) => (
+      {/* Left section - User List */}
+      <div className="xl:w-[30%] w-full overflow-y-scroll border-r border-gray-200">
+      {
+
+          allChatUser.map((user) => (
             <div
               key={user._id}
               onClick={() => fetchMessagesWithUser(user._id, user)}
@@ -376,51 +383,43 @@ const ChatDashboard = () => {
                   )}
                 </div>
               </div>
-              {console.log(
-                "User B - Rendering typing indicator:",
-                "selectedUser?._id === user._id:",
-                selectedUser?._id === user._id,
-                "typingUsers[user._id]:",
-                typingUsers[user._id],
-                "receiveId:",
-                receiveId,
-                "user._id:",
-                user._id
-              )}
             </div>
-          ))}
-        </div>
+          ))
+      }
 
-        {/* Right section - Chat Area */}
-        <div className="xl:w-[70%] w-full xl:mt-0 mt-10 flex flex-col justify-between h-[500px]">
-          {!hasSelectedUser ? (
-            <div className="flex-1 flex items-center justify-center text-center text-gray-500 text-lg">
-              👈 Select a user to start chatting
-            </div>
-          ) : (
-            <>
-              <div className="flex-1 overflow-y-auto" ref={messageListRef}>
-                {selectedUser && (
-                  <>
-                    <h2 className="text-2xl font-bold mb-2 border-b pb-3">
-                      Chat with {selectedUser.firstName}
-                    </h2>
-                    <UserChat messages={messages} currentUserId={authId} />
-                  </>
-                )}
-              </div>
-
-              {/* Message Input */}
-              {selectedUser && (
-                <MessageInput
-                  onSendMessage={handleSendMessage}
-                  onInputChange={handleInputChange}
-                />
-              )}
-            </>
-          )}
-        </div>
       </div>
+
+      {/* Right section - Chat Area */}
+      <div className="xl:w-[70%] w-full xl:mt-0 mt-10 flex flex-col justify-between h-[500px]">
+        {!hasSelectedUser ? (
+          <div className="flex-1 flex items-center justify-center text-center text-gray-500 text-lg">
+            👈 Select a user to start chatting
+          </div>
+        ) : (
+          <>
+            <div className="flex-1 overflow-y-auto" ref={messageListRef}>
+              {selectedUser && (
+                <>
+                  <h2 className="text-2xl font-bold mb-2 border-b pb-3">
+                    Chat with {selectedUser.firstName}
+                  </h2>
+                  <UserChat messages={messages} currentUserId={authId} />
+                </>
+              )}
+            </div>
+
+            {/* Message Input */}
+            {selectedUser && (
+              <MessageInput
+                onSendMessage={handleSendMessage}
+                onInputChange={handleInputChange}
+              />
+            )}
+          </>
+        )}
+      </div>
+    </div>
+     }
       <Footer />
     </div>
   );

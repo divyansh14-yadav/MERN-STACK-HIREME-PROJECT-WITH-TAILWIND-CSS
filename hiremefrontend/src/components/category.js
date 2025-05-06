@@ -5,7 +5,7 @@ import "slick-carousel/slick/slick-theme.css";
 import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
 import axios from "axios";
 import authConfig from "../api/config";
-import { Link } from "react-router-dom";
+import { Link, Outlet } from "react-router-dom";
 import CreateTask from "../task/createTask";
 import Loder from "./loader/loder";
 console.log(authConfig, "aaaaaaaaaaaa");
@@ -59,12 +59,12 @@ const CategorySlider = () => {
     }
   };
 
-  if (loading) {
-    return <Loder />;
-  }
+  // if (loading) {
+  //   return <Loder />;
+  // }
 
   return (
-    <div className="absolute xl:ml-15 ml-15 xl:w-[90%] w-[70%] m-auto z-10">
+    <div className="absolute xl:ml-15 ml-15 xl:w-[90%] w-[70%] m-auto z-10 top-16">
       <div className="">
         <FaChevronLeft
             className="absolute left-[-40px] top-[22.5px] cursor-pointer z-50"
@@ -160,6 +160,9 @@ const CategorySlider = () => {
           onClick={() => sliderRef.current.slickNext()}
         />
       </div>
+   
+      <Outlet/>
+   
     </div>
   );
 };

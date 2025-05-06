@@ -45,7 +45,7 @@ const Gigs = () => {
   console.log(FAQ, "FAQ");
 
   const [images, setImages] = useState([{ file: null, serviceImage: "" }]);
-  // console.log(images, "imagessssss");
+  console.log(images, "imagessssss");
 
   const [createServiceId, setCreateServiceId] = useState("");
   console.log(createServiceId, "idservice");
@@ -257,41 +257,57 @@ const Gigs = () => {
     );
   };
 
-  // const removeImage = (index) => {
-  //     if (index !== 0) {
-  //         setImages(images.filter((_, i) => i !== index));
-  //     }
-  // };
-
   const removeImage = (index) => {
-    const img = images[index];
+    // if (index !== 0) {
+    //   setImages(images.filter((_, i) => i !== index));
+    // }
 
-    // Agar image ka file nahi hai aur serviceImage hai, toh usse removedImages mein add karo
-    if (!img.file && img.serviceImage) {
-      setRemovedImages((prev) => [...prev, img.serviceImage]); // Add to removedImages
-    }
-
-    // Image ko images array se hata do
     setImages((prev) => {
-      const updatedImages = [...prev];
-      updatedImages.splice(index, 1); // Remove image at index
-      return updatedImages;
+      const newImages = [...prev];
+      const removedImage = newImages.splice(index, 1)[0];
+      if (
+        removedImage.serviceImage &&
+        typeof removedImage.serviceImage === "string"
+      ) {
+        URL.revokeObjectURL(removedImage.serviceImage);
+      }
+      return newImages;
     });
   };
+
+  // const removeImage = (index) => {
+  //   const img = images[index];
+
+  //   // Agar image ka file nahi hai aur serviceImage hai, toh usse removedImages mein add karo
+  //   if (!img.file && img.serviceImage) {
+  //     setRemovedImages((prev) => [...prev, img.serviceImage]); // Add to removedImages
+  //   }
+
+  //   // Image ko images array se hata do
+  //   setImages(
+  //     Array.isArray(serviceDetails?.serviceImage)
+  //       ? serviceDetails.serviceImage.flatMap((imgObj) =>
+  //           imgObj.url.map((url) => ({
+  //             file: null,
+  //             serviceImage: url,
+  //           }))
+  //         )
+  //       : [{ file: null, serviceImage: "" }]
+  //   );
+  // };
 
   const handleImageChange = (event, index) => {
     const file = event.target.files[0];
     if (file) {
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        setImages((prevImages) => {
-          if (!Array.isArray(prevImages)) prevImages = [];
-          const updatedImages = [...prevImages];
-          updatedImages[index] = { file, serviceImage: reader.result };
-          return updatedImages;
-        });
-      };
-      reader.readAsDataURL(file);
+      setImages((prevImages) => {
+        if (!Array.isArray(prevImages)) prevImages = [];
+        const updatedImages = [...prevImages];
+        updatedImages[index] = {
+          file: file,
+          serviceImage: URL.createObjectURL(file),
+        };
+        return updatedImages;
+      });
     }
   };
 
@@ -480,23 +496,23 @@ const Gigs = () => {
     }
 
     try {
-      if (validate && schema) {
-        await schema.validate(
-          {
-            title,
-            description,
-            categoryId,
-            sub_categoryId: subCategoryId,
-            searchTags,
-            requirement,
-            Basic_price,
-            Standard_price,
-            Premium_price,
-            FAQ,
-          },
-          { abortEarly: false }
-        );
-      }
+      // if (validate && schema) {
+      //   await schema.validate(
+      //     {
+      //       title,
+      //       description,
+      //       categoryId,
+      //       sub_categoryId: subCategoryId,
+      //       searchTags,
+      //       requirement,
+      //       Basic_price,
+      //       Standard_price,
+      //       Premium_price,
+      //       FAQ,
+      //     },
+      //     { abortEarly: false }
+      //   );
+      // }
 
       // FormData prepare kar rahe hain
       const formData = new FormData();
@@ -510,19 +526,29 @@ const Gigs = () => {
       formData.append("searchTags", searchTags);
       formData.append("requirement", requirement);
       formData.append("FAQ", JSON.stringify(FAQ));
+      // images.forEach((img, i) => {
+      //   if (img.file) {
+      //     formData.append("serviceImage", img.file);
+      //   }
+      // });
 
-      const keptOld = images
-        .filter((img) => !img.file && !removedImages.includes(img.serviceImage))
+      // Naye file images append karo
+      if (Array.isArray(images)) {
+        images.forEach((image) => {
+          if (image.file) {
+            formData.append("serviceImage", image.file);
+          }
+        });
+      }
+      const oldImageUrls = images
+        .filter((img) => !img.file && img.serviceImage) 
         .map((img) => img.serviceImage);
-      keptOld.forEach((name) => formData.append("serviceImage", name));
 
-      // Add the new images that have a file
-      images
-        .filter((img) => img.file)
-        .forEach((img) => formData.append("serviceImage", img.file));
-
-      // Add removed images to FormData
-      formData.append("removedImages", JSON.stringify(removedImages));
+      if (oldImageUrls.length) {
+        oldImageUrls.forEach((url) =>
+          formData.append("oldServiceImageUrls", url)
+        );
+      }
 
       if (createServiceId) {
         const response = await authConfig.put(
@@ -618,6 +644,24 @@ const Gigs = () => {
     setOpenDropdown(openDropdown === index ? null : index);
   };
 
+  function extractImageUrls(serviceImage) {
+    let obj = serviceImage;
+    // Unwrap single-item arrays and objects with only '0' key
+    while (Array.isArray(obj) && obj.length === 1) obj = obj[0];
+    while (
+      obj &&
+      typeof obj === "object" &&
+      Object.keys(obj).length === 1 &&
+      obj[0]
+    ) {
+      obj = obj[0];
+    }
+    if (obj && obj.url && Array.isArray(obj.url)) {
+      return obj.url;
+    }
+    return [];
+  }
+
   const handleEditClick = (serviceDetail) => {
     console.log(serviceDetail, "yoho");
     setTitle(serviceDetail?.title);
@@ -628,11 +672,30 @@ const Gigs = () => {
         ? serviceDetail.FAQ
         : [{ question: "", answer: "" }]
     );
+    // setImages(
+    //   serviceDetail?.serviceImage?.map((url) => ({
+    //     file: null,
+    //     serviceImage: { url },
+    //   })) || [{ file: null, serviceImage: { url: "" } }]
+    // );
+
+    // const imageUrls = serviceDetail?.serviceImage?.[0]?.url || [];
+    // const formattedImages = imageUrls.map((url) => ({
+    //   file: null,
+    //   serviceImage: { url },
+    // }));
+    // setImages(formattedImages);
+    // setImages(
+    //   serviceDetail?.serviceImage?.length > 0
+    //     ? serviceDetail.serviceImage
+    //     : [{ file: "", serviceImage: serviceDetail.serviceImage.url }]
+    // );
+
+    let urls = extractImageUrls(serviceDetail.serviceImage);
     setImages(
-      serviceDetail?.serviceImage?.map((img) => ({
-        file: null,
-        serviceImage: img,
-      })) || [{ file: null, serviceImage: "" }]
+      urls.length
+        ? urls.map((url) => ({ file: null, serviceImage: url }))
+        : [{ file: null, serviceImage: "" }]
     );
     setCreateServiceId(serviceDetail?._id);
     // Set Prices
@@ -707,230 +770,234 @@ const Gigs = () => {
   console.log("Removed Images:", removedImages);
   console.log("Images to be saved:", images);
 
-  if (loading) {
-    return <Loder />;
-  }
+  // if (loading) {
+  //   return <Loder />;
+  // }
 
   return (
     <div className="bg-[#eef2f8]">
-      <Nav />
+      
       <OtherNav />
-      <div className="xl:w-[80%] w-[90%] mt-10 m-auto rounded-md bg-white">
-        <div className="xl:flex block justify-between items-center border-b-1 border-[#0000001a] p-4 pb-5">
-          {/* <h1 className="text-[1rem] text-[#495463] font-bold">My Gigs</h1> */}
-          <div className="flex xl:gap-5 gap-2">
-            {serviceStatus?.map((status, index) => (
-              <div className="flex gap-2 font-semibold">
-                <button
-                  onClick={() => setActiveStepForServiceStatus(index)}
-                  className={
-                    index === 0
-                      ? "bg-[#fff3dd] w-[80px] p-1 rounded-md cursor-pointer"
-                      : "bg-[#12d00126] w-[100px] p-1 rounded-md cursor-pointer"
-                  }
-                >
-                  {status}
-                </button>
-              </div>
-            ))}
+
+      {loading ? (
+        <Loder />
+      ) : (
+        <div className="xl:w-[80%] w-[90%] mt-10 m-auto rounded-md bg-white">
+          <div className="xl:flex block justify-between items-center border-b-1 border-[#0000001a] p-4 pb-5">
+            {/* <h1 className="text-[1rem] text-[#495463] font-bold">My Gigs</h1> */}
+            <div className="flex xl:gap-5 gap-2">
+              {serviceStatus?.map((status, index) => (
+                <div className="flex gap-2 font-semibold">
+                  <button
+                    onClick={() => setActiveStepForServiceStatus(index)}
+                    className={
+                      index === 0
+                        ? "bg-[#fff3dd] w-[80px] p-1 rounded-md cursor-pointer"
+                        : "bg-[#12d00126] w-[100px] p-1 rounded-md cursor-pointer"
+                    }
+                  >
+                    {status}
+                  </button>
+                </div>
+              ))}
+            </div>
+            <button
+              className="border-2 border-[#f78318] cursor-pointer xl:text-[1rem] text-[1rem] xl:p-2 p-1 xl:block flex justify-start xl:mt-0 mt-5 font-bold text-white bg-[#f78318] rounded-md"
+              onClick={() => setOpen(true)}
+            >
+              + Create Gigs
+            </button>
           </div>
-          <button
-            className="border-2 border-[#f78318] xl:text-[1rem] text-[1rem] xl:p-2 p-1 xl:block flex justify-start xl:mt-0 mt-5 font-bold text-white bg-[#f78318] rounded-md"
-            onClick={() => setOpen(true)}
-          >
-            + Create Gigs
-          </button>
-        </div>
-        {activeStepForServiceStatus === 0 && (
-          <div class="flex flex-col">
-            <div class="overflow-x-auto sm:-mx-6 lg:-mx-8">
-              <div class="inline-block min-w-full py-2 sm:px-6 lg:px-8">
-                <div class="overflow-hidden">
-                  <table class="min-w-full text-left text-sm font-light text-surface ">
-                    <thead class="border-b border-neutral-200 font-medium ">
-                      <tr>
-                        <th scope="col" class="px-6 py-4">
-                          Service Title
-                        </th>
-                        <th scope="col" class="px-6 py-4">
-                          Service Views
-                        </th>
-                        <th scope="col" class="px-6 py-4">
-                          Category
-                        </th>
-                        <th scope="col" class="px-6 py-4">
-                          Ispublished
-                        </th>
-                        {/* <th scope="col" class="px-6 py-4">Status</th> */}
-                        <th scope="col" class="px-6 py-4">
-                          Action
-                        </th>
-                      </tr>
-                    </thead>
-                    {serviceDetailsAll.length ? (
-                      serviceDetailsAll.map(
-                        (serviceDetail, index) => (
-                          console.log(serviceDetail, "jsjsjsjsjsjjs"),
-                          (
+          {activeStepForServiceStatus === 0 && (
+            <div class="flex flex-col">
+              <div class="overflow-x-auto sm:-mx-6 lg:-mx-8">
+                <div class="inline-block min-w-full py-2 sm:px-6 lg:px-8">
+                  <div class="overflow-hidden">
+                    <table class="min-w-full text-left text-sm font-light text-surface ">
+                      <thead class="border-b border-neutral-200 font-medium ">
+                        <tr>
+                          <th scope="col" class="px-6 py-4">
+                            Service Title
+                          </th>
+                          <th scope="col" class="px-6 py-4">
+                            Service Views
+                          </th>
+                          <th scope="col" class="px-6 py-4">
+                            Category
+                          </th>
+                          <th scope="col" class="px-6 py-4">
+                            Ispublished
+                          </th>
+                          {/* <th scope="col" class="px-6 py-4">Status</th> */}
+                          <th scope="col" class="px-6 py-4">
+                            Action
+                          </th>
+                        </tr>
+                      </thead>
+                      {serviceDetailsAll.length ? (
+                        serviceDetailsAll.map(
+                          (serviceDetail, index) => (
+                            console.log(serviceDetail, "jsjsjsjsjsjjs"),
+                            (
+                              <tbody>
+                                <tr class="border-b border-neutral-200 transition duration-300 ease-in-out">
+                                  <div className="flex gap-2 items-center w-[20%]">
+                                    <td class="whitespace-nowrap px-6 py-4 font-medium">
+                                      {serviceDetail.title}
+                                    </td>
+                                  </div>
+                                  <td class="whitespace-nowrap px-6 py-4">
+                                    <p className="text-[#007bff] bg-[#d9ebff] text-center xl:w-[20%] w-[30%] rounded-full">
+                                      0
+                                    </p>
+                                  </td>
+                                  <td class="whitespace-nowrap px-6 py-4 font-semibold">
+                                    {
+                                      serviceDetail?.categoryId
+                                        ?.featureCategoriesName
+                                    }
+                                  </td>
+                                  <td class="whitespace-nowrap px-6 py-4">
+                                    <p className="bg-[#fff3dd] text-[#ffab1a] p-1 xl:w-[35%] w-full text-center font-semibold rounded-md">
+                                      {serviceDetail.in_pubhish}
+                                    </p>
+                                  </td>
+                                  <div
+                                    className="border-2 border-[#0000001a] text-start w-[22%] m-auto rounded-full cursor-pointer"
+                                    onClick={() => toggleDropdown(index)}
+                                  >
+                                    <td className="xl:px-3.5 px-1.5 py-1">
+                                      <FontAwesomeIcon
+                                        className="cursor-pointer text-[#0000001a]"
+                                        icon={faEllipsisVertical}
+                                      ></FontAwesomeIcon>
+                                    </td>
+                                  </div>
+                                  {openDropdown === index && (
+                                    <div
+                                      ref={dropdownRef}
+                                      className="absolute xl:right-32 right-20 mt-2 w-32 bg-white border rounded-lg shadow-lg z-10"
+                                    >
+                                      <ul className="py-2 px-2 text-sm text-gray-700 font-bold">
+                                        <li>
+                                          <button
+                                            onClick={() =>
+                                              handleEditClick(serviceDetail)
+                                            }
+                                            className="px-3 py-1 cursor-pointer rounded"
+                                          >
+                                            Edit
+                                          </button>
+                                        </li>
+                                        <li>
+                                          <button
+                                            onClick={handlePublicData}
+                                            className="block px-3 py-2 w-full text-left cursor-pointer hover:bg-gray-100"
+                                          >
+                                            Publish
+                                          </button>
+                                        </li>
+                                      </ul>
+                                    </div>
+                                  )}
+                                </tr>
+                              </tbody>
+                            )
+                          )
+                        )
+                      ) : (
+                        <tr>
+                          <td colSpan={5} className="text-center py-10">
+                            <img
+                              className="w-[7%] m-auto"
+                              src="https://script.viserlab.com/metalance/assets/templates/basic/images/empty_list.png"
+                              alt="No Projects"
+                            />
+                            <h1 className="mt-3 text-[#CFCFCF]">
+                              No service found for draft
+                            </h1>
+                          </td>
+                        </tr>
+                      )}
+                    </table>
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
+          {activeStepForServiceStatus === 1 && (
+            <div class="flex flex-col">
+              <div class="overflow-x-auto sm:-mx-6 lg:-mx-8">
+                <div class="inline-block min-w-full py-2 sm:px-6 lg:px-8">
+                  <div class="overflow-hidden">
+                    <table class="min-w-full text-left text-sm font-light text-surface ">
+                      <thead class="border-b border-neutral-200 font-medium ">
+                        <tr>
+                          <th scope="col" class="px-6 py-4">
+                            Service Title
+                          </th>
+                          <th scope="col" class="px-6 py-4">
+                            Service Views
+                          </th>
+                          <th scope="col" class="px-6 py-4">
+                            Category
+                          </th>
+                          <th scope="col" class="px-6 py-4">
+                            Ispublished
+                          </th>
+                          {/* <th scope="col" class="px-6 py-4">Status</th> */}
+                          {/* <th scope="col" class="px-6 py-4">Action</th> */}
+                        </tr>
+                      </thead>
+                      {serviceDetailsAllPublic?.services?.length ? (
+                        serviceDetailsAllPublic?.services?.map(
+                          (serviceDetail, index) => (
                             <tbody>
-                              <tr class="border-b border-neutral-200 transition duration-300 ease-in-out">
+                              <tr class="border-b border-neutral-200 transition duration-300 ease-in-out ">
                                 <div className="flex gap-2 items-center w-[20%]">
                                   <td class="whitespace-nowrap px-6 py-4 font-medium">
                                     {serviceDetail.title}
                                   </td>
                                 </div>
                                 <td class="whitespace-nowrap px-6 py-4">
-                                  <p className="text-[#007bff] bg-[#d9ebff] text-center xl:w-[20%] w-[30%] rounded-full">
+                                  <p className="text-[#007bff] bg-[#d9ebff] text-center w-[20%] rounded-full">
                                     0
                                   </p>
                                 </td>
                                 <td class="whitespace-nowrap px-6 py-4 font-semibold">
-                                  {
-                                    serviceDetail.categoryId
-                                      .featureCategoriesName
-                                  }
+                                  logo design
                                 </td>
                                 <td class="whitespace-nowrap px-6 py-4">
-                                  <p className="bg-[#fff3dd] text-[#ffab1a] p-1 xl:w-[35%] w-full text-center font-semibold rounded-md">
+                                  <p className="bg-[#12d00126] text-[#12d001] p-1 w-[35%] text-center font-semibold rounded-md">
                                     {serviceDetail.in_pubhish}
                                   </p>
                                 </td>
-                                <div
-                                  className="border-2 border-[#0000001a] text-start w-[22%] m-auto rounded-full cursor-pointer"
-                                  onClick={() => toggleDropdown(index)}
-                                >
-                                  <td className="xl:px-3.5 px-1.5 py-1">
-                                    <FontAwesomeIcon
-                                      className="cursor-pointer text-[#0000001a]"
-                                      icon={faEllipsisVertical}
-                                    ></FontAwesomeIcon>
-                                  </td>
-                                </div>
-                                {openDropdown === index && (
-                                  <div
-                                    ref={dropdownRef}
-                                    className="absolute xl:right-32 right-20 mt-2 w-32 bg-white border rounded-lg shadow-lg z-10"
-                                  >
-                                    <ul className="py-2 px-2 text-sm text-gray-700 font-bold">
-                                      <li>
-                                        <button
-                                          onClick={() =>
-                                            handleEditClick(serviceDetail)
-                                          }
-                                          className="px-3 py-1 rounded"
-                                        >
-                                          Edit
-                                        </button>
-                                      </li>
-                                      <li>
-                                        <button
-                                          onClick={handlePublicData}
-                                          className="block px-3 py-2 w-full text-left hover:bg-gray-100"
-                                        >
-                                          Publish
-                                        </button>
-                                      </li>
-                                    </ul>
-                                  </div>
-                                )}
                               </tr>
                             </tbody>
                           )
                         )
-                      )
-                    ) : (
-                      <tr>
-                        <td colSpan={5} className="text-center py-10">
-                          <img
-                            className="w-[7%] m-auto"
-                            src="https://script.viserlab.com/metalance/assets/templates/basic/images/empty_list.png"
-                            alt="No Projects"
-                          />
-                          <h1 className="mt-3 text-[#CFCFCF]">
-                            No service found for draft
-                          </h1>
-                        </td>
-                      </tr>
-                    )}
-                  </table>
+                      ) : (
+                        <tr>
+                          <td colSpan={5} className="text-center py-10">
+                            <img
+                              className="w-[7%] m-auto"
+                              src="https://script.viserlab.com/metalance/assets/templates/basic/images/empty_list.png"
+                              alt="No Projects"
+                            />
+                            <h1 className="mt-3 text-[#CFCFCF]">
+                              No service found for publish
+                            </h1>
+                          </td>
+                        </tr>
+                      )}
+                    </table>
+                  </div>
                 </div>
               </div>
             </div>
-          </div>
-        )}
-        {activeStepForServiceStatus === 1 && (
-          <div class="flex flex-col">
-            <div class="overflow-x-auto sm:-mx-6 lg:-mx-8">
-              <div class="inline-block min-w-full py-2 sm:px-6 lg:px-8">
-                <div class="overflow-hidden">
-                  <table class="min-w-full text-left text-sm font-light text-surface ">
-                    <thead class="border-b border-neutral-200 font-medium ">
-                      <tr>
-                        <th scope="col" class="px-6 py-4">
-                          Service Title
-                        </th>
-                        <th scope="col" class="px-6 py-4">
-                          Service Views
-                        </th>
-                        <th scope="col" class="px-6 py-4">
-                          Category
-                        </th>
-                        <th scope="col" class="px-6 py-4">
-                          Ispublished
-                        </th>
-                        {/* <th scope="col" class="px-6 py-4">Status</th> */}
-                        {/* <th scope="col" class="px-6 py-4">Action</th> */}
-                      </tr>
-                    </thead>
-                    {serviceDetailsAllPublic?.services?.length ? (
-                      serviceDetailsAllPublic?.services?.map(
-                        (serviceDetail, index) => (
-                          <tbody>
-                            <tr class="border-b border-neutral-200 transition duration-300 ease-in-out ">
-                              <div className="flex gap-2 items-center w-[20%]">
-                                <td class="whitespace-nowrap px-6 py-4 font-medium">
-                                  {serviceDetail.title}
-                                </td>
-                              </div>
-                              <td class="whitespace-nowrap px-6 py-4">
-                                <p className="text-[#007bff] bg-[#d9ebff] text-center w-[20%] rounded-full">
-                                  0
-                                </p>
-                              </td>
-                              <td class="whitespace-nowrap px-6 py-4 font-semibold">
-                                logo design
-                              </td>
-                              <td class="whitespace-nowrap px-6 py-4">
-                                <p className="bg-[#12d00126] text-[#12d001] p-1 w-[35%] text-center font-semibold rounded-md">
-                                  {serviceDetail.in_pubhish}
-                                </p>
-                              </td>
-                            </tr>
-                          </tbody>
-                        )
-                      )
-                    ) : (
-                      <tr>
-                        <td colSpan={5} className="text-center py-10">
-                          <img
-                            className="w-[7%] m-auto"
-                            src="https://script.viserlab.com/metalance/assets/templates/basic/images/empty_list.png"
-                            alt="No Projects"
-                          />
-                          <h1 className="mt-3 text-[#CFCFCF]">
-                            No service found for publish
-                          </h1>
-                        </td>
-                      </tr>
-                    )}
-                  </table>
-                </div>
-              </div>
-            </div>
-          </div>
-        )}
-      </div>
-
+          )}
+        </div>
+      )}
       {/* Popup (Dialog) */}
 
       <Dialog
@@ -1071,7 +1138,7 @@ const Gigs = () => {
                                 key={category._id}
                                 value={category._id || ""}
                               >
-                                {category.featureCategoriesName}
+                                {category?.featureCategoriesName}
                               </option>
                             ))}
                           </select>
@@ -1092,7 +1159,7 @@ const Gigs = () => {
                             className="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full text-xs sm:text-sm border-gray-300 rounded-md p-2 sm:p-2.5"
                             onChange={handleSubCategoryChange}
                             value={subCategoryId || ""}
-                            disabled={!categoryId}
+                            // disabled={!categoryId}
                           >
                             <option value="">Select Subcategory</option>
                             {subCategories.map((sub) => (
@@ -1153,12 +1220,14 @@ const Gigs = () => {
                           type: "premium",
                         },
                       ].map((pkg) => (
+                        console.log(pkg,"pkgsssssssss"),
+                        
                         <div
-                          key={pkg.label}
+                          key={pkg?.label}
                           className="bg-white rounded-xl shadow-md border border-gray-200 p-5 flex flex-col gap-4"
                         >
                           <h2 className="text-lg font-bold text-center text-[#f78318]">
-                            {pkg.label} Package
+                            {pkg?.label} Package
                           </h2>
 
                           {/* Name */}
@@ -1166,11 +1235,11 @@ const Gigs = () => {
                             type="text"
                             className="p-2 border rounded-md text-sm"
                             placeholder="Package Name"
-                            value={pkg.state[`${pkg.prefix}_Name`] || ""}
+                            value={pkg?.state[`${pkg?.prefix}_Name`] || ""}
                             onChange={(e) =>
                               handlePriceChange(
-                                pkg.type,
-                                `${pkg.prefix}_Name`,
+                                pkg?.type,
+                                `${pkg?.prefix}_Name`,
                                 e.target.value
                               )
                             }
@@ -1181,11 +1250,11 @@ const Gigs = () => {
                             className="p-2 border rounded-md text-sm"
                             rows={3}
                             placeholder="Package Description"
-                            value={pkg.state[`${pkg.prefix}_description`] || ""}
+                            value={pkg.state[`${pkg?.prefix}_description`] || ""}
                             onChange={(e) =>
                               handlePriceChange(
-                                pkg.type,
-                                `${pkg.prefix}_description`,
+                                pkg?.type,
+                                `${pkg?.prefix}_description`,
                                 e.target.value
                               )
                             }
@@ -1196,11 +1265,11 @@ const Gigs = () => {
                             type="number"
                             className="p-2 border rounded-md text-sm"
                             placeholder="Price ($)"
-                            value={pkg.state[`${pkg.prefix}_price`] || ""}
+                            value={pkg.state[`${pkg?.prefix}_price`] || ""}
                             onChange={(e) =>
                               handlePriceChange(
-                                pkg.type,
-                                `${pkg.prefix}_price`,
+                                pkg?.type,
+                                `${pkg?.prefix}_price`,
                                 e.target.value
                               )
                             }
@@ -1211,11 +1280,11 @@ const Gigs = () => {
                             type="number"
                             className="p-2 border rounded-md text-sm"
                             placeholder="Revisions"
-                            value={pkg.state[`${pkg.prefix}_revisions`] || ""}
+                            value={pkg.state[`${pkg?.prefix}_revisions`] || ""}
                             onChange={(e) =>
                               handlePriceChange(
                                 pkg.type,
-                                `${pkg.prefix}_revisions`,
+                                `${pkg?.prefix}_revisions`,
                                 e.target.value
                               )
                             }
@@ -1426,73 +1495,78 @@ const Gigs = () => {
 
                     <div className="mt-6 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
                       {Array.isArray(images) &&
-                        images.map((image, index) => (
-                          <div key={index} className="relative group">
-                            <label
-                              htmlFor={`fileInput-${index}`}
-                              className="block w-full aspect-video rounded-md border-2 border-dashed border-gray-300 cursor-pointer bg-white overflow-hidden relative"
-                            >
-                              <input
-                                type="file"
-                                className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
-                                id={`fileInput-${index}`}
-                                onChange={(e) => handleImageChange(e, index)}
-                                accept="image/*"
-                              />
-                              {image.serviceImage ? (
-                                <img
-                                  src={
-                                    image.serviceImage.startsWith("data:")
-                                      ? image.serviceImage
-                                      : `https://hireback-1.onrender.com//${image.serviceImage}`
-                                  }
-                                  alt={`Preview ${index + 1}`}
-                                  className="object-cover w-full h-full rounded-md transition duration-300 group-hover:scale-105"
-                                />
-                              ) : (
-                                <div className="flex flex-col items-center justify-center h-full text-gray-400">
-                                  <svg
-                                    className="w-12 h-12"
-                                    stroke="currentColor"
-                                    fill="none"
-                                    viewBox="0 0 48 48"
-                                    aria-hidden="true"
-                                  >
-                                    <path
-                                      d="M28 8H12a4 4 0 00-4 4v20m32-12v8m0 0v8a4 4 0 01-4 4H12a4 4 0 01-4-4v-4m32-4l-3.172-3.172a4 4 0 00-5.656 0L28 28M8 32l9.172-9.172a4 4 0 005.656 0L28 20m-28 12h.01"
-                                      strokeWidth={2}
-                                      strokeLinecap="round"
-                                      strokeLinejoin="round"
-                                    />
-                                  </svg>
-                                  <p className="mt-2 text-sm">Upload Image</p>
-                                </div>
-                              )}
-                            </label>
-
-                            {index !== 0 && (
-                              <button
-                                type="button"
-                                className="absolute top-2 right-2 bg-red-500 hover:bg-red-600 text-white rounded-full w-6 h-6 flex items-center justify-center text-xs font-bold shadow"
-                                onClick={() => removeImage(index)}
-                              >
-                                <svg
-                                  className="w-4 h-4"
-                                  fill="none"
-                                  viewBox="0 0 24 24"
-                                  stroke="currentColor"
+                        images.map(
+                          (image, index) => (
+                            console.log(image, "mapimage"),
+                            (
+                              <div key={index} className="relative group">
+                                <label
+                                  htmlFor={`fileInput-${index}`}
+                                  className="block w-full aspect-video rounded-md border-2 border-dashed border-gray-300 cursor-pointer bg-white overflow-hidden relative"
                                 >
-                                  <path
-                                    strokeLinecap="round"
-                                    strokeLinejoin="round"
-                                    strokeWidth={2}
-                                    d="M6 18L18 6M6 6l12 12"
+                                  <input
+                                    type="file"
+                                    className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+                                    id={`fileInput-${index}`}
+                                    onChange={(e) =>
+                                      handleImageChange(e, index)
+                                    }
+                                    accept="image/*"
                                   />
-                                </svg>
-                              </button>
-                            )}
-                          </div>
-                        ))}
+                                  {image.serviceImage ? (
+                                    <img
+                                      src={image.serviceImage}
+                                      alt={`Preview ${index + 1}`}
+                                      className="object-cover w-full h-full rounded-md transition duration-300 group-hover:scale-105"
+                                    />
+                                  ) : (
+                                    <div className="flex flex-col items-center justify-center h-full text-gray-400">
+                                      <svg
+                                        className="w-12 h-12"
+                                        stroke="currentColor"
+                                        fill="none"
+                                        viewBox="0 0 48 48"
+                                        aria-hidden="true"
+                                      >
+                                        <path
+                                          d="M28 8H12a4 4 0 00-4 4v20m32-12v8m0 0v8a4 4 0 01-4 4H12a4 4 0 01-4-4v-4m32-4l-3.172-3.172a4 4 0 00-5.656 0L28 28M8 32l9.172-9.172a4 4 0 005.656 0L28 20m-28 12h.01"
+                                          strokeWidth={2}
+                                          strokeLinecap="round"
+                                          strokeLinejoin="round"
+                                        />
+                                      </svg>
+                                      <p className="mt-2 text-sm">
+                                        Upload Image
+                                      </p>
+                                    </div>
+                                  )}
+                                </label>
+
+                                {index !== 0 && (
+                                  <button
+                                    type="button"
+                                    className="absolute top-2 right-2 bg-red-500 hover:bg-red-600 text-white rounded-full w-6 h-6 flex items-center justify-center text-xs font-bold shadow"
+                                    onClick={() => removeImage(index)}
+                                  >
+                                    <svg
+                                      className="w-4 h-4"
+                                      fill="none"
+                                      viewBox="0 0 24 24"
+                                      stroke="currentColor"
+                                    >
+                                      <path
+                                        strokeLinecap="round"
+                                        strokeLinejoin="round"
+                                        strokeWidth={2}
+                                        d="M6 18L18 6M6 6l12 12"
+                                      />
+                                    </svg>
+                                  </button>
+                                )}
+                              </div>
+                            )
+                          )
+                        )}
                     </div>
 
                     <div className="mt-8">
@@ -1529,7 +1603,7 @@ const Gigs = () => {
                       </h1>
                       <button
                         onClick={() => handleServiceCreate(false)}
-                        className="mt-4 sm:mt-0 px-5 py-2 border-2 border-[#f78318] text-[#f78318] hover:bg-[#f78318] hover:text-white font-semibold text-sm rounded-md transition"
+                        className="mt-4 sm:mt-0 px-5 py-2 border-2 cursor-pointer border-[#f78318] text-[#f78318] hover:bg-[#f78318] hover:text-white font-semibold text-sm rounded-md transition"
                       >
                         Save as Draft
                       </button>
@@ -1615,7 +1689,6 @@ const Gigs = () => {
           </Box>
         </Box>
       </Dialog>
-
       <Footer />
     </div>
   );

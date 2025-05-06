@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import BrandSlider from "../common/brandSlider";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import authConfig from "../api/config";
+import { toast } from "react-toastify";
 
 const SliderComponent = (featured) => {
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -46,17 +47,22 @@ const SliderComponent = (featured) => {
       const categoryName = service.categoryId?.featureCategoriesName;
 
       if (subcategoryId) {
-        navigate(`/featuredService/sub/${subcategoryId}/${subcategoryName}`);
+        navigate(`/featuredService/sub/${subcategoryId}/${subcategoryName}`, {
+          state: { services },
+        });
+        
       } else if (categoryId) {
-        navigate(`/featuredService/${categoryId}/${categoryName}`);
+        navigate(`/featuredService/${categoryId}/${categoryName}`,{
+          state: { services },
+        });
       }
     } catch (error) {
-      alert("No services found with the given title.");
+      // alert("No services found with the given title.");
+      toast.error("No services found with the given title.")
       console.error("Error fetching services:", error);
     }
   };
 
- 
   return (
     <div className="relative w-full z-auto overflow-x-visible xl:mt-14 mt-15">
       <div className="relative overflow-hidden w-full xl:h-126 h-118">
@@ -99,7 +105,7 @@ const SliderComponent = (featured) => {
                       <button
                         type="submit"
                         className="text-white bg-[#da6f0c] cursor-pointer rounded-r-lg p-3.5 absolute right-4 lg:right-8.5"
-                      > 
+                      >
                         <svg
                           className="w-13 h-5 text-white"
                           aria-hidden="true"

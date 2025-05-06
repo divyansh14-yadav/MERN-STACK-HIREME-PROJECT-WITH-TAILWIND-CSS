@@ -55,11 +55,11 @@ const FeatureGigs = (featureGig) => {
                 speed={500}
                 slidesToShow={1}
               >
-                {gigs.serviceImage.map((imgd, imgIndex) => (
+                {gigs?.serviceImage?.url?.map((imgd, imgIndex) => (
                   <img
                     key={imgIndex}
                     className="rounded-t-[10px] w-full h-[150px]"
-                    src={`https://hireback-1.onrender.com//${imgd}`}
+                    src={imgd}
                     alt="Service"
                   />
                 ))}
@@ -69,7 +69,7 @@ const FeatureGigs = (featureGig) => {
                 <div className="h-[40px] w-[48px]">
                   <img
                     className="w-[70%] h-[30px] rounded-[45px]"
-                    src={`https://hireback-1.onrender.com//${gigs.authId.authProfile}`}
+                    src={gigs.authId.authProfile}
                   />
                 </div>
                 <Link to={`/userServices/${gigs.authId._id}`}>

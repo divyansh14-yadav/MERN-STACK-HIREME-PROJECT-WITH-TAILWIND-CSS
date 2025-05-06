@@ -253,7 +253,7 @@ const AuthProjectDetails = () => {
   return (
     <div className="bg-[#eef2f8]">
       <div>
-        <Nav />
+        
         <OtherNav />
         <div className="xl:w-[80%] w-[90%] mt-10 m-auto rounded-md bg-white pb-7">
           <div>
@@ -261,7 +261,7 @@ const AuthProjectDetails = () => {
               <div className="w-[185px] h-[135px] p-5 pt-8">
                 <img
                   className="w-[100%] h-[145px] rounded-full"
-                  src={`https://hireback-1.onrender.com//${detailedProject?.serviceId?.serviceImage[0]}`}
+                  src={detailedProject?.serviceId?.serviceImage?.url[0]}
                 />
               </div>
               {serviceAuthId === authId ? (
@@ -330,12 +330,20 @@ const AuthProjectDetails = () => {
             <div className="flex xl:gap-20 gap-10 items-center text-[#495463] text-start xl:p-5 p-5">
               <div className="font-semibold">
                 <h1 className="xl:text-[1rem] text-[0.6rem]">Amount</h1>
-                <h1 className="xl:text-[1rem] text-[0.6rem] xl:mt-3 mt-2">Deadline</h1>
-                <h1 className="xl:text-[1rem] text-[0.6rem] xl:mt-3 mt-3">Status</h1>
+                <h1 className="xl:text-[1rem] text-[0.6rem] xl:mt-3 mt-2">
+                  Deadline
+                </h1>
+                <h1 className="xl:text-[1rem] text-[0.6rem] xl:mt-3 mt-3">
+                  Status
+                </h1>
               </div>
               <div className="font-bold">
-                <p className="xl:text-[1rem] text-[0.6rem] xl:mt-3 mt-2">$ {detailedProject?.serviceId?.Basic_price[0]?.b_price}</p>
-                <p className="xl:text-[1rem] text-[0.6rem] xl:mt-3 mt-2">{detailedProject?.dead_line}</p>
+                <p className="xl:text-[1rem] text-[0.6rem] xl:mt-3 mt-2">
+                  $ {detailedProject?.quotePrice}
+                </p>
+                <p className="xl:text-[1rem] text-[0.6rem] xl:mt-3 mt-2">
+                  {detailedProject?.dead_line}
+                </p>
                 <p className="bg-[#ffab1a26] text-[#ffab1a] xl:mt-2  xl:text-[1rem] text-[0.6rem] xl:p-1.5 p-1 w-[35%] font-semibold rounded-md">
                   {detailedProject?.status}
                 </p>
@@ -348,11 +356,62 @@ const AuthProjectDetails = () => {
                   <button
                     className={
                       activeStep === index
-                        ? "text-[#f78318] cursor-pointer text-[1.1rem] font-semibold"
-                        : "text-[#888686] cursor-pointer text-[1.1rem] font-semibold"
+                        ? "text-[#f78318] cursor-pointer text-[1.1rem] font-semibold flex items-center gap-2"
+                        : "text-[#888686] cursor-pointer text-[1.1rem] font-semibold flex items-center gap-2"
                     }
                     onClick={() => setActiveStep(index)}
                   >
+                    {index === 0 && (
+                      <svg
+                        className="w-5 h-5"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                        xmlns="http://www.w3.org/2000/svg"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth="2"
+                          d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z"
+                        ></path>
+                      </svg>
+                    )}{" "}
+                    {/* Chat Bubble Icon for "Message" */}
+                    {index === 1 && (
+                      <svg
+                        className="w-5 h-5"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                        xmlns="http://www.w3.org/2000/svg"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth="2"
+                          d="M15.172 7l-6.586 6.586a2 2 0 102.828 2.828l6.414-6.586a4 4 0 00-5.656-5.656l-6.415 6.585a6 6 0 108.486 8.486L20.5 13"
+                        ></path>
+                      </svg>
+                    )}{" "}
+                    {/* Paperclip/File Icon for "Files" */}
+                    {index === 2 && (
+                      <svg
+                        className="w-5 h-5"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                        xmlns="http://www.w3.org/2000/svg"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth="2"
+                          d="M14 10h.01M12 10h.01M10 10h.01M17 21v-7a2 2 0 00-2-2H9a2 2 0 00-2 2v7h10zm4-12h-3.464a9 9 0 11-12.972 0H3a2 2 0 00-2 2v2h20v-2a2 2 0 00-2-2z"
+                        ></path>
+                      </svg>
+                    )}{" "}
+                    {/* Star/Thumbs Up Icon for "Review & Ratings" */}
                     {headings}
                   </button>
                 </div>
@@ -390,7 +449,7 @@ const AuthProjectDetails = () => {
                                 <div className="h-[45px] w-[40px] ml-2">
                                   <img
                                     className="w-[100%] h-[40px] rounded-[45px]"
-                                    src={`https://hireback-1.onrender.com//${messages?.messagerId?.authProfile}`}
+                                    src={`{messages?.messagerId?.authProfile}`}
                                   />
                                 </div>
 
@@ -519,7 +578,7 @@ const AuthProjectDetails = () => {
                               <div className="h-[45px] w-[40px] ml-2">
                                 <img
                                   className="w-full h-[40px] rounded-full"
-                                  src={`https://hireback-1.onrender.com//${uploadfile?.uploaderId?.authProfile}`}
+                                  src={`{uploadfile?.uploaderId?.authProfile}`}
                                   alt="Uploader Profile"
                                 />
                               </div>
@@ -564,12 +623,12 @@ const AuthProjectDetails = () => {
 
                                       <img
                                         className="w-[50px] h-[50px] sm:w-[30px] sm:h-[30px] rounded-md"
-                                        src={`https://hireback-1.onrender.com//${file}`}
+                                        src={`{file}`}
                                         alt="Uploaded file"
                                       />
 
                                       <a
-                                        href={`https://hireback-1.onrender.com//${file}`}
+                                        href={`{file}`}
                                         download={file}
                                         target="_blank"
                                         rel="noopener noreferrer"

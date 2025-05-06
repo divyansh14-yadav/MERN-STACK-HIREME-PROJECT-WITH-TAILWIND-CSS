@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
-import { Link, NavLink, useParams } from "react-router-dom";
+import { Link, NavLink, useLocation, useParams } from "react-router-dom";
 import Footer from "../components/footer";
 import Nav from "../components/nav";
 import CategorySlider from "../components/category";
@@ -39,11 +39,15 @@ const FeaturedTaskDetailed = () => {
   const [showFilter, setShowFilter] = useState(false);
   // console.log(taskType, "fulltime");
 
+  const locations = useLocation()
   const taskId = useParams();
   console.log(taskId.taskId, "taskid");
   const [loading, setLoading] = useState(true);
 
   const authId = JSON.parse(localStorage.getItem("authId"));
+
+  const searchDatas = locations.state?.searchData || [];
+  console.log(searchDatas,"searchData");
 
   useEffect(() => {
     const fetchFeatureService = async () => {
@@ -273,7 +277,7 @@ const FeaturedTaskDetailed = () => {
 
   //                                                   <div className='flex gap-8'>
   //                                                       <div>
-  //                                                           <img className="rounded-md w-[70px] h-[60px] shadow-sm" src={`https://hireback-1.onrender.com//${serach.task_logo}`} alt="Service" />
+  //                                                           <img className="rounded-md w-[70px] h-[60px] shadow-sm" src={`{serach.task_logo}`} alt="Service" />
   //                                                       </div>
   //                                                       <div className='text-start'>
   //                                                           <p className='font-semibold text-[1.1rem]'>{serach?.taskTitle}</p>
@@ -323,7 +327,7 @@ const FeaturedTaskDetailed = () => {
 
   //                                                   <div className='flex gap-8'>
   //                                                       <div>
-  //                                                           <img className="rounded-md w-[70px] h-[60px] shadow-sm" src={`https://hireback-1.onrender.com//${allTaskAccordingCategory.task_logo}`} alt="Service" />
+  //                                                           <img className="rounded-md w-[70px] h-[60px] shadow-sm" src={`{allTaskAccordingCategory.task_logo}`} alt="Service" />
   //                                                       </div>
   //                                                       <div className='text-start'>
   //                                                           <p className='font-semibold text-[1.1rem]'>{allTaskAccordingCategory.taskTitle}</p>
@@ -374,7 +378,6 @@ const FeaturedTaskDetailed = () => {
 
   return (
     <div>
-      <Nav taskId={taskId} />
       <CategorySlider />
 
       <div className="w-[90%] mx-auto xl:mt-28 mt-10">
@@ -480,15 +483,23 @@ const FeaturedTaskDetailed = () => {
             </div>
 
             {/* Result Cards */}
-            <div className="mt-6 space-y-5border-2">
-              {(location || taskTitle || tags || newest || oldest
-                ? searcData
-                : allTaskAccordingCategory
-              ).length > 0 ? (
-                (location || taskTitle || tags || newest || oldest
-                  ? searcData
-                  : allTaskAccordingCategory
-                ).map((task, index) => (
+            <div className="mt-6 overflow-y-scroll max-h-[600px]">
+            {(location.state?.searchData?.length > 0
+    ? location.state.searchData
+    : searchDatas?.length > 0
+    ? searchDatas
+    : location || taskTitle || tags || newest || oldest
+    ? searcData
+    : allTaskAccordingCategory
+  ).length > 0 ? (
+    (location.state?.searchData?.length > 0
+      ? location.state.searchData
+      : searchDatas?.length > 0
+      ? searchDatas
+      : location || taskTitle || tags || newest || oldest
+      ? searcData
+      : allTaskAccordingCategory
+    ).map((task, index) => (
                   <div
                     key={index}
                     className={`xl:p-10 p-6 rounded-xl xl:mt-8 mt-8 shadow-md transition duration-300 ${
@@ -498,7 +509,11 @@ const FeaturedTaskDetailed = () => {
                     <div className="flex flex-col md:flex-row md:justify-between md:items-center gap-5">
                       <div className="flex gap-5 items-start">
                         <img
-                          src={`https://hireback-1.onrender.com//${task.task_logo}`}
+                          src={
+                            typeof task.task_logo === "object"
+                              ? task.task_logo.url
+                              : task.task_logo
+                          }
                           alt="Task"
                           className="w-16 h-14 rounded-md shadow"
                         />

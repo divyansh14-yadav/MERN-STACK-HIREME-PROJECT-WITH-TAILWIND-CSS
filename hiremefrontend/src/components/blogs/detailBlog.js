@@ -58,17 +58,19 @@ const DetailBlog = () => {
 
         fetchAllBlog();
     }, []);
-  if (loading) {
-    return <Loder />;
-  }
+//   if (loading) {
+//     return <Loder />;
+//   }
     return (
         <>
-            <Nav />
+            
             <CategorySlider />
-            <div className='xl:flex xl:w-[93%] block xl:gap-10 xl:mt-30 mt-10 relative w-full z-auto overflow-x-visible'>
+            {
+                loading ? <Loder/>:
+                <div className='xl:flex xl:w-[93%] block xl:gap-10 xl:mt-30 mt-10 relative w-full z-auto overflow-x-visible'>
                 <div className="w-[100%] xl:ml-25 mt-10 rounded-t-[10px] bg-[#f9f9f9] leading-[1.5] text-start">
                     <img className="rounded-t-[10px] h-[350px] w-full"
-                        src={`https://hireback-1.onrender.com//${selectedBlog ? selectedBlog.blog_image : detailBlog.blog_image}`}
+                        src={selectedBlog ? selectedBlog?.blog_image?.url : detailBlog?.blog_image?.url}
                         alt="Blog"
                     />
 
@@ -103,7 +105,7 @@ const DetailBlog = () => {
                             <div key={blog._id} className='flex items-center border-b-1 border-[#0000001a] pb-5'>
                                 <div className='mt-2 w-[30%]'>
                                     <img className="mt-8 xl:h-[70px] h-[65px] w-[100%] rounded-md"
-                                        src={`https://hireback-1.onrender.com//${blog.blog_image}`}
+                                        src={blog.blog_image.url}
                                         alt="Blog"
                                     />
                                 </div>
@@ -132,6 +134,7 @@ const DetailBlog = () => {
                         ))}
                 </div>
             </div>
+            }
             <Footer />
         </>
     );

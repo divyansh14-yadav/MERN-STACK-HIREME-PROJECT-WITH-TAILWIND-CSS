@@ -64,9 +64,12 @@ const FeaturedService = () => {
 
   // console.log(subCategoryId, "subsubsubsubsubsubsubsub");
 
-  const location = useLocation();
   const navigate = useNavigate();
+  const location = useLocation();
 
+  const services = location.state?.services || [];
+  console.log(services,"heloservices");
+  
   // useEffect(() => {
   //   const queryParams = new URLSearchParams(location.search);
   //   const savedminRating = queryParams.get("minRating");
@@ -242,29 +245,32 @@ const FeaturedService = () => {
     setIsOpen(!isOpen);
   };
 
-  if (loading) {
-    return <Loder />;
-  }
+  // if (loading) {
+  //   return <Loder />;
+  // }
   
   return (
     <div>
-      <Nav />
+      
       <CategorySlider />
-      <div className="w-[90%] m-auto xl:mt-28 mt-25">
+      {
+        loading ? <Loder/>
+        :
+        <div className="w-[90%] m-auto xl:mt-28 mt-25">
         <h1 className="text-start xl:text-[2.2rem] text-2xl font-bold text-[#3d3d3d]">
           {featureCategoriesName}
         </h1>
         <div className="border-b-2 mt-8 border-[#0000001a]"></div>
         <div className="mt-6 font-semibold text-[#3d3d3d] xl:flex justify-between item-center text-start block">
-          {categoryId ? (
-            <h1 className="">
-              {featuredCategoryService.length} Services available
-            </h1>
-          ) : (
-            <h1 className="">
-              {subCategoriesAllData.length} Services available
-            </h1>
-          )}
+           <h1>
+           {(() => {
+             if (categoryId) {
+               return `${(services && services.length > 0 ? services.length : featuredCategoryService?.length || 0)} Services available`;
+             } else {
+               return `${(services && services.length > 0 ? services.length : subCategoriesAllData?.length || 0)} Services available`;
+             }
+           })()}
+         </h1>
           <div className="flex gap-5 xl:mt-0 mt-5 items-center">
             <p className="text-[1.08rem]">Sort by :</p>
             <select
@@ -360,169 +366,152 @@ const FeaturedService = () => {
           
     {categoryId ? (
   <div className="xl:w-[90%] w-full sm:[90%]">
-    <div className="w-full m-auto gap-5 xl:grid xl:grid-cols-3 sm:grid sm:grid-cols-2 grid-cols-1">
-      {featuredCategoryService.length ? (
-        featuredCategoryService?.map((featuredServices, index) => (
-          <div key={index} className="shadow-xl xl:mt-0 mt-10">
-            <div className="">
-              <Slider
-                prevArrow={<CustomPrevArrow />}
-                nextArrow={<CustomNextArrow />}
-                ref={featureServiceRef}
-                speed={500}
-                slidesToShow={1}
-              >
-                {featuredServices?.serviceImage?.map(
-                  (imgd, imgIndex) => (
-                    <img
-                      key={imgIndex}
-                      className="rounded-t-[10px] w-full h-[150px]"
-                      src={`https://hireback-1.onrender.com//${imgd}`}
-                      alt="Service"
-                    />
-                  )
-                )}
-              </Slider>
+   <div className="w-full m-auto gap-5 xl:grid xl:grid-cols-3 sm:grid sm:grid-cols-2 grid-cols-1">
+  {(featuredCategoryService.length > 0 ? featuredCategoryService : services).length > 0 ? (
+    (featuredCategoryService.length > 0 ? featuredCategoryService : services).map((item, index) => (
+      <div key={index} className="shadow-xl xl:mt-0 mt-10">
+        <div>
+          <Slider
+            prevArrow={<CustomPrevArrow />}
+            nextArrow={<CustomNextArrow />}
+            ref={featureServiceRef}
+            speed={500}
+            slidesToShow={1}
+          >
+            {item?.serviceImage?.url?.map((img, imgIndex) => (
+              <img
+                key={imgIndex}
+                className="rounded-t-[10px] w-full h-[150px]"
+                src={img}
+                alt="Service"
+              />
+            ))}
+          </Slider>
 
-              <div className="pl-[12px] flex items-center mt-6">
-                <div className="h-[40px] w-[48px]">
-                  <img
-                    className="w-[70%] h-[30px] rounded-[45px]"
-                    src={`https://hireback-1.onrender.com//${featuredServices.authId.authProfile}`}
-                  />
-                </div>
-                <Link
-                  to={`/userServices/${featuredServices.authId._id}`}
-                >
-                  <div className="flex gap-2 pb-3 font-semibold ml-1">
-                    <p className="">
-                      {featuredServices.authId.firstName}
-                    </p>
-                    <p className="">
-                      {featuredServices.authId.lastName}
-                    </p>
-                  </div>
-                </Link>
+          <div className="pl-[12px] flex items-center mt-6">
+            <div className="h-[40px] w-[48px]">
+              <img
+                className="w-[70%] h-[30px] rounded-[45px]"
+                src={item?.authId?.authProfile}
+                alt="Profile"
+              />
+            </div>
+            <Link to={`/userServices/${item?.authId?._id}`}>
+              <div className="flex gap-2 pb-3 font-semibold ml-1">
+                <p>{item?.authId?.firstName}</p>
+                <p>{item?.authId?.lastName}</p>
               </div>
-              <Link to={`/detailedService/${featuredServices._id}`}>
-                <h1 className="text-[#212121] text-start font-semibold text-[0.990rem] pl-[12px] mt-[10px]">
-                  {`${featuredServices.title.substring(0, 50)}...`}
-                </h1>
-              </Link>
-              <div className="flex items-center gap-2 mt-5 border-1 p-2 pl-[12px] border-[#0000001a]">
-                <FontAwesomeIcon
-                  icon={faStar}
-                  style={{ color: "#f78318" }}
-                />
+            </Link>
+          </div>
 
-                <div className="flex gap-2">
-                  <p className="text-[#f78318] font-medium">
-                    {featuredServices.averageRating}
-                  </p>
-                  <p>{`(${featuredServices.totalRatings})`}</p>
-                </div>
-              </div>
+          <Link to={`/detailedService/${item._id}`}>
+            <h1 className="text-[#212121] text-start font-semibold text-[0.990rem] pl-[12px] mt-[10px]">
+              {`${item.title?.substring(0, 50)}...`}
+            </h1>
+          </Link>
+
+          <div className="flex items-center gap-2 mt-5 border-1 p-2 pl-[12px] border-[#0000001a]">
+            <FontAwesomeIcon icon={faStar} style={{ color: "#f78318" }} />
+            <div className="flex gap-2">
+              <p className="text-[#f78318] font-medium">{item.averageRating}</p>
+              <p>{`(${item.totalRatings})`}</p>
             </div>
           </div>
-        ))
-      ) : (
-        <div className="col-span-full flex flex-col items-center justify-center py-10">
-          <img
-            className="w-[8%] pb-4"
-            src="https://script.viserlab.com/metalance/assets/templates/basic//images/empty_list.png"
-            alt="No services found"
-          />
-          <h1 className="mt-3 text-center text-lg text-[#717171] font-semibold">
-            No featured services found in this category.
-          </h1>
         </div>
-      )}
+      </div>
+    ))
+  ) : (
+    <div className="col-span-full flex flex-col items-center justify-center py-10">
+      <img
+        className="w-[8%] pb-4"
+        src="https://script.viserlab.com/metalance/assets/templates/basic//images/empty_list.png"
+        alt="No services found"
+      />
+      <h1 className="mt-3 text-center text-lg text-[#717171] font-semibold">
+        No featured services found in this category.
+      </h1>
     </div>
+  )}
+</div>
+
   </div>
 ) : subcategoryId ? (
   <div className="xl:w-[72%] w-full">
-    <div className="w-[100%] m-auto gap-5 xl:grid xl:grid-cols-3 sm:grid sm:grid-cols-2 grid grid-cols-1 ">
-      {subCategoriesAllData.length ? (
-        subCategoriesAllData?.map((subCategoriesData, index) => (
-          <div key={index} className="shadow-xl">
-            <div className="">
-              <Slider
-                prevArrow={<CustomPrevArrow />}
-                nextArrow={<CustomNextArrow />}
-                ref={subCategoriesRef}
-                speed={500}
-                slidesToShow={1}
-              >
-                {subCategoriesData?.serviceImage?.map(
-                  (imgd, imgIndex) => (
-                    <img
-                      key={imgIndex}
-                      className="rounded-t-[10px] w-full h-[150px]"
-                      src={`https://hireback-1.onrender.com//${imgd}`}
-                      alt="Service"
-                    />
-                  )
-                )}
-              </Slider>
+<div className="w-full m-auto gap-5 xl:grid xl:grid-cols-3 sm:grid sm:grid-cols-2 grid-cols-1">
+  {(services.length > 0 ? services : subCategoriesAllData).length > 0 ? (
+    (services.length > 0 ? services : subCategoriesAllData).map((item, index) => (
+      console.log(item,"ddddddddddddddd"),
+      
+      <div key={index} className="shadow-xl">
+        <div>
+          <Slider
+            prevArrow={<CustomPrevArrow />}
+            nextArrow={<CustomNextArrow />}
+            ref={subCategoriesRef}
+            speed={500}
+            slidesToShow={1}
+          >
+            {item?.serviceImage?.url?.map((img, imgIndex) => (
+              <img
+                key={imgIndex}
+                className="rounded-t-[10px] w-full h-[150px]"
+                src={img}
+                alt="Service"
+              />
+            ))}
+          </Slider>
 
-              <div className="pl-[12px] flex items-center mt-6">
-                <div className="h-[40px] w-[48px]">
-                  <img
-                    className="w-[70%] h-[30px] rounded-[45px]"
-                    src={`https://hireback-1.onrender.com//${subCategoriesData.authId.authProfile}`}
-                  />
-                </div>
-                <Link
-                  to={`/userServices/${subCategoriesData.authId._id}`}
-                >
-                  <div className="flex gap-2 pb-3 font-semibold ml-1">
-                    <p className="">
-                      {subCategoriesData.authId.firstName}
-                    </p>
-                    <p className="">
-                      {subCategoriesData.authId.lastName}
-                    </p>
-                  </div>
-                </Link>
+          <div className="pl-[12px] flex items-center mt-6">
+            <div className="h-[40px] w-[48px]">
+              <img
+                className="w-[70%] h-[30px] rounded-[45px]"
+                src={item?.authId?.authProfile}
+                alt="Profile"
+              />
+            </div>
+            <Link to={`/userServices/${item.authId?._id}`}>
+              <div className="flex gap-2 pb-3 font-semibold ml-1">
+                <p>{item.authId?.firstName}</p>
+                <p>{item.authId?.lastName}</p>
               </div>
-              <Link to={`/detailedService/${subCategoriesData._id}`}>
-                <h1 className="text-[#212121] text-start font-semibold text-[0.990rem] pl-[12px] mt-[10px]">
-                  {`${subCategoriesData.title.substring(0, 50)}...`}
-                </h1>
-              </Link>
-              <div className="flex items-center gap-2 mt-5 border-1 p-2 pl-[12px] border-[#0000001a]">
-                <FontAwesomeIcon
-                  icon={faStar}
-                  style={{ color: "#f78318" }}
-                />
+            </Link>
+          </div>
 
-                <div className="flex gap-2">
-                  <p className="text-[#f78318] font-medium">
-                    {subCategoriesData.averageRating}
-                  </p>
-                  <p>{`(${subCategoriesData.totalRatings})`}</p>
-                </div>
-              </div>
+          <Link to={`/detailedService/${item._id}`}>
+            <h1 className="text-[#212121] text-start font-semibold text-[0.990rem] pl-[12px] mt-[10px]">
+              {`${item.title?.substring(0, 50)}...`}
+            </h1>
+          </Link>
+
+          <div className="flex items-center gap-2 mt-5 border-1 p-2 pl-[12px] border-[#0000001a]">
+            <FontAwesomeIcon icon={faStar} style={{ color: "#f78318" }} />
+            <div className="flex gap-2">
+              <p className="text-[#f78318] font-medium">{item.averageRating || 0}</p>
+              <p>{`(${item.totalRatings || 0})`}</p>
             </div>
           </div>
-        ))
-      ) : (
-        <div className="col-span-full flex flex-col items-center justify-center py-10">
-          <img
-            className="w-[8%] pb-4"
-            src="https://script.viserlab.com/metalance/assets/templates/basic//images/empty_list.png"
-            alt="No services found"
-          />
-          <h1 className="mt-3 text-center text-lg text-[#717171] font-semibold">
-            No services found in this subcategory.
-          </h1>
         </div>
-      )}
+      </div>
+    ))
+  ) : (
+    <div className="col-span-full flex flex-col items-center justify-center py-10">
+      <img
+        className="w-[8%] pb-4"
+        src="https://script.viserlab.com/metalance/assets/templates/basic//images/empty_list.png"
+        alt="No services found"
+      />
+      <h1 className="mt-3 text-center text-lg text-[#717171] font-semibold">
+        No services found.
+      </h1>
     </div>
+  )}
+</div>
+
   </div>
 ) : null}
         </div>
       </div>
+      }
       <Footer />
     </div>
   );

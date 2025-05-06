@@ -56,7 +56,7 @@ const Home = () => {
 
   return (
     <div>
-      <Nav />
+      
       {loading ? (
         <Loder />
       ) : (

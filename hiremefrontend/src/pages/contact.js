@@ -42,7 +42,7 @@ const Contact = () => {
 
   return (
     <div>
-      <Nav />
+      
       <CategorySlider />
       <div className="py-16 lg:py-32">
         <div className="container mx-auto px-4 lg:px-8">

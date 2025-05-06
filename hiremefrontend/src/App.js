@@ -29,48 +29,47 @@ import CategorySlider from './components/category';
 import SliderComponent from './components/slider';
 import FeaturedTaskDetailed from './task/featuredTaskDetailed';
 import FeaturedTaskSubDetails from './task/featuredTaskSubDetails';
-import { ToastContainer } from 'react-toastify';
+import { toast, ToastContainer } from 'react-toastify';
 import CreateTask from './task/createTask';
 import PaymentSucess from './components/paymentSucess';
 import PaymentTransaction from './components/payments/paymentTransaction';
 import PaymentDeposit from './components/payments/paymentDeposit';
 import PaymentWithdraws from './components/payments/paymentWithdraws';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import Chat from './components/user chat/chat';
 import ChatDashboard from './components/user chat/chatDashboard';
 import { io } from "socket.io-client";
+import { messaging, getToken, onMessage } from "./firebase";
+import axios from "axios";
+import authConfig from './api/config';
 
-const socket = io("https://hireback-1.onrender.com/api/v1");
+const socket = io("http://192.168.1.2:8000/api/v1");
 function App() {
-  // useEffect(() => {
-  //   // Ask for notification permission on first load
-  //   Notification.requestPermission().then((permission) => {
-  //     if (permission === "granted") {
-  //       console.log("Notification permission granted.");
-  //     } else {
-  //       console.log("Notification permission denied.");
-  //     }
-  //   });
-  // }, []);
-
+  const [profileImage, setProfileImage] = useState("");
+  console.log(profileImage,"cloudimageprofile");
+  
+  // for socket io
   useEffect(() => {
     const authId = JSON.parse(localStorage.getItem("authId"));
     if (authId) {
       socket.emit("join", authId); // ✅ Auto join on app load
     }
   }, []);
+
   return (
     <div className="App">
       {/* <Nav/> */}
 
       <Routes>
+
+        <Route element={<Nav profileImage={profileImage}/>}> 
         <Route path='/' element={<Home />}></Route>
         {/* <Route path='/blog' element={<Blog/>}></Route> */}
         <Route path='/blog' element={<AllBlogs />}></Route>
         <Route path='/blog/:blogId' element={<DetailBlog />} />
         <Route path='/contact' element={<Contact />}></Route>
-        <Route path='/signUp' element={<SignUp />}></Route>
-        <Route path='/signIn' element={<SignIn />}></Route>
+        {/* <Route path='/signUp' element={<SignUp />}></Route>
+        <Route path='/signIn' element={<SignIn />}></Route> */}
         <Route path='/s' element={<SignUpProfile />}></Route>
         <Route path='/forgetPassword/' element={<ForgetResetPassword />}></Route>
         <Route path='/verifyOtp' element={<VerifyOtp />}></Route>
@@ -81,7 +80,7 @@ function App() {
         <Route path='/userServices/:authId' element={<UserServicesDetails />}></Route>
         <Route path='/authPortfolio/:authId' element={<AuthPortfolio />}></Route>
         <Route path='/detailedPortfolio/:portfolioId/:authId' element={<AuthportfolioDetailed />}></Route>
-        <Route path='/basicInfo' element={<BasicInfo />}></Route>
+        <Route path='/basicInfo' element={<BasicInfo setProfileImage={setProfileImage} />}></Route>
         <Route path='/user/dashboard' element={<Dashboard />}></Route>
         <Route path='/user/gigs' element={<Gigs />}></Route>
         <Route path='/user/projects' element={<AuthProjects />}></Route>
@@ -95,6 +94,9 @@ function App() {
         <Route path='/user/transaction' element={<PaymentTransaction />}></Route>
         <Route path='/user/Messages' element={<ChatDashboard />}></Route>
         {/* <Route path="/chat/:userId/:receiverId" element={<Chat />} /> */}
+        </Route>
+        <Route path='/signUp' element={<SignUp />}></Route>
+        <Route path='/signIn' element={<SignIn />}></Route>
       </Routes>
       <ToastContainer></ToastContainer>
 
@@ -103,3 +105,10 @@ function App() {
 }
 
 export default App;
+
+
+
+
+
+
+

@@ -1,6 +1,6 @@
 // import axios from "axios";
 
-// const API_URL = "https://hireback-1.onrender.com/api/v1/messages"; // Change to your backend URL
+// const API_URL = "http://192.168.1.2:8000/api/v1/messages"; // Change to your backend URL
 
 // export const fetchMessages = async (senderId, receiverId) => {
 //   try {
@@ -32,7 +32,7 @@
 
 import axios from "axios";
 
-const API_URL = "https://hireback-1.onrender.com/api/v1/messages";
+const API_URL = "http://192.168.1.2:8000/api/v1/messages";
 
 export const fetchMessages = async (senderId, receiverId) => {
   try {

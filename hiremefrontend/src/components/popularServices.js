@@ -96,7 +96,7 @@ const PopularServices = () => {
                   <div className="relative xl:mt-12 mt-2 p-3">
                     <img
                       className="w-full m-auto"
-                      src={`https://hireback-1.onrender.com/${item.feature_category_image}`}
+                      src={`http://192.168.1.2:8000/${item.feature_category_image}`}
                       alt={item.featureCategoriesName}
                     />
                     <div className="absolute top-[258px] w-[90%] m-auto h-[20%] inset-0 bg-gradient-to-t from-black/100 via-black/60 to-transparent"></div>

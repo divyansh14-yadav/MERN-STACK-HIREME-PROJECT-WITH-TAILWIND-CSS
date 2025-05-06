@@ -90,7 +90,7 @@ const ClientsReview = ({ clientReviews }) => {
                       <div className="h-[50px] w-[50px] rounded-full overflow-hidden">
                         <img
                           className="w-full h-full object-cover"
-                          src={`https://hireback-1.onrender.com//${clientReview.reviewerId?.authProfile}`}
+                          src={clientReview.reviewerId?.authProfile}
                           alt="Reviewer"
                         />
                       </div>

@@ -1,21 +1,21 @@
-import React, { useState } from 'react'
-import { Link, useNavigate } from 'react-router-dom'
-import SignUpProfile from './signUpProfile'
-import authConfig from '../../api/config'
-import Nav from '../../components/nav'
+import React, { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import SignUpProfile from "./signUpProfile";
+import authConfig from "../../api/config";
+import Nav from "../../components/nav";
 import { toast } from "react-toastify";
-import {RegisterValidation} from "../../validations/RegisterValidation"
+import { RegisterValidation } from "../../validations/RegisterValidation";
 const SignUp = () => {
-  const [firstName, setFirstName] = useState("")
-  const [lastName, setLastName] = useState("")
-  const [email, setEmail] = useState("")
-  const [password, setPassword] = useState("")
-  const [confirm_password, setConfirm_password] = useState("")
-
-  const navigate = useNavigate()
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [confirm_password, setConfirm_password] = useState("");
+  const [agreeTerms, setagreeTerms] = useState(false);
+  const navigate = useNavigate();
 
   const handleSubmit = async (event) => {
-    event.preventDefault()
+    event.preventDefault();
 
     try {
       await RegisterValidation.validate(
@@ -25,6 +25,7 @@ const SignUp = () => {
           email,
           password,
           confirm_password,
+          agreeTerms,
         },
         { abortEarly: false }
       );
@@ -33,37 +34,40 @@ const SignUp = () => {
         lastName,
         email,
         password,
-        confirm_password
-      })
+        confirm_password,
+      });
       if (response.status === 200) {
         // alert("Register Succesfully")
-        setFirstName("")
-        setLastName("")
-        setEmail("")
-        setPassword("")
-        setConfirm_password("")
-        navigate("/s")
+        setFirstName("");
+        setLastName("");
+        setEmail("");
+        setPassword("");
+        setConfirm_password("");
+        setagreeTerms(true);
+        navigate("/s", {
+          state: { firstName: response.data.tempUser.firstName},
+        });
       }
       console.log(response, "registerResponse");
     } catch (error) {
       if (error.name === "ValidationError") {
         error.errors.forEach((err) => toast.error(err));
         return;
-      }
-      else if (error.response.data.message === "already have an account") {
+      } else if (error.response.data.message === "already have an account") {
         // return alert("already have account")
-        return toast.error("Already have an account")
-      }
-      else if (error.response.data.message === "confirm_password are not matched") {
+        return toast.error("Already have an account");
+      } else if (
+        error.response.data.message === "confirm_password are not matched"
+      ) {
         // alert("password not matched")
-        return toast.error("confirm_password are not matched")
+        return toast.error("confirm_password are not matched");
       }
     }
+  };
 
-  }
-
-  <SignUpProfile data={{ firstName, lastName, email, password, confirm_password }} />
-
+  <SignUpProfile
+    data={{ firstName, lastName, email, password, confirm_password }}
+  />;
 
   return (
     <div className="min-h-screen flex flex-col md:flex-row">
@@ -78,10 +82,16 @@ const SignUp = () => {
             Join Now to Start Your Freelance Journey!
           </h1>
           <p className="text-sm md:text-base">
-            Craft Your Professional Identity. Showcase Your Skills and Expertise to Attract Clients and Opportunities.
+            Craft Your Professional Identity. Showcase Your Skills and Expertise
+            to Attract Clients and Opportunities.
           </p>
           <div className="flex flex-wrap gap-3">
-            {["Logo Design", "Illustration", "Website Development", "Social Media Marketing"].map((item, index) => (
+            {[
+              "Logo Design",
+              "Illustration",
+              "Website Development",
+              "Social Media Marketing",
+            ].map((item, index) => (
               <a
                 key={index}
                 href="#"
@@ -100,7 +110,7 @@ const SignUp = () => {
                 "662f39a6a80d91714370982.png",
                 "662f39943ae351714370964.png",
                 "662f39db6d1a91714371035.png",
-                "662f39ad8af6c1714370989.png"
+                "662f39ad8af6c1714370989.png",
               ].map((img, idx) => (
                 <img
                   key={idx}
@@ -125,31 +135,40 @@ const SignUp = () => {
           </Link>
           <p className="text-sm text-gray-600">
             Already have an account?
-            <Link to="/signIn" className="text-[#f78318] font-medium ml-1">SignIn</Link>
+            <Link to="/signIn" className="text-[#f78318] font-medium ml-1">
+              SignIn
+            </Link>
           </p>
         </div>
 
-        <h2 className="text-2xl font-bold text-gray-800 mb-2">Sign Up <span className="text-[#f78318]">Now</span></h2>
+        <h2 className="text-2xl font-bold text-gray-800 mb-2">
+          Sign Up <span className="text-[#f78318]">Now</span>
+        </h2>
         <p className="text-sm text-gray-500 mb-8">
-          Unlock Your Potential and Connect with Endless Freelance Possibilities.
+          Unlock Your Potential and Connect with Endless Freelance
+          Possibilities.
         </p>
 
         <form onSubmit={handleSubmit} className="space-y-6">
           <div className="flex flex-col md:flex-row gap-4">
             <div className="w-full">
-              <label className="block text-sm font-medium text-gray-700 mb-1">First Name <span className="text-red-500">*</span></label>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                First Name <span className="text-red-500">*</span>
+              </label>
               <input
                 type="text"
-                value={firstName}
+                value={firstName.toLowerCase()}
                 onChange={(e) => setFirstName(e.target.value)}
                 className="w-full p-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-orange-400 outline-none"
               />
             </div>
             <div className="w-full">
-              <label className="block text-sm font-medium text-gray-700 mb-1">Last Name <span className="text-red-500">*</span></label>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                Last Name <span className="text-red-500">*</span>
+              </label>
               <input
                 type="text"
-                value={lastName}
+                value={lastName.toLowerCase()}
                 onChange={(e) => setLastName(e.target.value)}
                 className="w-full p-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-orange-400 outline-none"
               />
@@ -157,10 +176,12 @@ const SignUp = () => {
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Email Address <span className="text-red-500">*</span></label>
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              Email Address <span className="text-red-500">*</span>
+            </label>
             <input
               type="email"
-              value={email}
+              value={email.toLowerCase()}
               onChange={(e) => setEmail(e.target.value)}
               className="w-full p-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-orange-400 outline-none"
             />
@@ -168,7 +189,9 @@ const SignUp = () => {
 
           <div className="flex flex-col md:flex-row gap-4">
             <div className="w-full">
-              <label className="block text-sm font-medium text-gray-700 mb-1">Password <span className="text-red-500">*</span></label>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                Password <span className="text-red-500">*</span>
+              </label>
               <input
                 type="password"
                 value={password}
@@ -177,7 +200,9 @@ const SignUp = () => {
               />
             </div>
             <div className="w-full">
-              <label className="block text-sm font-medium text-gray-700 mb-1">Confirm Password <span className="text-red-500">*</span></label>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                Confirm Password <span className="text-red-500">*</span>
+              </label>
               <input
                 type="password"
                 value={confirm_password}
@@ -188,11 +213,27 @@ const SignUp = () => {
           </div>
 
           <div className="flex items-start gap-2">
-            <input type="checkbox" className="mt-1" />
+            <input
+              type="checkbox"
+              value={agreeTerms}
+              className="mt-1"
+              onChange={(e) => setagreeTerms(true)}
+              checked={agreeTerms}
+            />
             <p className="text-sm text-gray-600">
-              By proceeding, you agree to the <a href="#" className="text-[#f78318]">Privacy Policy</a>,
-              <a href="#" className="text-[#f78318] ml-1">Terms of Service</a>, and
-              <a href="#" className="text-[#f78318] ml-1">Refund Policy</a>.
+              By proceeding, you agree to the{" "}
+              <a href="#" className="text-[#f78318]">
+                Privacy Policy
+              </a>
+              ,
+              <a href="#" className="text-[#f78318] ml-1">
+                Terms of Service
+              </a>
+              , and
+              <a href="#" className="text-[#f78318] ml-1">
+                Refund Policy
+              </a>
+              .
             </p>
           </div>
 
@@ -205,8 +246,7 @@ const SignUp = () => {
         </form>
       </div>
     </div>
-  )
+  );
+};
 
-}
-
-export default SignUp
+export default SignUp;

@@ -128,11 +128,11 @@ const FeaturedTaskSubDetails = () => {
   const handleSliderChange = (event, newValue) => {
     setProgress(newValue);
   };
-  useEffect(() => {
-    if (taskDetailedinfo.Task_Min_Budget) {
-      setProgress(taskDetailedinfo.Task_Min_Budget);
-    }
-  }, [taskDetailedinfo]);
+  // useEffect(() => {
+  //   if (taskDetailedinfo.Task_Min_Budget) {
+  //     setProgress(taskDetailedinfo.Task_Min_Budget);
+  //   }
+  // }, [taskDetailedinfo]);
 
   const handleBidTimeChanges = (value) => {
     setDaysDrpdown(value);
@@ -157,6 +157,7 @@ const FeaturedTaskSubDetails = () => {
   };
 
   const handleCreateBid = async () => {
+    window.scrollTo(0, 0);
     try {
       const response = await authConfig.post(
         `/createBid/${authId}/${taskDetailedinfo._id}`,
@@ -430,7 +431,7 @@ const FeaturedTaskSubDetails = () => {
 
   return (
     <div>
-      <Nav />
+      
       <CategorySlider />
       <div>
         <div className="xl:mt-25 mt-7 xl:w-[83%] w-full xl:p-0 p-3 m-auto text-[1.1rem] font-semibold border-b-1 border-neutral-200 pb-5">
@@ -456,8 +457,8 @@ const FeaturedTaskSubDetails = () => {
                 onClick={() => setActiveSteps(index)}
                 className={`flex items-center gap-2 px-4 py-2 cursor-pointer rounded-md transition-colors duration-200 flex-shrink-0 ${
                   activeSteps === index
-                    ? "text-[#F78318] font-semibold xl:text-lg text-base bg-orange-100"
-                    : "text-[#888686] font-semibold xl:text-lg text-base hover:text-[#F78318]"
+                    ? "text-[#F78318] font-semibold xl:text-[1.1rem] text-base bg-orange-100"
+                    : "text-[#888686] font-semibold xl:text-[1.1rem] text-base hover:text-[#F78318]"
                 }`}
               >
                 <item.icon className="xl:text-lg text-base" />
@@ -470,42 +471,163 @@ const FeaturedTaskSubDetails = () => {
           <div>
             <div className="xl:flex block mt-10 gap-8 xl:w-[80%] w-full m-auto">
               <div className="xl:w-[90%] w-[95%] text-start border-1 border-neutral-200 xl:ml-0 ml-2 p-5 rounded-md">
-                <div className="xl:flex block justify-between items-center">
-                  <h1 className="text-[#333] xl:text-[22px] text-[20px] font-bold">
+                <div className="flex flex-col xl:flex-row justify-between items-start xl:items-center mb-5">
+                  <h1 className="text-gray-800 text-xl xl:text-2xl font-semibold mb-1 xl:mb-0">
                     Project Description
                   </h1>
-                  <div className="flex gap-2 items-center font-bold text-[18px] xl:mt-0 mt-3">
-                    <p className="text-[#666] ">
-                      {"$" + taskDetailedinfo.Task_Min_Budget}
-                    </p>{" "}
-                    -
-                    <p className="text-[#666]">
-                      {"$" + taskDetailedinfo.Task_Max_Budget + " " + "USD"}
+                  <div className="flex items-center gap-2 text-base font-medium text-gray-700">
+                    <p className="text-black font-bold">
+                      ${taskDetailedinfo.Task_Min_Budget} - $
+                      {taskDetailedinfo.Task_Max_Budget} USD
                     </p>
-                    <p className="text-[#666]">
+                    <span className="text-[0.875rem] bg-[#F78318] text-white py-1 px-2 rounded-full">
                       {taskDetailedinfo.fixed_Task_type}
-                    </p>
+                    </span>
                   </div>
                 </div>
-                <p className="text-[16px] text-[#666] text-justify xl:mt-6 mt-3 w-[99%]">
+
+                {/* Project Description Text */}
+                <p className="text-gray-600 text-sm xl:text-base text-justify mb-6">
                   {taskDetailedinfo.taskDescription +
                     "Leverage agile frameworks to provide a robust synopsis for high level overviews. Iterative approaches to corporate strategy foster collaborative thinking to further the overall value proposition. Organically grow the holistic world view of disruptive innovation via workplace diversity and empowermentLeverage agile frameworks to provide a robust synopsis for high level overviews. Iterative approaches to corporate strategy foster collaborative thinking to further the overall value proposition. Organically grow the holistic world view of disruptive innovation via workplace diversity"}
                 </p>
-                <div className="mt-8">
-                  <h1 className="text-[22px] text-[#333] font-bold">
+                <div className="mb-6">
+                  <h2 className="text-gray-800 text-lg font-semibold mb-3">
                     Skill Required
-                  </h1>
-                  <div className="flex gap-3">
+                  </h2>
+                  <div className="flex flex-wrap gap-1.5">
                     {taskDetailedinfo?.task_Skill_Required?.map(
-                      (skills, indes) => (
-                        <p className="mt-2 text-[#ffab1a] bg-[#ffab1a26]  p-1.5 rounded-md">
+                      (skills, index) => (
+                        <span
+                          key={index}
+                          className="inline-block bg-yellow-100 text-yellow-600 text-[1rem] font-semibold py-0.5 px-2 rounded-full"
+                        >
                           {skills}
-                        </p>
+                        </span>
                       )
                     )}
                   </div>
                 </div>
+
+
+                {
+  // authId === taskDetailedinfo?.authId?._id ? null :
+  authId === taskDetailedinfo?.authId?._id || hasUserPlacedBid || confirmationBid ? null : (
+    <div className="mt-6 bg-white rounded-lg shadow-md overflow-hidden">
+      <div className="bg-[#f78318] text-white py-4 px-6">
+        <h2 className="font-semibold text-xl">Place Your Bid</h2>
+      </div>
+      <div className="p-6">
+        <div className="mb-4">
+          <label htmlFor="bidAmount" className="block text-gray-700 text-sm font-bold mb-2">
+            Your Minimal Rate:
+          </label>
+          <div className="relative rounded-md shadow-sm xl:w-[50%] w-full">
+            <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
+              <span className="text-gray-500 sm:text-sm">$</span>
+            </div>
+            <input
+              type="number"
+              name="bidAmount"
+              id="bidAmount"
+              className="shadow-sm focus:ring-indigo-500 p-2 focus:border-indigo-500 block w-full pl-7 pr-12 sm:text-sm border-gray-300 rounded-md"
+              placeholder={`Between $${taskDetailedinfo?.Task_Min_Budget} and $${taskDetailedinfo?.Task_Max_Budget}`}
+              value={progress}
+              // onChange={(e) => {
+              //   const value = parseInt(e.target.value, 10);
+              //   if (!isNaN(value) && value >= taskDetailedinfo?.Task_Min_Budget && value <= taskDetailedinfo?.Task_Max_Budget) {
+              //     handleSliderChange(null, value); // Simulate slider change
+              //   } else if (e.target.value === "") {
+              //     handleSliderChange(null, ""); // Allow clearing the input
+              //   }
+              // }}
+
+              onChange={(e)=>setProgress(e.target.value)}
+              min={taskDetailedinfo?.Task_Min_Budget}
+              max={taskDetailedinfo?.Task_Max_Budget}
+            />
+            <div className="absolute inset-y-0 right-0 flex items-center">
+              <span className="text-gray-500 pr-2">USD</span>
+            </div>
+          </div>
+          {typeof progress === 'number' && (
+            <p className="text-gray-500 text-xs mt-1">Your bid: ${progress}</p>
+          )}
+        </div>
+
+        <div className="mb-4">
+          <p className="block text-gray-700 text-sm font-bold mb-2">
+            Set your <span className="font-semibold">delivery time</span>:
+          </p>
+          <div className="flex gap-3">
+            <select
+              onChange={(e) => handleBidTimeChanges(e.target.value)}
+              className="shadow-sm block w-1/2 sm:text-sm p-2 border border-gray-300 rounded-md outline-none"
+            >
+              <option value="">Select</option>
+              <option value="Days">Days</option>
+              <option value="Hours">Hours</option>
+            </select>
+            <div className="relative shadow-sm rounded-md w-1/2 border border-gray-300 outline-none">
+              <div className="absolute inset-y-0 left-0 flex items-center pl-3">
+                <button
+                  onClick={handleDecrement}
+                  className="text-gray-400 hover:text-gray-600 focus:outline-none"
+                >
+                  <svg className="h-5 w-5" fill="currentColor" viewBox="0 0 20 20">
+                    <path fillRule="evenodd" d="M5 10a1 1 0 011-1h8a1 1 0 110 2H6a1 1 0 01-1-1z" clipRule="evenodd" />
+                  </svg>
+                </button>
               </div>
+              <input
+                type="number"
+                className="block w-full p-2 pl-10 pr-10 text-center sm:text-sm border-gray-300 rounded-md"
+                value={timeValue}
+                onChange={(e) =>
+                  setTimeValue(Math.max(0, Math.min(maxValue, Number(e.target.value))))
+                }
+              />
+              <div className="absolute inset-y-0 right-0 flex items-center pr-3">
+                <button
+                  onClick={handleIncrement}
+                  className="text-gray-400 hover:text-gray-600 focus:outline-none"
+                >
+                  <svg className="h-5 w-5" fill="currentColor" viewBox="0 0 20 20">
+                    <path fillRule="evenodd" d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z" clipRule="evenodd" />
+                  </svg>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div className="mb-6">
+          <label htmlFor="description" className="block text-gray-700 text-sm font-bold mb-2">
+            Description:
+          </label>
+          <textarea
+            id="description"
+            className="shadow-lg outline-none w-full h-[150px] p-3 sm:text-sm border border-gray-300 rounded-md"
+            rows="3"
+            placeholder="Explain why you are the best fit for this task..."
+            value={description}
+            onChange={(e) => setDescription(e.target.value)}
+          ></textarea>
+        </div>
+
+        <button
+          onClick={handleCreateBid}
+          className="w-full bg-[#f78318] text-white font-bold py-3 rounded-md focus:outline-none focus:shadow-outline"
+        >
+          Place Your Bid
+        </button>
+      </div>
+    </div>
+  )
+  // : null
+}
+              </div>
+
               <div className="xl:w-[35%] w-full xl:mt-0 mt-10">
                 <div className="text-start shadow-xl">
                   <div className="bg-[#f0f0f0] flex items-center h-14">
@@ -514,7 +636,13 @@ const FeaturedTaskSubDetails = () => {
                     </h1>
                   </div>
                   <div className="p-6 bg-[#f9f9f9]">
-                    <div>
+                  <div>
+                      <p className="font-semibold text-[#333] text-[1.05rem]">
+                        Task Owner
+                      </p>
+                      <p className="text-[#666]">{taskDetailedinfo.authId.firstName}</p>
+                    </div>
+                    <div className="mt-3">
                       <p className="font-semibold text-[#333] text-[1.05rem]">
                         Location
                       </p>
@@ -568,7 +696,7 @@ const FeaturedTaskSubDetails = () => {
                     </div>
                   </div>
                 </div>
-
+{/* 
                 {
                   //  authId === taskDetailedinfo?.authId?._id ? null :
                   authId === taskDetailedinfo?.authId?._id ||
@@ -674,7 +802,7 @@ const FeaturedTaskSubDetails = () => {
                   // ))
 
                   //  :null
-                }
+                } */}
               </div>
             </div>
           </div>
@@ -994,7 +1122,7 @@ const FeaturedTaskSubDetails = () => {
                         </td>
                         <td className="px-3 py-2 whitespace-nowrap text-sm text-[#f78318] sm:px-4">
                           <a
-                            href={`https://hireback-1.onrender.com//${file.uploadFiles}`}
+                            href={`{file.uploadFiles}`}
                             download
                             target="_blank"
                             rel="noopener noreferrer"

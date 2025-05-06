@@ -77,7 +77,7 @@ const FeaturedCategory = (featured) => {
                 >
                   <img
                     className="custom-img"
-                    src={`https://hireback-1.onrender.com/${item.feature_category_logo}`}
+                    src={`http://192.168.1.2:8000/${item.feature_category_logo}`}
                   />
                   <p className="custom-text">{item.featureCategoriesName}</p>
                 </Link>

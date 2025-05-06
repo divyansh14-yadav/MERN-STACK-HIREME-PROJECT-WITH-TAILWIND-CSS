@@ -148,11 +148,11 @@ import { FaHome, FaTasks, FaBriefcase, FaShoppingCart, FaEnvelope, FaWallet, FaM
 
 const OtherNav = () => {
   return (
-    <div className="bg-white shadow-md py-3">
+    <div className="bg-white shadow-md py-3 border-t-1 border-neutral-200">
       <div className="container mx-auto px-4 lg:px-8">
         <nav className="flex items-center justify-between">
           <ul className="flex items-center space-x-4 lg:space-x-8 overflow-x-auto scrollbar-hide">
-            <li>
+            {/* <li> */}
               <NavLink
                 to="/user/dashboard"
                 className={({ isActive }) =>
@@ -163,8 +163,8 @@ const OtherNav = () => {
               >
                 <FaHome className="text-lg" /> <span>Dashboard</span>
               </NavLink>
-            </li>
-            <li>
+            {/* </li> */}
+            {/* <li> */}
               <NavLink
                 to="/user/gigs"
                 className={({ isActive }) =>
@@ -175,8 +175,8 @@ const OtherNav = () => {
               >
                 <FaBriefcase className="text-lg" /> <span>Gigs</span>
               </NavLink>
-            </li>
-            <li>
+            {/* </li> */}
+            {/* <li> */}
               <NavLink
                 to="/user/projects"
                 className={({ isActive }) =>
@@ -187,8 +187,8 @@ const OtherNav = () => {
               >
                 <FaShoppingCart className="text-lg" /> <span>Orders</span>
               </NavLink>
-            </li>
-            <li>
+            {/* </li> */}
+            {/* <li> */}
               <NavLink
                 to="/user/task"
                 className={({ isActive }) =>
@@ -199,8 +199,8 @@ const OtherNav = () => {
               >
                 <FaTasks className="text-lg" /> <span>Project</span>
               </NavLink>
-            </li>
-            <li>
+            {/* </li> */}
+            {/* <li> */}
               <NavLink
                 to="/user/Messages"
                 className={({ isActive }) =>
@@ -211,8 +211,8 @@ const OtherNav = () => {
               >
                 <FaEnvelope className="text-lg" /> <span>Messages</span>
               </NavLink>
-            </li>
-            <li>
+            {/* </li> */}
+            {/* <li> */}
               <NavLink
                 to="/user/deposit"
                 className={({ isActive }) =>
@@ -223,7 +223,7 @@ const OtherNav = () => {
               >
                 <FaWallet className="text-lg" /> <span>Deposit</span>
               </NavLink>
-            </li>
+            {/* </li> */}
             {/* <li>
               <NavLink
                 to="/user/Withdraw"
@@ -236,7 +236,7 @@ const OtherNav = () => {
                 <FaMoneyBillAlt className="text-lg" /> <span>Withdraws</span>
               </NavLink>
             </li> */}
-            <li>
+            {/* <li> */}
               <NavLink
                 to="/user/transaction"
                 className={({ isActive }) =>
@@ -247,7 +247,7 @@ const OtherNav = () => {
               >
                 <FaExchangeAlt className="text-lg" /> <span>Transactions</span>
               </NavLink>
-            </li>
+            {/* </li> */}
           </ul>
           {/* Optional Button - Adjust styling as needed */}
           {/* <div>

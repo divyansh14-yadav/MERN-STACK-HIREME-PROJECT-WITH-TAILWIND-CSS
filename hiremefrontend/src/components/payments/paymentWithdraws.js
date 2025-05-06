@@ -8,7 +8,7 @@ const PaymentWithdraws = props => {
     return (
         <div>
              <div className='bg-[#eef2f8] pb-10'>
-            <Nav />
+            
             <OtherNav />
             <div className='w-[80%] m-auto bg-white text-start rounded-md p-4 mt-15'>
                 <div>

@@ -1,37 +1,70 @@
-// // public/firebase-messaging-sw.js
+// // // public/firebase-messaging-sw.js
 
-// importScripts('https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js');
-// importScripts('https://www.gstatic.com/firebasejs/9.6.1/firebase-messaging-compat.js');
+// // importScripts('https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js');
+// // importScripts('https://www.gstatic.com/firebasejs/9.6.1/firebase-messaging-compat.js');
 
+// // firebase.initializeApp({
+// //     apiKey: "AIzaSyCLYIbI4NmZ1oU42LI103wBr1EEJ4bDHjY",
+// //     authDomain: "hireme-9b46b.firebaseapp.com",
+// //     projectId: "hireme-9b46b",
+// //     storageBucket: "hireme-9b46b.firebasestorage.app",
+// //     messagingSenderId: "755848707643",
+// //     appId: "1:755848707643:web:3c4e86c5c25d269d37a61e",
+// //     measurementId: "G-XY4HLZHSFE"
+// // });
+
+// // const messaging = firebase.messaging();
+
+
+// importScripts("https://www.gstatic.com/firebasejs/10.11.0/firebase-app-compat.js");
+// importScripts("https://www.gstatic.com/firebasejs/10.11.0/firebase-messaging-compat.js");
 // firebase.initializeApp({
-//     apiKey: "AIzaSyCLYIbI4NmZ1oU42LI103wBr1EEJ4bDHjY",
-//     authDomain: "hireme-9b46b.firebaseapp.com",
-//     projectId: "hireme-9b46b",
-//     storageBucket: "hireme-9b46b.firebasestorage.app",
-//     messagingSenderId: "755848707643",
-//     appId: "1:755848707643:web:3c4e86c5c25d269d37a61e",
-//     measurementId: "G-XY4HLZHSFE"
+  // apiKey: "AIzaSyCLYIbI4NmZ1oU42LI103wBr1EEJ4bDHjY",
+  // authDomain: "hireme-9b46b.firebaseapp.com",
+  // projectId: "hireme-9b46b",
+  // storageBucket: "hireme-9b46b.firebasestorage.app",
+  // messagingSenderId: "755848707643",
+  // appId: "1:755848707643:web:3c4e86c5c25d269d37a61e",
+// });
+// const messaging = firebase.messaging();
+// messaging.onBackgroundMessage(function (payload) {
+//   console.log(":envelope_with_arrow: Background message received: ", payload);
+//   const { title, body } = payload.notification;
+//   self.registration.showNotification(title, {
+//     body,
+//     icon: "/logo192.png",
+//   });
 // });
 
-// const messaging = firebase.messaging();
 
 
-importScripts("https://www.gstatic.com/firebasejs/10.11.0/firebase-app-compat.js");
-importScripts("https://www.gstatic.com/firebasejs/10.11.0/firebase-messaging-compat.js");
+
+
+
+
+// public/firebase-messaging-sw.js
+importScripts('https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js');
+importScripts('https://www.gstatic.com/firebasejs/9.6.1/firebase-messaging-compat.js');
+
 firebase.initializeApp({
   apiKey: "AIzaSyCLYIbI4NmZ1oU42LI103wBr1EEJ4bDHjY",
   authDomain: "hireme-9b46b.firebaseapp.com",
   projectId: "hireme-9b46b",
-  storageBucket: "hireme-9b46b.firebasestorage.app",
+  storageBucket: "hireme-9b46b.appspot.com",
   messagingSenderId: "755848707643",
-  appId: "1:755848707643:web:3c4e86c5c25d269d37a61e",
+  appId: "1:755848707643:web:3c4e86c5c25d269d37a61e"
 });
+
 const messaging = firebase.messaging();
-messaging.onBackgroundMessage(function (payload) {
-  console.log(":envelope_with_arrow: Background message received: ", payload);
-  const { title, body } = payload.notification;
-  self.registration.showNotification(title, {
-    body,
-    icon: "/logo192.png",
-  });
+
+messaging.onBackgroundMessage(function(payload) {
+  console.log('[firebase-messaging-sw.js] Received background message ', payload);
+  // Customize notification here
+  const notificationTitle = payload.notification.title;
+  const notificationOptions = {
+    body: payload.notification.body,
+    icon: '/firebase-logo.png'
+  };
+
+  self.registration.showNotification(notificationTitle, notificationOptions);
 });

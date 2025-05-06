@@ -496,7 +496,7 @@ const Gigs = () => {
 
     return (
         <div className="bg-[#eef2f8]">
-            <Nav />
+            
             <OtherNav />
             <div className="w-[80%] mt-10 m-auto rounded-md bg-white">
                 <div className="flex justify-between items-center border-b-1 border-[#0000001a] p-4 pb-5">
