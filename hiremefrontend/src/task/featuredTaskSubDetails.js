@@ -78,6 +78,8 @@ const FeaturedTaskSubDetails = () => {
   console.log(mileStoneID, "mileid");
   const [fileName, setFileName] = useState("");
   const [selectedFile, setSelectedFile] = useState("");
+  console.log(selectedFile,"filetask");
+  
   const [createdAllFiles, setCreatedAllFiles] = useState([]);
   console.log(createdAllFiles, "filessssssssssssssssssssssss");
 
@@ -385,6 +387,9 @@ const FeaturedTaskSubDetails = () => {
     try {
       const formData = new FormData();
 
+      console.log(formData,"taskformdata");
+      
+
       formData.append("uploadFiles", selectedFile);
       const response = await authConfig.post(
         `/uploadTaskFile/${authId}/${taskDetailedinfo.authId._id}`,
@@ -434,8 +439,8 @@ const FeaturedTaskSubDetails = () => {
       
       <CategorySlider />
       <div>
-        <div className="xl:mt-25 mt-7 xl:w-[83%] w-full xl:p-0 p-3 m-auto text-[1.1rem] font-semibold border-b-1 border-neutral-200 pb-5">
-          <h1 className="text-start x;:w-[70%] w-full mt-5 xl:text-[1.5rem] text-[1.4rem] font-bold">
+        <div className="xl:mt-25 mt-10 xl:w-[83%] w-full xl:p-0 p-3 m-auto text-[1.1rem] font-semibold border-b-1 border-neutral-200 pb-5">
+          <h1 className="text-start x;:w-[70%] w-full mt-5 xl:text-[1.5rem] text-[1.1rem] font-bold">
             {taskDetailedinfo.taskTitle}
           </h1>
           {/* {
@@ -514,8 +519,8 @@ const FeaturedTaskSubDetails = () => {
   // authId === taskDetailedinfo?.authId?._id ? null :
   authId === taskDetailedinfo?.authId?._id || hasUserPlacedBid || confirmationBid ? null : (
     <div className="mt-6 bg-white rounded-lg shadow-md overflow-hidden">
-      <div className="bg-[#f78318] text-white py-4 px-6">
-        <h2 className="font-semibold text-xl">Place Your Bid</h2>
+      <div className="bg-[#f78318] text-white xl:py-4 py-2 px-6">
+        <h2 className="font-semibold xl:text-xl text-md">Place Your Bid</h2>
       </div>
       <div className="p-6">
         <div className="mb-4">
@@ -835,9 +840,9 @@ const FeaturedTaskSubDetails = () => {
                             {proposalTaks?.loginAuthId.lastName}
                           </p>
                         </div>
-                        <div className="xl:flex block gap-5 text-[#777] text-[1rem] font-semibold mt-1">
+                        <div className="xl:flex block gap-4 items-center text-[#777] text-[1rem] font-semibold mt-1">
                           <p>{proposalTaks?.loginAuthId?.country || "null"}</p>
-                          <p className="text-[#666]">
+                          {/* <p className="text-[#666]">
                             {(() => {
                               const createdDate = new Date(
                                 proposalTaks.createdAt
@@ -856,7 +861,20 @@ const FeaturedTaskSubDetails = () => {
                                 ? "This month"
                                 : `${totalMonthsAgo} months ago`;
                             })()}
-                          </p>
+                          </p> */}
+
+<p className=" text-gray-600 text-sm ml-4">
+              {new Date(proposalTaks.createdAt)
+                .toLocaleString("en-US", {
+                  year: "numeric",
+                  month: "short",
+                  day: "2-digit",
+                  hour: "2-digit",
+                  minute: "2-digit",
+                  hour12: true,
+                })
+                .replace(",", "")}
+            </p>
                         </div>
                         <div className="mt-5">
                           <p className="text-justify">
@@ -1032,97 +1050,106 @@ const FeaturedTaskSubDetails = () => {
           </div>
         )}
         {activeSteps === 3 && (
-          <div className="mt-8 w-full px-4 sm:px-6 lg:px-8 max-w-5xl mx-auto">
-            <div className="bg-white p-6 sm:p-8 rounded-lg shadow-md border border-gray-100">
-              <h2 className="text-xl font-semibold text-gray-800 mb-6">
-                Upload Files
-              </h2>
+  <div className="mt-8 w-full px-4 sm:px-6 lg:px-8 max-w-5xl mx-auto">
+    <div className="bg-white p-6 sm:p-8 rounded-lg shadow-md border border-gray-100">
+      <h2 className="text-xl font-semibold text-gray-800 mb-6">
+        Upload Files
+      </h2>
 
-              <div className="border-2 border-dashed border-gray-300 rounded-md p-4 sm:p-6 flex flex-col items-center justify-center hover:border-[#f78318] cursor-pointer transition-colors">
-                <img
-                  className="max-h-16 mb-3 opacity-70"
-                  src={uploadImage}
-                  alt="Upload Icon"
-                />
-                <p className="text-gray-600 text-sm sm:text-base mb-1">
-                  Drag and drop files here or{" "}
-                  <label
-                    htmlFor="fileInput"
-                    className="text-[#f78318] hover:underline cursor-pointer"
-                  >
-                    browse
-                  </label>
-                </p>
-                <p className="text-gray-500 text-xs sm:text-sm">
-                  (Image should be horizontal, at least 1500 x 500 px)
-                </p>
-                <input
-                  type="file"
-                  id="fileInput"
-                  className="hidden"
-                  accept="image/*"
-                  onChange={handleFileChange}
-                />
-              </div>
+      <div className="border-2 border-dashed border-gray-300 rounded-md p-4 sm:p-6 flex flex-col items-center justify-center hover:border-[#f78318] cursor-pointer transition-colors">
+        <img
+          className="max-h-16 mb-3 opacity-70"
+          src={uploadImage}
+          alt="Upload Icon"
+        />
+        <p className="text-gray-600 text-sm sm:text-base mb-1">
+          Drag and drop files here or{" "}
+          <label
+            htmlFor="fileInput"
+            className="text-[#f78318] hover:underline cursor-pointer"
+          >
+            browse
+          </label>
+        </p>
+        <p className="text-gray-500 text-xs sm:text-sm">
+          (Image should be horizontal, at least 1500 x 500 px)
+        </p>
+        <input
+          type="file"
+          id="fileInput"
+          className="hidden"
+          accept="image/*"
+          onChange={handleFileChange}
+        />
+      </div>
 
-              {fileName && (
-                <p className="mt-4 text-sm text-gray-700 text-center">
-                  Selected file: <span className="font-medium">{fileName}</span>
-                </p>
-              )}
+      {fileName && (
+        <p className="mt-4 text-sm text-gray-700 text-center">
+          Selected file: <span className="font-medium">{fileName}</span>
+        </p>
+      )}
 
-              <div className="mt-6 flex justify-center">
-                {(taskDetailedinfo?.authId?._id === authId ||
-                  bid?.some(
-                    (bidItem) =>
-                      bidItem.loginAuthId._id === authId &&
-                      bidItem.status === "Alloted"
-                  )) && (
-                  <button
-                    className="bg-[#f78318] hover:bg-[#f78318] text-white font-semibold py-2 px-4 rounded-md focus:outline-none focus:ring-2 focus:ring-[#f78318] focus:ring-offset-1 transition-colors"
-                    onClick={createFiles}
-                  >
-                    Upload File
-                  </button>
-                )}
-              </div>
+      <div className="mt-6 flex justify-center">
+        {(taskDetailedinfo?.authId?._id === authId ||
+          bid?.some(
+            (bidItem) =>
+              bidItem.loginAuthId._id === authId &&
+              bidItem.status === "Alloted"
+          )) && (
+          <button
+            className="bg-[#f78318] hover:bg-[#f78318] text-white font-semibold py-2 px-4 rounded-md focus:outline-none focus:ring-2 focus:ring-[#f78318] focus:ring-offset-1 transition-colors"
+            onClick={createFiles}
+          >
+            Upload File
+          </button>
+        )}
+      </div>
 
-              <div className="mt-8 overflow-x-auto rounded-lg border border-gray-200">
-                <table className="min-w-full divide-y divide-gray-200">
-                  <thead className="bg-gray-50">
-                    <tr>
-                      <th className="px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider sm:px-4">
-                        Client
-                      </th>
-                      <th className="px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider sm:px-4">
-                        Freelancer
-                      </th>
-                      <th className="px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider sm:px-4">
-                        File
-                      </th>
-                      <th className="px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider sm:px-4">
-                        Download
-                      </th>
-                    </tr>
-                  </thead>
-                  <tbody className="bg-white divide-y divide-gray-200">
-                    {createdAllFiles?.map((file, index) => (
-                      <tr
-                        key={index}
-                        className="hover:bg-gray-50 transition-colors"
-                      >
-                        <td className="px-3 py-2 whitespace-nowrap text-sm text-gray-700 sm:px-4">
-                          {file?.taskCreatorId?.firstName}
-                        </td>
-                        <td className="px-3 py-2 whitespace-nowrap text-sm text-gray-700 sm:px-4">
-                          {file?.loginAuthId?.firstName}
-                        </td>
-                        <td className="px-3 py-2 whitespace-nowrap text-sm text-gray-700 sm:px-4">
-                          {file?.uploadFiles}
-                        </td>
-                        <td className="px-3 py-2 whitespace-nowrap text-sm text-[#f78318] sm:px-4">
+      <div className="mt-8 overflow-x-auto rounded-lg border border-gray-200">
+        <table className="min-w-full divide-y divide-gray-200">
+          <thead className="bg-gray-50">
+            <tr>
+              <th className="px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider sm:px-4">
+                Client
+              </th>
+              <th className="px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider sm:px-4">
+                Freelancer
+              </th>
+              <th className="px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider sm:px-4">
+                File
+              </th>
+              <th className="px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider sm:px-4">
+                Download
+              </th>
+            </tr>
+          </thead>
+          <tbody className="bg-white divide-y divide-gray-200">
+            {createdAllFiles?.map((file, index) => (
+              <tr
+                key={index}
+                className="hover:bg-gray-50 transition-colors"
+              >
+                <td className="px-3 py-2 whitespace-nowrap text-sm text-gray-700 sm:px-4">
+                  {file?.taskCreatorId?.firstName}
+                </td>
+                <td className="px-3 py-2 whitespace-nowrap text-sm text-gray-700 sm:px-4">
+                  {file?.loginAuthId?.firstName}
+                </td>
+                <td className="px-3 py-2 whitespace-nowrap text-sm text-gray-700 sm:px-4">
+                  {Array.isArray(file.uploadFiles)
+                    ? file.uploadFiles.map((f, idx) => (
+                        <div key={idx}>
+                          {f.public_id || `File ${idx + 1}`}
+                        </div>
+                      ))
+                    : file?.uploadFiles?.public_id}
+                </td>
+                <td className="px-3 py-2 whitespace-nowrap text-sm text-[#f78318] sm:px-4">
+                  {Array.isArray(file.uploadFiles)
+                    ? file.uploadFiles.map((f, idx) => (
+                        <div key={idx}>
                           <a
-                            href={`{file.uploadFiles}`}
+                            href={f.url}
                             download
                             target="_blank"
                             rel="noopener noreferrer"
@@ -1140,17 +1167,43 @@ const FeaturedTaskSubDetails = () => {
                                 clipRule="evenodd"
                               />
                             </svg>
-                            <span>Download</span>
+                            <span>Download {f.public_id || `File ${idx + 1}`}</span>
                           </a>
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
-            </div>
-          </div>
-        )}
+                        </div>
+                      ))
+                    : (
+                      <a
+                        href={file?.uploadFiles?.url}
+                        download
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="hover:underline flex items-center gap-2"
+                      >
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          viewBox="0 0 24 24"
+                          fill="currentColor"
+                          className="w-4 h-4"
+                        >
+                          <path
+                            fillRule="evenodd"
+                            d="M12 2.25c-5.384 0-9.75 4.366-9.75 9.75s4.366 9.75 9.75 9.75 9.75-4.366 9.75-9.75S17.384 2.25 12 2.25ZM12.75 14.25a.75.75 0 00-1.5 0V7.88l-2.22 2.22a.75.75 0 001.06 1.06l3-3a.75.75 0 000-1.06l-3-3a.75.75 0 00-1.06 1.06l2.22 2.22h-6.38a.75.75 0 000 1.5h6.38v6.37Z"
+                            clipRule="evenodd"
+                          />
+                        </svg>
+                        <span>Download {file?.uploadFiles?.public_id}</span>
+                      </a>
+                    )}
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+)}
+
         {/* create milestone pop up */}
         <Dialog
           open={openModalForCreateMileStone}

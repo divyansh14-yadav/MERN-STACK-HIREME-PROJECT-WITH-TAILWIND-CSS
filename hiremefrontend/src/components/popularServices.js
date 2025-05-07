@@ -12,7 +12,6 @@ const PopularServices = () => {
 
   const sliderRef = useRef(null);
 
-  //  bg-black bg-gradient-to-b from-black/60 to-transparent
   useEffect(() => {
     const fetchFeaturedCategories = async () => {
       try {
@@ -20,6 +19,11 @@ const PopularServices = () => {
         const response = await authConfig.get("fetch-home-details");
         if (response.status === 200) {
           setPopular_service(response.data.popularService);
+          setTimeout(() => {
+            if (sliderRef.current) {
+              sliderRef.current.slickGoTo(0); // or use slickPlay() if autoplay is on
+            }
+          }, 100);
         }
       } catch (error) {
         console.error("Error fetching categories:", error);

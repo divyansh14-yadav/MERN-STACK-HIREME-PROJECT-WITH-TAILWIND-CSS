@@ -67,7 +67,7 @@ const DetailBlog = () => {
             <CategorySlider />
             {
                 loading ? <Loder/>:
-                <div className='xl:flex xl:w-[93%] block xl:gap-10 xl:mt-30 mt-10 relative w-full z-auto overflow-x-visible'>
+                <div className='xl:flex xl:w-[93%] block xl:gap-10 xl:mt-30 mt-18 relative w-full z-auto overflow-x-visible'>
                 <div className="w-[100%] xl:ml-25 mt-10 rounded-t-[10px] bg-[#f9f9f9] leading-[1.5] text-start">
                     <img className="rounded-t-[10px] h-[350px] w-full"
                         src={selectedBlog ? selectedBlog?.blog_image?.url : detailBlog?.blog_image?.url}

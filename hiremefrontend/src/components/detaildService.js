@@ -95,11 +95,17 @@ const DetaildService = () => {
   }, [serviceId]);
 
   useEffect(() => {
+    console.log("serviceDetaildList:", serviceDetaildList); // debug
+    console.log("ID:", serviceDetaildList?._id);
+  
     const comparePackage = async () => {
+      if (!serviceDetaildList?._id) return;
+  
       try {
         const response = await authConfig.get(
           `comparePackage/${serviceDetaildList._id}`
         );
+        console.log("Compare response:", response.data); // debug
         if (response.status === 200) {
           setComparePackages(response?.data?.compare_price);
         }
@@ -107,8 +113,10 @@ const DetaildService = () => {
         console.error("Error fetching compare packages details:", error);
       }
     };
+  
     comparePackage();
-  }, []);
+  }, [serviceDetaildList?._id]);
+  
 
   const CustomPrevArrow = ({ onClick }) => (
     <button
@@ -295,13 +303,13 @@ const DetaildService = () => {
                 <Link
                   to={`/featuredService/${serviceDetaildList?.categoryId._id}/${serviceDetaildList?.categoryId?.featureCategoriesName}`}
                 >
-                  <p className="font-bold text-[#5c5c5c]">
+                  <p className="font-bold text-[#5c5c5c] text-[0.875rem] xl:text-xl">
                     {serviceDetaildList?.categoryId?.featureCategoriesName}
                   </p>
                 </Link>
                 {/* <FontAwesomeIcon icon={faGreaterThan} /> */}
                 <FontAwesomeIcon icon={faGreaterThan} />
-                <p className="font-bold text-[#f78318]">
+                <p className="font-bold text-[#f78318] text-[0.875rem] xl:text-xl">
                   {
                     serviceDetaildList?.sub_categoryId
                       ?.feature_SubCategories_name
@@ -574,7 +582,7 @@ const DetaildService = () => {
                               <td></td>
                               <td className="p-4">
                                 <button
-                                  onClick={handleShowDeletePortfolio}
+                                  onClick={()=>handleShowDeletePortfolio(comparePackages.basic[0])}
                                   className="bg-orange-500 text-white px-4 py-2 rounded hover:bg-orange-600"
                                 >
                                   Request To Order
@@ -583,7 +591,7 @@ const DetaildService = () => {
                               <td className="p-4">
                                 <button
                                   className="bg-orange-500 text-white px-4 py-2 rounded hover:bg-orange-600"
-                                  onClick={handleShowDeletePortfolio}
+                                  onClick={()=>handleShowDeletePortfolio(comparePackages.standard[0])}
                                 >
                                   Request To Order
                                 </button>
@@ -591,7 +599,7 @@ const DetaildService = () => {
                               <td className="p-4">
                                 <button
                                   className="bg-orange-500 text-white px-4 py-2 rounded hover:bg-orange-600"
-                                  onClick={handleShowDeletePortfolio}
+                                  onClick={()=>handleShowDeletePortfolio(comparePackages.premium[0])}
                                 >
                                   Request To Order
                                 </button>
@@ -945,8 +953,8 @@ const DetaildService = () => {
           </div>
         </div>
       </div>
-      <div className="bg-[#f9f9f9]">
-        <div className=" pb-20 xl:w-[53.5%] w-full xl:ml-20 bg-[#f9f9f9] ">
+      <div className="bg-[#f9f9f9] pt-10">
+        <div className=" pb-20 xl:w-[53.5%] w-[90%] m-auto xl:ml-20 bg-[#f9f9f9] ">
           <div className="pt-3 pb-3 pl-3 bg-white rounded-xl">
             <div className="flex items-center justify-between border-b-1 border-[#0000001a] pb-5">
               <h1 className="text-[1.5rem] ml-1 text-[#3d3d3d] font-bold">
@@ -966,13 +974,13 @@ const DetaildService = () => {
                         <div className="h-[50px] w-[80px]">
                           <img
                             className="xl:w-[80%] xl:h-[55px] w-[70%] h-[50px] rounded-[45px]"
-                            src={reviewRating?.reviewerId?.authProfile}
+                            src={reviewRating?.reviewerId?.authProfile || "https://th.bing.com/th/id/OIP.4Q7-yMnrlnqwR4ORH7c06AHaHa?w=209&h=209&c=7&r=0&o=5&dpr=1.3&pid=1.7"}
                           />
                         </div>
 
                         <div className="mt-4 ml-4">
                           <div className="flex gap-2 font-bold ml-1">
-                            <p>{reviewRating?.reviewerId?.firstName}</p>
+                            <p>{reviewRating?.reviewerId?.firstName || "User"}</p>
                             <p>{reviewRating?.reviewerId?.lastName}</p>
                           </div>
                           <div className="flex mt-2 gap-2 items-center font-normal pb-3">
@@ -1065,12 +1073,12 @@ const DetaildService = () => {
                       Confirm Your Order!
                     </Dialog.Title>
 
-                    <Dialog.Title
+                    {/* <Dialog.Title
                       as="h3"
                       className="text-lg font-semibold text-gray-900"
                     >
                      {packageType} Package Order  MATIC {price?.b_price || price?.s_price || price?.p_price}
-                    </Dialog.Title>
+                    </Dialog.Title> */}
                 </div>
                     <div className="mt-2">
                       <p className="font-semibold text-gray-700">Order Quote</p>

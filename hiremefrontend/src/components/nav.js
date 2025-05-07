@@ -623,7 +623,7 @@ const Nav = ({ userDetails, taskId,profileImage  }) => {
       {/* Mobile Menu */}
       {menuOpen && (
         <div className="md:hidden" id="mobile-menu">
-          <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3">
+          <div className="relative px-2 pt-2 pb-3 space-y-1 sm:px-3 z-30">
             <div className="relative rounded-md shadow-sm mt-1 flex">
               <div className="pointer-events-none pl-3 absolute inset-y-0 left-0 flex items-center">
                 <Search className="h-5 w-5 text-gray-400" />
@@ -646,6 +646,7 @@ const Nav = ({ userDetails, taskId,profileImage  }) => {
             </div>
             <Link
               to="/"
+              onClick={() => setMenuOpen(false)} 
               className="bg-gray-50 hover:bg-gray-100 text-gray-700 block px-3 py-2 rounded-md text-base font-medium flex items-center"
             >
               <BookOpen className="inline-block h-5 w-5 mr-1 align-middle text-orange-500" />
@@ -653,6 +654,7 @@ const Nav = ({ userDetails, taskId,profileImage  }) => {
             </Link>
             <Link
               to="/blog"
+              onClick={() => setMenuOpen(false)} 
               className="bg-gray-50 hover:bg-gray-100 text-gray-700 block px-3 py-2 rounded-md text-base font-medium flex items-center"
             >
               <Newspaper className="inline-block h-5 w-5 mr-1 align-middle text-orange-500" />
@@ -660,6 +662,7 @@ const Nav = ({ userDetails, taskId,profileImage  }) => {
             </Link>
             <Link
               to="/contact"
+              onClick={() => setMenuOpen(false)} 
               className="bg-gray-50 hover:bg-gray-100 text-gray-700 block px-3 py-2 rounded-md text-base font-medium flex items-center"
             >
               <Phone className="inline-block h-5 w-5 mr-1 align-middle text-orange-500" />
@@ -669,6 +672,7 @@ const Nav = ({ userDetails, taskId,profileImage  }) => {
               <>
                 <Link
                   to="/user/dashboard"
+                  onClick={() => setMenuOpen(false)} 
                   className="bg-gray-50 hover:bg-gray-100 text-gray-700 block px-3 py-2 rounded-md text-base font-medium flex items-center"
                 >
                   <LayoutDashboard className="inline-block h-5 w-5 mr-1 align-middle text-orange-500" />
@@ -676,6 +680,7 @@ const Nav = ({ userDetails, taskId,profileImage  }) => {
                 </Link>
                 <Link
                   to="/basicInfo"
+                  onClick={() => setMenuOpen(false)} 
                   className="bg-gray-50 hover:bg-gray-100 text-gray-700 block px-3 py-2 rounded-md text-base font-medium flex items-center"
                 >
                   <UserCircle2 className="inline-block h-5 w-5 mr-1 align-middle text-orange-500" />

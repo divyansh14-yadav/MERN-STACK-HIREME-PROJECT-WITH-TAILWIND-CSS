@@ -350,14 +350,14 @@ const AuthProjectDetails = () => {
               </div>
             </div>
 
-            <div className="flex xl:gap-10 gap-8 mt-5 p-5">
+            <div className="flex xl:gap-10 gap-5 mt-5 p-5 overflow-x-scroll">
               {projectDetailsHeadings?.map((headings, index) => (
                 <div className={`flex items-center`}>
                   <button
                     className={
                       activeStep === index
-                        ? "text-[#f78318] cursor-pointer text-[1.1rem] font-semibold flex items-center gap-2"
-                        : "text-[#888686] cursor-pointer text-[1.1rem] font-semibold flex items-center gap-2"
+                        ? "text-[#f78318] cursor-pointer xl:text-[1.1rem] text-[0.8rem] font-semibold flex items-center gap-2"
+                        : "text-[#888686] cursor-pointer xl:text-[1.1rem] text-[0.8rem] font-semibold flex items-center gap-2"
                     }
                     onClick={() => setActiveStep(index)}
                   >

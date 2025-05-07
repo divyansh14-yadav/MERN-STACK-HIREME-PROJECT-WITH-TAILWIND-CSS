@@ -30,6 +30,26 @@ const FeaturedTask = () => {
     </button>
   );
 
+  // useEffect(() => {
+  //   const fetchAllFeaturedTask = async () => {
+  //     window.scrollTo(0, 0);
+  //     try {
+  //       const response = await authConfig.get("show-all-task-category");
+  //       if (response.status === 200) {
+  //         setAllFeaturedTask(response.data.taskCategory);
+  //       } else {
+  //         console.log("Error fetching all FeaturedTask");
+  //       }
+  //     } catch (error) {
+  //       console.error("Error fetching all FeaturedTask:", error);
+  //     }
+  //   };
+
+  //   fetchAllFeaturedTask();
+  // }, []);
+
+
+
   useEffect(() => {
     const fetchAllFeaturedTask = async () => {
       window.scrollTo(0, 0);
@@ -37,6 +57,13 @@ const FeaturedTask = () => {
         const response = await authConfig.get("show-all-task-category");
         if (response.status === 200) {
           setAllFeaturedTask(response.data.taskCategory);
+  
+          // Timeout to wait for render before triggering slide update
+          setTimeout(() => {
+            if (sliderRefforTask.current) {
+              sliderRefforTask.current.slickGoTo(0); // or use slickPlay() if autoplay is on
+            }
+          }, 100);
         } else {
           console.log("Error fetching all FeaturedTask");
         }
@@ -44,9 +71,10 @@ const FeaturedTask = () => {
         console.error("Error fetching all FeaturedTask:", error);
       }
     };
-
+  
     fetchAllFeaturedTask();
   }, []);
+  
 
   return (
     <div>

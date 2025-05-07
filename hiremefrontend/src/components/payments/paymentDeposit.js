@@ -196,7 +196,7 @@ const PaymentDeposit = () => {
       </div>
       <div className="flex gap-5 items-center mt-5 flex-wrap">
         <button
-          className="bg-[#f78318] rounded-md px-4 py-2 text-white font-semibold hover:bg-[#e27000]"
+          className="bg-[#f78318] cursor-pointer rounded-md px-4 py-2 text-white font-semibold hover:bg-[#e27000]"
           onClick={handleOpenModal}
         >
           + Add Amount
@@ -213,77 +213,75 @@ const PaymentDeposit = () => {
 
       {/* Deposit Modal */}
       <Dialog
-        open={openModalForDeposit}
-        onClose={handleCloseModal}
-        className="relative z-10"
-      >
-        <DialogBackdrop className="fixed inset-0 bg-black/30" />
-        <div className="fixed inset-0 z-10 w-screen overflow-y-auto">
-          <div className="flex min-h-full items-center justify-center p-4 text-center">
-            <DialogPanel className="relative w-full max-w-lg transform overflow-hidden rounded-2xl bg-white text-left shadow-xl transition-all p-6">
-              <DialogTitle className="text-xl font-bold text-gray-900">
-                Confirm Your Deposit
-              </DialogTitle>
+  open={openModalForDeposit}
+  onClose={handleCloseModal}
+  className="relative z-50"
+>
+  <div className="fixed inset-0 bg-black/30" aria-hidden="true" />
 
-              <div className="mt-4">
-                <label className="font-medium text-gray-700">
-                  Amount In $
-                </label>
-                <input
-                  type="number"
-                  placeholder="Enter deposit amount $"
-                  className="w-full border border-gray-300 rounded-md p-2 mt-1 focus:outline-none focus:ring-2 focus:ring-[#f78318]"
-                  value={deposit}
-                  onChange={(e) => setDeposit(e.target.value)}
-                />
-              </div>
+  <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+    <Dialog.Panel className="relative w-full max-w-lg transform overflow-hidden rounded-2xl bg-white text-left shadow-xl transition-all p-6">
+      <Dialog.Title className="text-xl font-bold text-gray-900">
+        Confirm Your Deposit
+      </Dialog.Title>
 
-              <div className="mt-4">
-                <label className="font-medium text-gray-700">
-                  Choose Payment Gateway
-                </label>
-                <div className="flex gap-6 mt-2">
-                  <label className="flex items-center gap-2 text-sm">
-                    <input
-                      type="radio"
-                      value="razorpay"
-                      checked={paymentMethod === "razorpay"}
-                      onChange={() => setPaymentMethod("razorpay")}
-                    />
-                    Razorpay
-                  </label>
-                  <label className="flex items-center gap-2 text-sm">
-                    <input
-                      type="radio"
-                      value="stripe"
-                      checked={paymentMethod === "stripe"}
-                      onChange={() => setPaymentMethod("stripe")}
-                    />
-                    Stripe
-                  </label>
-                </div>
-              </div>
+      <div className="mt-4">
+        <label className="font-medium text-gray-700">Amount In $</label>
+        <input
+          type="number"
+          placeholder="Enter deposit amount $"
+          className="w-full border border-gray-300 rounded-md p-2 mt-1 focus:outline-none focus:ring-2 focus:ring-[#f78318]"
+          value={deposit}
+          onChange={(e) => setDeposit(e.target.value)}
+        />
+      </div>
 
-              <div className="mt-6 flex justify-end gap-4">
-                <button
-                  type="button"
-                  onClick={handleCloseModal}
-                  className="px-4 py-2 rounded-md bg-gray-200 text-gray-700 hover:bg-gray-300"
-                >
-                  Cancel
-                </button>
-                <button
-                  type="button"
-                  onClick={handlePayment}
-                  className="px-5 py-2 rounded-md bg-[#f78318] text-white hover:bg-[#e27000]"
-                >
-                  Deposit
-                </button>
-              </div>
-            </DialogPanel>
-          </div>
+      <div className="mt-4">
+        <label className="font-medium text-gray-700">
+          Choose Payment Gateway
+        </label>
+        <div className="flex gap-6 mt-2">
+          <label className="flex items-center gap-2 text-sm">
+            <input
+              type="radio"
+              value="razorpay"
+              checked={paymentMethod === "razorpay"}
+              onChange={() => setPaymentMethod("razorpay")}
+            />
+            Razorpay
+          </label>
+          <label className="flex items-center gap-2 text-sm">
+            <input
+              type="radio"
+              value="stripe"
+              checked={paymentMethod === "stripe"}
+              onChange={() => setPaymentMethod("stripe")}
+            />
+            Stripe
+          </label>
         </div>
-      </Dialog>
+      </div>
+
+      <div className="mt-6 flex justify-end gap-4">
+        <button
+          type="button"
+          onClick={handleCloseModal}
+          className="px-4 py-2 rounded-md bg-gray-200 text-gray-700 hover:bg-gray-300"
+        >
+          Cancel
+        </button>
+        <button
+          type="button"
+          onClick={handlePayment}
+          className="px-5 py-2 rounded-md bg-[#f78318] text-white hover:bg-[#e27000]"
+        >
+          Deposit
+        </button>
+      </div>
+    </Dialog.Panel>
+  </div>
+</Dialog>
+
 
       <Footer />
     </div>

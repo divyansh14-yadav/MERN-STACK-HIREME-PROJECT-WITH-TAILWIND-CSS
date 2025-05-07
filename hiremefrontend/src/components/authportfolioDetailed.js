@@ -44,7 +44,7 @@ const AuthportfolioDetailed = () => {
 
       {/* User Info Section */}
    {
-    loading ? <Loder/>:   <div className="mt-10 xl:mt-25 px-4 xl:px-20">
+    loading ? <Loder/>:   <div className="mt-18 xl:mt-25 px-4 xl:px-20">
     <div className="flex flex-col sm:flex-row items-center gap-4 sm:gap-4 items-center">
       <img
         className="w-14 h-14 xl:w-12 xl:h-12 rounded-full object-cover border-2 border-[#f78318]"

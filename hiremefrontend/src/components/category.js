@@ -32,6 +32,11 @@ const CategorySlider = () => {
         if (response.status === 200) {
           setFeatured(response.data.featuredCategories);
           setLoading(false);
+          setTimeout(() => {
+            if (sliderRef.current) {
+              sliderRef.current.slickGoTo(0); // or use slickPlay() if autoplay is on
+            }
+          }, 100);
         }
       } catch (error) {
         console.error("Error fetching categories:", error);

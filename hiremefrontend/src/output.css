@@ -408,6 +408,9 @@
   .z-13 {
     z-index: 13;
   }
+  .z-30 {
+    z-index: 30;
+  }
   .z-50 {
     z-index: 50;
   }
@@ -1332,6 +1335,9 @@
   .overflow-x-auto {
     overflow-x: auto;
   }
+  .overflow-x-scroll {
+    overflow-x: scroll;
+  }
   .overflow-x-visible {
     overflow-x: visible;
   }
@@ -1340,6 +1346,9 @@
   }
   .overflow-y-scroll {
     overflow-y: scroll;
+  }
+  .scroll-smooth {
+    scroll-behavior: smooth;
   }
   .rounded {
     border-radius: 0.25rem;
@@ -2037,6 +2046,9 @@
   }
   .text-\[0\.6rem\] {
     font-size: 0.6rem;
+  }
+  .text-\[0\.7rem\] {
+    font-size: 0.7rem;
   }
   .text-\[0\.8rem\] {
     font-size: 0.8rem;
@@ -4031,6 +4043,11 @@
       padding-block: calc(var(--spacing) * 3);
     }
   }
+  .xl\:py-4 {
+    @media (width >= 80rem) {
+      padding-block: calc(var(--spacing) * 4);
+    }
+  }
   .xl\:pt-0 {
     @media (width >= 80rem) {
       padding-top: calc(var(--spacing) * 0);
@@ -4083,6 +4100,12 @@
     @media (width >= 80rem) {
       font-size: var(--text-lg);
       line-height: var(--tw-leading, var(--text-lg--line-height));
+    }
+  }
+  .xl\:text-xl {
+    @media (width >= 80rem) {
+      font-size: var(--text-xl);
+      line-height: var(--tw-leading, var(--text-xl--line-height));
     }
   }
   .xl\:text-\[1\.1rem\] {

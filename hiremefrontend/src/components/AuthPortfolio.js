@@ -37,7 +37,7 @@ const AuthPortfolio = () => {
       {loading ? (
         <Loder />
       ) : (
-        <div className="xl:mt-25 mt-10">
+        <div className="xl:mt-25 mt-18">
      <div className="bg-[#f7831804] p-6 rounded-2xl shadow-md xl:w-[90%] w-full m-auto">
   <div className="flex flex-col xl:flex-row justify-between items-start xl:items-center gap-6">
     

@@ -380,7 +380,7 @@ const FeaturedTaskDetailed = () => {
     <div>
       <CategorySlider />
 
-      <div className="w-[90%] mx-auto xl:mt-28 mt-10">
+      <div className="w-[90%] mx-auto xl:mt-28 mt-20">
         <div className="flex flex-col lg:flex-row gap-10">
           {/* Sidebar */}
           <div className="w-full xl:w-[23%]">

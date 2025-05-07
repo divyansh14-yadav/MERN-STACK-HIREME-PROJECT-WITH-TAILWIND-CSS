@@ -140,124 +140,125 @@
 // export default OtherNav
 
 
-
-
-import React from 'react';
+import React, { useEffect } from 'react';
 import { NavLink } from 'react-router-dom';
-import { FaHome, FaTasks, FaBriefcase, FaShoppingCart, FaEnvelope, FaWallet, FaMoneyBillAlt, FaExchangeAlt } from 'react-icons/fa'; // More relevant icons
+import {
+  FaHome,
+  FaTasks,
+  FaBriefcase,
+  FaShoppingCart,
+  FaEnvelope,
+  FaWallet,
+  FaExchangeAlt,
+} from 'react-icons/fa';
 
 const OtherNav = () => {
+  // Restore scroll position when component mounts
+  useEffect(() => {
+    const nav = document.querySelector(".scrollbar-hide");
+    const savedScroll = sessionStorage.getItem("nav-scroll");
+    if (nav && savedScroll) {
+      nav.scrollLeft = parseInt(savedScroll);
+    }
+  }, []);
+
+  // Save scroll position before navigation
+  const handleNavClick = (e) => {
+    const nav = document.querySelector(".scrollbar-hide");
+    if (nav) {
+      sessionStorage.setItem("nav-scroll", nav.scrollLeft);
+    }
+  };
+
   return (
     <div className="bg-white shadow-md py-3 border-t-1 border-neutral-200">
       <div className="container mx-auto px-4 lg:px-8">
         <nav className="flex items-center justify-between">
           <ul className="flex items-center space-x-4 lg:space-x-8 overflow-x-auto scrollbar-hide">
-            {/* <li> */}
-              <NavLink
-                to="/user/dashboard"
-                className={({ isActive }) =>
-                  isActive
-                    ? "text-[#f78318] font-semibold border-b-2 border-[#f78318] pb-1 flex items-center gap-2"
-                    : "text-gray-700 font-medium hover:text-[#f78318] transition-colors flex items-center gap-2"
-                }
-              >
-                <FaHome className="text-lg" /> <span>Dashboard</span>
-              </NavLink>
-            {/* </li> */}
-            {/* <li> */}
-              <NavLink
-                to="/user/gigs"
-                className={({ isActive }) =>
-                  isActive
-                    ? "text-[#f78318] font-semibold border-b-2 border-[#f78318] pb-1 flex items-center gap-2"
-                    : "text-gray-700 font-medium hover:text-[#f78318] transition-colors flex items-center gap-2"
-                }
-              >
-                <FaBriefcase className="text-lg" /> <span>Gigs</span>
-              </NavLink>
-            {/* </li> */}
-            {/* <li> */}
-              <NavLink
-                to="/user/projects"
-                className={({ isActive }) =>
-                  isActive
-                    ? "text-[#f78318] font-semibold border-b-2 border-[#f78318] pb-1 flex items-center gap-2"
-                    : "text-gray-700 font-medium hover:text-[#f78318] transition-colors flex items-center gap-2"
-                }
-              >
-                <FaShoppingCart className="text-lg" /> <span>Orders</span>
-              </NavLink>
-            {/* </li> */}
-            {/* <li> */}
-              <NavLink
-                to="/user/task"
-                className={({ isActive }) =>
-                  isActive
-                    ? "text-[#f78318] font-semibold border-b-2 border-[#f78318] pb-1 flex items-center gap-2"
-                    : "text-gray-700 font-medium hover:text-[#f78318] transition-colors flex items-center gap-2"
-                }
-              >
-                <FaTasks className="text-lg" /> <span>Project</span>
-              </NavLink>
-            {/* </li> */}
-            {/* <li> */}
-              <NavLink
-                to="/user/Messages"
-                className={({ isActive }) =>
-                  isActive
-                    ? "text-[#f78318] font-semibold border-b-2 border-[#f78318] pb-1 flex items-center gap-2"
-                    : "text-gray-700 font-medium hover:text-[#f78318] transition-colors flex items-center gap-2"
-                }
-              >
-                <FaEnvelope className="text-lg" /> <span>Messages</span>
-              </NavLink>
-            {/* </li> */}
-            {/* <li> */}
-              <NavLink
-                to="/user/deposit"
-                className={({ isActive }) =>
-                  isActive
-                    ? "text-[#f78318] font-semibold border-b-2 border-[#f78318] pb-1 flex items-center gap-2"
-                    : "text-gray-700 font-medium hover:text-[#f78318] transition-colors flex items-center gap-2"
-                }
-              >
-                <FaWallet className="text-lg" /> <span>Deposit</span>
-              </NavLink>
-            {/* </li> */}
-            {/* <li>
-              <NavLink
-                to="/user/Withdraw"
-                className={({ isActive }) =>
-                  isActive
-                    ? "text-[#f78318] font-semibold border-b-2 border-[#f78318] pb-1 flex items-center gap-2"
-                    : "text-gray-700 font-medium hover:text-[#f78318] transition-colors flex items-center gap-2"
-                }
-              >
-                <FaMoneyBillAlt className="text-lg" /> <span>Withdraws</span>
-              </NavLink>
-            </li> */}
-            {/* <li> */}
-              <NavLink
-                to="/user/transaction"
-                className={({ isActive }) =>
-                  isActive
-                    ? "text-[#f78318] font-semibold border-b-2 border-[#f78318] pb-1 flex items-center gap-2"
-                    : "text-gray-700 font-medium hover:text-[#f78318] transition-colors flex items-center gap-2"
-                }
-              >
-                <FaExchangeAlt className="text-lg" /> <span>Transactions</span>
-              </NavLink>
-            {/* </li> */}
-          </ul>
-          {/* Optional Button - Adjust styling as needed */}
-          {/* <div>
-            <button
-              type="submit"
-              className="font-semibold bg-[#f78318] text-white py-2 px-4 rounded-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-400 focus:ring-offset-1 mt-2 lg:mt-0"
+            <NavLink
+              to="/user/dashboard"
+              onClick={handleNavClick}
+              className={({ isActive }) =>
+                isActive
+                  ? "text-[#f78318] font-semibold border-b-2 border-[#f78318] pb-1 flex items-center gap-2"
+                  : "text-gray-700 font-medium hover:text-[#f78318] transition-colors flex items-center gap-2"
+              }
             >
-              Create Gigs
-            </button>
-          </div> */}
+              <FaHome className="text-lg" /> <span>Dashboard</span>
+            </NavLink>
+
+            <NavLink
+              to="/user/gigs"
+              onClick={handleNavClick}
+              className={({ isActive }) =>
+                isActive
+                  ? "text-[#f78318] font-semibold border-b-2 border-[#f78318] pb-1 flex items-center gap-2"
+                  : "text-gray-700 font-medium hover:text-[#f78318] transition-colors flex items-center gap-2"
+              }
+            >
+              <FaBriefcase className="text-lg" /> <span>Gigs</span>
+            </NavLink>
+
+            <NavLink
+              to="/user/projects"
+              onClick={handleNavClick}
+              className={({ isActive }) =>
+                isActive
+                  ? "text-[#f78318] font-semibold border-b-2 border-[#f78318] pb-1 flex items-center gap-2"
+                  : "text-gray-700 font-medium hover:text-[#f78318] transition-colors flex items-center gap-2"
+              }
+            >
+              <FaShoppingCart className="text-lg" /> <span>Orders</span>
+            </NavLink>
+
+            <NavLink
+              to="/user/task"
+              onClick={handleNavClick}
+              className={({ isActive }) =>
+                isActive
+                  ? "text-[#f78318] font-semibold border-b-2 border-[#f78318] pb-1 flex items-center gap-2"
+                  : "text-gray-700 font-medium hover:text-[#f78318] transition-colors flex items-center gap-2"
+              }
+            >
+              <FaTasks className="text-lg" /> <span>Project</span>
+            </NavLink>
+
+            <NavLink
+              to="/user/Messages"
+              onClick={handleNavClick}
+              className={({ isActive }) =>
+                isActive
+                  ? "text-[#f78318] font-semibold border-b-2 border-[#f78318] pb-1 flex items-center gap-2"
+                  : "text-gray-700 font-medium hover:text-[#f78318] transition-colors flex items-center gap-2"
+              }
+            >
+              <FaEnvelope className="text-lg" /> <span>Messages</span>
+            </NavLink>
+
+            <NavLink
+              to="/user/deposit"
+              onClick={handleNavClick}
+              className={({ isActive }) =>
+                isActive
+                  ? "text-[#f78318] font-semibold border-b-2 border-[#f78318] pb-1 flex items-center gap-2"
+                  : "text-gray-700 font-medium hover:text-[#f78318] transition-colors flex items-center gap-2"
+              }
+            >
+              <FaWallet className="text-lg" /> <span>Deposit</span>
+            </NavLink>
+
+            <NavLink
+              to="/user/transaction"
+              onClick={handleNavClick}
+              className={({ isActive }) =>
+                isActive
+                  ? "text-[#f78318] font-semibold border-b-2 border-[#f78318] pb-1 flex items-center gap-2"
+                  : "text-gray-700 font-medium hover:text-[#f78318] transition-colors flex items-center gap-2"
+              }
+            >
+              <FaExchangeAlt className="text-lg" /> <span>Transactions</span>
+            </NavLink>
+          </ul>
         </nav>
       </div>
     </div>
