@@ -12,6 +12,7 @@ const AuthPortfolio = () => {
 
   const [loading, setLoading] = useState(true);
 
+  const [portfolioId,setPortfolioId] = useState("")
   const { authId } = useParams();
   console.log(authId, "portfolioAuthId");
 
@@ -23,6 +24,7 @@ const AuthPortfolio = () => {
         if (response.status === 200) {
           setUserPortfolio(response.data);
           setLoading(false);
+          setPortfolioId(response.data.portfolio[0])
         }
       } catch (error) {
         console.error("Error fetching userPortfolio:", error);
@@ -38,37 +40,46 @@ const AuthPortfolio = () => {
         <Loder />
       ) : (
         <div className="xl:mt-25 mt-18">
-     <div className="bg-[#f7831804] p-6 rounded-2xl shadow-md xl:w-[90%] w-full m-auto">
-  <div className="flex flex-col xl:flex-row justify-between items-start xl:items-center gap-6">
-    
-    {/* Back to Profile */}
-    <div className="text-[#f78418] text-lg font-medium hover:underline transition duration-300">
-      <Link to={`/userServices/${authId}`}>
-        <p>← Back to Profile</p>
-      </Link>
-    </div>
+          <div className="bg-[#f7831804] p-6 rounded-2xl shadow-md xl:w-[90%] w-full m-auto">
+            <div className="flex flex-col xl:flex-row justify-between items-start xl:items-center gap-6">
+              {/* Back to Profile */}
+              <div className="text-[#f78418] text-lg font-medium hover:underline transition duration-300">
+                <Link to={`/userServices/${authId}`}>
+                  <p>← Back to Profile</p>
+                </Link>
+              </div>
 
-    {/* User Info */}
-    <div className="flex items-center gap-4">
-      <img
-        className="w-12 h-12 rounded-full object-cover border-2 border-[#f78418]"
-        src={
-          userPortfolio?.authDetails?.authId?.authProfile
-            ? userPortfolio.authDetails?.authId?.authProfile
-            : "/default-avatar.png" // fallback avatar
-        }
-        alt="User Avatar"
-      />
-      <Link to={`/userServices/${authId}`}>
-        <div className="flex gap-2 items-center hover:underline transition duration-300 text-base font-semibold text-gray-800">
-          <p>{userPortfolio?.authDetails?.authId?.firstName || "First"}</p>
-          <p>{userPortfolio?.authDetails?.authId?.lastName || "Last"}</p>
-        </div>
-      </Link>
-    </div>
-    
-  </div>
-</div>
+              {/* User Info */}
+              {
+                  portfolioId?._id ?
+              <div className="flex items-center gap-4">
+               
+                  
+                  <img
+                  className="w-12 h-12 rounded-full object-cover border-2 border-[#f78418]"
+                  src={
+                    userPortfolio?.authDetails?.authId?.authProfile
+                      ? userPortfolio.authDetails?.authId?.authProfile
+                      : "" // fallback avatar
+                  }
+                  // alt="User Avatar"
+                />
+               
+                <Link to={`/userServices/${authId}`}>
+                  <div className="flex gap-2 items-center hover:underline transition duration-300 text-base font-semibold text-gray-800">
+                    <p>
+                      {userPortfolio?.authDetails?.authId?.firstName || ""}
+                    </p>
+                    <p>
+                      {userPortfolio?.authDetails?.authId?.lastName || ""}
+                    </p>
+                  </div>
+                </Link>
+              </div>
+              :null
+            }
+            </div>
+          </div>
 
           <div className="xl:grid xl:grid-cols-3 sm:grid sm:grid-cols-2 grid grid-cols-1 gap-10 w-[90%] m-auto mt-10">
             {userPortfolio?.portfolio?.map((allPortfolio, index) => (

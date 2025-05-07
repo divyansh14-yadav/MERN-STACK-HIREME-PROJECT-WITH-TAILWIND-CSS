@@ -78,8 +78,8 @@ const FeaturedTaskSubDetails = () => {
   console.log(mileStoneID, "mileid");
   const [fileName, setFileName] = useState("");
   const [selectedFile, setSelectedFile] = useState("");
-  console.log(selectedFile,"filetask");
-  
+  console.log(selectedFile, "filetask");
+
   const [createdAllFiles, setCreatedAllFiles] = useState([]);
   console.log(createdAllFiles, "filessssssssssssssssssssssss");
 
@@ -387,8 +387,7 @@ const FeaturedTaskSubDetails = () => {
     try {
       const formData = new FormData();
 
-      console.log(formData,"taskformdata");
-      
+      console.log(formData, "taskformdata");
 
       formData.append("uploadFiles", selectedFile);
       const response = await authConfig.post(
@@ -436,7 +435,6 @@ const FeaturedTaskSubDetails = () => {
 
   return (
     <div>
-      
       <CategorySlider />
       <div>
         <div className="xl:mt-25 mt-10 xl:w-[83%] w-full xl:p-0 p-3 m-auto text-[1.1rem] font-semibold border-b-1 border-neutral-200 pb-5">
@@ -514,123 +512,161 @@ const FeaturedTaskSubDetails = () => {
                   </div>
                 </div>
 
-
                 {
-  // authId === taskDetailedinfo?.authId?._id ? null :
-  authId === taskDetailedinfo?.authId?._id || hasUserPlacedBid || confirmationBid ? null : (
-    <div className="mt-6 bg-white rounded-lg shadow-md overflow-hidden">
-      <div className="bg-[#f78318] text-white xl:py-4 py-2 px-6">
-        <h2 className="font-semibold xl:text-xl text-md">Place Your Bid</h2>
-      </div>
-      <div className="p-6">
-        <div className="mb-4">
-          <label htmlFor="bidAmount" className="block text-gray-700 text-sm font-bold mb-2">
-            Your Minimal Rate:
-          </label>
-          <div className="relative rounded-md shadow-sm xl:w-[50%] w-full">
-            <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
-              <span className="text-gray-500 sm:text-sm">$</span>
-            </div>
-            <input
-              type="number"
-              name="bidAmount"
-              id="bidAmount"
-              className="shadow-sm focus:ring-indigo-500 p-2 focus:border-indigo-500 block w-full pl-7 pr-12 sm:text-sm border-gray-300 rounded-md"
-              placeholder={`Between $${taskDetailedinfo?.Task_Min_Budget} and $${taskDetailedinfo?.Task_Max_Budget}`}
-              value={progress}
-              // onChange={(e) => {
-              //   const value = parseInt(e.target.value, 10);
-              //   if (!isNaN(value) && value >= taskDetailedinfo?.Task_Min_Budget && value <= taskDetailedinfo?.Task_Max_Budget) {
-              //     handleSliderChange(null, value); // Simulate slider change
-              //   } else if (e.target.value === "") {
-              //     handleSliderChange(null, ""); // Allow clearing the input
-              //   }
-              // }}
+                  // authId === taskDetailedinfo?.authId?._id ? null :
+                  authId === taskDetailedinfo?.authId?._id ||
+                  hasUserPlacedBid ||
+                  confirmationBid ? null : (
+                    <div className="mt-6 bg-white rounded-lg shadow-md overflow-hidden">
+                      <div className="bg-[#f78318] text-white xl:py-4 py-2 px-6">
+                        <h2 className="font-semibold xl:text-xl text-md">
+                          Place Your Bid
+                        </h2>
+                      </div>
+                      <div className="p-6">
+                        <div className="mb-4">
+                          <label
+                            htmlFor="bidAmount"
+                            className="block text-gray-700 text-sm font-bold mb-2"
+                          >
+                            Your Minimal Rate:
+                          </label>
+                          <div className="relative rounded-md shadow-sm xl:w-[50%] w-full">
+                            <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
+                              <span className="text-gray-500 sm:text-sm">
+                                $
+                              </span>
+                            </div>
+                            <input
+                              type="number"
+                              name="bidAmount"
+                              id="bidAmount"
+                              className="shadow-sm focus:ring-indigo-500 p-2 focus:border-indigo-500 block w-full pl-7 pr-12 sm:text-sm border-gray-300 rounded-md"
+                              placeholder={`Between $${taskDetailedinfo?.Task_Min_Budget} and $${taskDetailedinfo?.Task_Max_Budget}`}
+                              value={progress}
+                              // onChange={(e) => {
+                              //   const value = parseInt(e.target.value, 10);
+                              //   if (!isNaN(value) && value >= taskDetailedinfo?.Task_Min_Budget && value <= taskDetailedinfo?.Task_Max_Budget) {
+                              //     handleSliderChange(null, value); // Simulate slider change
+                              //   } else if (e.target.value === "") {
+                              //     handleSliderChange(null, ""); // Allow clearing the input
+                              //   }
+                              // }}
 
-              onChange={(e)=>setProgress(e.target.value)}
-              min={taskDetailedinfo?.Task_Min_Budget}
-              max={taskDetailedinfo?.Task_Max_Budget}
-            />
-            <div className="absolute inset-y-0 right-0 flex items-center">
-              <span className="text-gray-500 pr-2">USD</span>
-            </div>
-          </div>
-          {typeof progress === 'number' && (
-            <p className="text-gray-500 text-xs mt-1">Your bid: ${progress}</p>
-          )}
-        </div>
+                              onChange={(e) => setProgress(e.target.value)}
+                              min={taskDetailedinfo?.Task_Min_Budget}
+                              max={taskDetailedinfo?.Task_Max_Budget}
+                            />
+                            <div className="absolute inset-y-0 right-0 flex items-center">
+                              <span className="text-gray-500 pr-2">USD</span>
+                            </div>
+                          </div>
+                          {typeof progress === "number" && (
+                            <p className="text-gray-500 text-xs mt-1">
+                              Your bid: ${progress}
+                            </p>
+                          )}
+                        </div>
 
-        <div className="mb-4">
-          <p className="block text-gray-700 text-sm font-bold mb-2">
-            Set your <span className="font-semibold">delivery time</span>:
-          </p>
-          <div className="flex gap-3">
-            <select
-              onChange={(e) => handleBidTimeChanges(e.target.value)}
-              className="shadow-sm block w-1/2 sm:text-sm p-2 border border-gray-300 rounded-md outline-none"
-            >
-              <option value="">Select</option>
-              <option value="Days">Days</option>
-              <option value="Hours">Hours</option>
-            </select>
-            <div className="relative shadow-sm rounded-md w-1/2 border border-gray-300 outline-none">
-              <div className="absolute inset-y-0 left-0 flex items-center pl-3">
-                <button
-                  onClick={handleDecrement}
-                  className="text-gray-400 hover:text-gray-600 focus:outline-none"
-                >
-                  <svg className="h-5 w-5" fill="currentColor" viewBox="0 0 20 20">
-                    <path fillRule="evenodd" d="M5 10a1 1 0 011-1h8a1 1 0 110 2H6a1 1 0 01-1-1z" clipRule="evenodd" />
-                  </svg>
-                </button>
-              </div>
-              <input
-                type="number"
-                className="block w-full p-2 pl-10 pr-10 text-center sm:text-sm border-gray-300 rounded-md"
-                value={timeValue}
-                onChange={(e) =>
-                  setTimeValue(Math.max(0, Math.min(maxValue, Number(e.target.value))))
+                        <div className="mb-4">
+                          <p className="block text-gray-700 text-sm font-bold mb-2">
+                            Set your{" "}
+                            <span className="font-semibold">delivery time</span>
+                            :
+                          </p>
+                          <div className="flex gap-3">
+                            <select
+                              onChange={(e) =>
+                                handleBidTimeChanges(e.target.value)
+                              }
+                              className="shadow-sm block w-1/2 sm:text-sm p-2 border border-gray-300 rounded-md outline-none"
+                            >
+                              <option value="">Select</option>
+                              <option value="Days">Days</option>
+                              <option value="Hours">Hours</option>
+                            </select>
+                            <div className="relative shadow-sm rounded-md w-1/2 border border-gray-300 outline-none">
+                              <div className="absolute inset-y-0 left-0 flex items-center pl-3">
+                                <button
+                                  onClick={handleDecrement}
+                                  className="text-gray-400 hover:text-gray-600 focus:outline-none"
+                                >
+                                  <svg
+                                    className="h-5 w-5"
+                                    fill="currentColor"
+                                    viewBox="0 0 20 20"
+                                  >
+                                    <path
+                                      fillRule="evenodd"
+                                      d="M5 10a1 1 0 011-1h8a1 1 0 110 2H6a1 1 0 01-1-1z"
+                                      clipRule="evenodd"
+                                    />
+                                  </svg>
+                                </button>
+                              </div>
+                              <input
+                                type="number"
+                                className="block w-full p-2 pl-10 pr-10 text-center sm:text-sm border-gray-300 rounded-md"
+                                value={timeValue}
+                                onChange={(e) =>
+                                  setTimeValue(
+                                    Math.max(
+                                      0,
+                                      Math.min(maxValue, Number(e.target.value))
+                                    )
+                                  )
+                                }
+                              />
+                              <div className="absolute inset-y-0 right-0 flex items-center pr-3">
+                                <button
+                                  onClick={handleIncrement}
+                                  className="text-gray-400 hover:text-gray-600 focus:outline-none"
+                                >
+                                  <svg
+                                    className="h-5 w-5"
+                                    fill="currentColor"
+                                    viewBox="0 0 20 20"
+                                  >
+                                    <path
+                                      fillRule="evenodd"
+                                      d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z"
+                                      clipRule="evenodd"
+                                    />
+                                  </svg>
+                                </button>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+
+                        <div className="mb-6">
+                          <label
+                            htmlFor="description"
+                            className="block text-gray-700 text-sm font-bold mb-2"
+                          >
+                            Description:
+                          </label>
+                          <textarea
+                            id="description"
+                            className="shadow-lg outline-none w-full h-[150px] p-3 sm:text-sm border border-gray-300 rounded-md"
+                            rows="3"
+                            placeholder="Explain why you are the best fit for this task..."
+                            value={description}
+                            onChange={(e) => setDescription(e.target.value)}
+                          ></textarea>
+                        </div>
+
+                        <button
+                          onClick={handleCreateBid}
+                          className="w-full bg-[#f78318] text-white font-bold py-3 rounded-md focus:outline-none focus:shadow-outline"
+                        >
+                          Place Your Bid
+                        </button>
+                      </div>
+                    </div>
+                  )
+                  // : null
                 }
-              />
-              <div className="absolute inset-y-0 right-0 flex items-center pr-3">
-                <button
-                  onClick={handleIncrement}
-                  className="text-gray-400 hover:text-gray-600 focus:outline-none"
-                >
-                  <svg className="h-5 w-5" fill="currentColor" viewBox="0 0 20 20">
-                    <path fillRule="evenodd" d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z" clipRule="evenodd" />
-                  </svg>
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div className="mb-6">
-          <label htmlFor="description" className="block text-gray-700 text-sm font-bold mb-2">
-            Description:
-          </label>
-          <textarea
-            id="description"
-            className="shadow-lg outline-none w-full h-[150px] p-3 sm:text-sm border border-gray-300 rounded-md"
-            rows="3"
-            placeholder="Explain why you are the best fit for this task..."
-            value={description}
-            onChange={(e) => setDescription(e.target.value)}
-          ></textarea>
-        </div>
-
-        <button
-          onClick={handleCreateBid}
-          className="w-full bg-[#f78318] text-white font-bold py-3 rounded-md focus:outline-none focus:shadow-outline"
-        >
-          Place Your Bid
-        </button>
-      </div>
-    </div>
-  )
-  // : null
-}
               </div>
 
               <div className="xl:w-[35%] w-full xl:mt-0 mt-10">
@@ -641,11 +677,13 @@ const FeaturedTaskSubDetails = () => {
                     </h1>
                   </div>
                   <div className="p-6 bg-[#f9f9f9]">
-                  <div>
+                    <div>
                       <p className="font-semibold text-[#333] text-[1.05rem]">
                         Task Owner
                       </p>
-                      <p className="text-[#666]">{taskDetailedinfo.authId.firstName}</p>
+                      <p className="text-[#666]">
+                        {taskDetailedinfo.authId.firstName}
+                      </p>
                     </div>
                     <div className="mt-3">
                       <p className="font-semibold text-[#333] text-[1.05rem]">
@@ -701,7 +739,7 @@ const FeaturedTaskSubDetails = () => {
                     </div>
                   </div>
                 </div>
-{/* 
+                {/* 
                 {
                   //  authId === taskDetailedinfo?.authId?._id ? null :
                   authId === taskDetailedinfo?.authId?._id ||
@@ -827,7 +865,7 @@ const FeaturedTaskSubDetails = () => {
                       <div className="w-[58px] h-[60px]">
                         <img
                           className="rounded-full xl:w-[220px] w-[60%] xl:h-[60px] h-[60%] object-cover shadow-sm"
-                          src={`http://localhost:8000/${proposalTaks?.loginAuthId?.authProfile}`}
+                          src={proposalTaks?.loginAuthId?.authProfile}
                           alt="Service"
                         />
                       </div>
@@ -842,39 +880,19 @@ const FeaturedTaskSubDetails = () => {
                         </div>
                         <div className="xl:flex block gap-4 items-center text-[#777] text-[1rem] font-semibold mt-1">
                           <p>{proposalTaks?.loginAuthId?.country || "null"}</p>
-                          {/* <p className="text-[#666]">
-                            {(() => {
-                              const createdDate = new Date(
-                                proposalTaks.createdAt
-                              );
-                              const currentDate = new Date();
 
-                              const yearDiff =
-                                currentDate.getFullYear() -
-                                createdDate.getFullYear();
-                              const monthDiff =
-                                currentDate.getMonth() - createdDate.getMonth();
-
-                              const totalMonthsAgo = yearDiff * 12 + monthDiff;
-
-                              return totalMonthsAgo === 0
-                                ? "This month"
-                                : `${totalMonthsAgo} months ago`;
-                            })()}
-                          </p> */}
-
-<p className=" text-gray-600 text-sm ml-4">
-              {new Date(proposalTaks.createdAt)
-                .toLocaleString("en-US", {
-                  year: "numeric",
-                  month: "short",
-                  day: "2-digit",
-                  hour: "2-digit",
-                  minute: "2-digit",
-                  hour12: true,
-                })
-                .replace(",", "")}
-            </p>
+                          <p className=" text-gray-600 text-sm ml-4">
+                            {new Date(proposalTaks.createdAt)
+                              .toLocaleString("en-US", {
+                                year: "numeric",
+                                month: "short",
+                                day: "2-digit",
+                                hour: "2-digit",
+                                minute: "2-digit",
+                                hour12: true,
+                              })
+                              .replace(",", "")}
+                          </p>
                         </div>
                         <div className="mt-5">
                           <p className="text-justify">
@@ -1050,159 +1068,163 @@ const FeaturedTaskSubDetails = () => {
           </div>
         )}
         {activeSteps === 3 && (
-  <div className="mt-8 w-full px-4 sm:px-6 lg:px-8 max-w-5xl mx-auto">
-    <div className="bg-white p-6 sm:p-8 rounded-lg shadow-md border border-gray-100">
-      <h2 className="text-xl font-semibold text-gray-800 mb-6">
-        Upload Files
-      </h2>
+          <div className="mt-8 w-full px-4 sm:px-6 lg:px-8 max-w-5xl mx-auto">
+            <div className="bg-white p-6 sm:p-8 rounded-lg shadow-md border border-gray-100">
+              <h2 className="text-xl font-semibold text-gray-800 mb-6">
+                Upload Files
+              </h2>
 
-      <div className="border-2 border-dashed border-gray-300 rounded-md p-4 sm:p-6 flex flex-col items-center justify-center hover:border-[#f78318] cursor-pointer transition-colors">
-        <img
-          className="max-h-16 mb-3 opacity-70"
-          src={uploadImage}
-          alt="Upload Icon"
-        />
-        <p className="text-gray-600 text-sm sm:text-base mb-1">
-          Drag and drop files here or{" "}
-          <label
-            htmlFor="fileInput"
-            className="text-[#f78318] hover:underline cursor-pointer"
-          >
-            browse
-          </label>
-        </p>
-        <p className="text-gray-500 text-xs sm:text-sm">
-          (Image should be horizontal, at least 1500 x 500 px)
-        </p>
-        <input
-          type="file"
-          id="fileInput"
-          className="hidden"
-          accept="image/*"
-          onChange={handleFileChange}
-        />
-      </div>
+              <div className="border-2 border-dashed border-gray-300 rounded-md p-4 sm:p-6 flex flex-col items-center justify-center hover:border-[#f78318] cursor-pointer transition-colors">
+                <img
+                  className="max-h-16 mb-3 opacity-70"
+                  src={uploadImage}
+                  alt="Upload Icon"
+                />
+                <p className="text-gray-600 text-sm sm:text-base mb-1">
+                  Drag and drop files here or{" "}
+                  <label
+                    htmlFor="fileInput"
+                    className="text-[#f78318] hover:underline cursor-pointer"
+                  >
+                    browse
+                  </label>
+                </p>
+                <p className="text-gray-500 text-xs sm:text-sm">
+                  (Image should be horizontal, at least 1500 x 500 px)
+                </p>
+                <input
+                  type="file"
+                  id="fileInput"
+                  className="hidden"
+                  accept="image/*"
+                  onChange={handleFileChange}
+                />
+              </div>
 
-      {fileName && (
-        <p className="mt-4 text-sm text-gray-700 text-center">
-          Selected file: <span className="font-medium">{fileName}</span>
-        </p>
-      )}
+              {fileName && (
+                <p className="mt-4 text-sm text-gray-700 text-center">
+                  Selected file: <span className="font-medium">{fileName}</span>
+                </p>
+              )}
 
-      <div className="mt-6 flex justify-center">
-        {(taskDetailedinfo?.authId?._id === authId ||
-          bid?.some(
-            (bidItem) =>
-              bidItem.loginAuthId._id === authId &&
-              bidItem.status === "Alloted"
-          )) && (
-          <button
-            className="bg-[#f78318] hover:bg-[#f78318] text-white font-semibold py-2 px-4 rounded-md focus:outline-none focus:ring-2 focus:ring-[#f78318] focus:ring-offset-1 transition-colors"
-            onClick={createFiles}
-          >
-            Upload File
-          </button>
-        )}
-      </div>
+              <div className="mt-6 flex justify-center">
+                {(taskDetailedinfo?.authId?._id === authId ||
+                  bid?.some(
+                    (bidItem) =>
+                      bidItem.loginAuthId._id === authId &&
+                      bidItem.status === "Alloted"
+                  )) && (
+                  <button
+                    className="bg-[#f78318] hover:bg-[#f78318] text-white font-semibold py-2 px-4 rounded-md focus:outline-none focus:ring-2 focus:ring-[#f78318] focus:ring-offset-1 transition-colors"
+                    onClick={createFiles}
+                  >
+                    Upload File
+                  </button>
+                )}
+              </div>
 
-      <div className="mt-8 overflow-x-auto rounded-lg border border-gray-200">
-        <table className="min-w-full divide-y divide-gray-200">
-          <thead className="bg-gray-50">
-            <tr>
-              <th className="px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider sm:px-4">
-                Client
-              </th>
-              <th className="px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider sm:px-4">
-                Freelancer
-              </th>
-              <th className="px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider sm:px-4">
-                File
-              </th>
-              <th className="px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider sm:px-4">
-                Download
-              </th>
-            </tr>
-          </thead>
-          <tbody className="bg-white divide-y divide-gray-200">
-            {createdAllFiles?.map((file, index) => (
-              <tr
-                key={index}
-                className="hover:bg-gray-50 transition-colors"
-              >
-                <td className="px-3 py-2 whitespace-nowrap text-sm text-gray-700 sm:px-4">
-                  {file?.taskCreatorId?.firstName}
-                </td>
-                <td className="px-3 py-2 whitespace-nowrap text-sm text-gray-700 sm:px-4">
-                  {file?.loginAuthId?.firstName}
-                </td>
-                <td className="px-3 py-2 whitespace-nowrap text-sm text-gray-700 sm:px-4">
-                  {Array.isArray(file.uploadFiles)
-                    ? file.uploadFiles.map((f, idx) => (
-                        <div key={idx}>
-                          {f.public_id || `File ${idx + 1}`}
-                        </div>
-                      ))
-                    : file?.uploadFiles?.public_id}
-                </td>
-                <td className="px-3 py-2 whitespace-nowrap text-sm text-[#f78318] sm:px-4">
-                  {Array.isArray(file.uploadFiles)
-                    ? file.uploadFiles.map((f, idx) => (
-                        <div key={idx}>
-                          <a
-                            href={f.url}
-                            download
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="hover:underline flex items-center gap-2"
-                          >
-                            <svg
-                              xmlns="http://www.w3.org/2000/svg"
-                              viewBox="0 0 24 24"
-                              fill="currentColor"
-                              className="w-4 h-4"
-                            >
-                              <path
-                                fillRule="evenodd"
-                                d="M12 2.25c-5.384 0-9.75 4.366-9.75 9.75s4.366 9.75 9.75 9.75 9.75-4.366 9.75-9.75S17.384 2.25 12 2.25ZM12.75 14.25a.75.75 0 00-1.5 0V7.88l-2.22 2.22a.75.75 0 001.06 1.06l3-3a.75.75 0 000-1.06l-3-3a.75.75 0 00-1.06 1.06l2.22 2.22h-6.38a.75.75 0 000 1.5h6.38v6.37Z"
-                                clipRule="evenodd"
-                              />
-                            </svg>
-                            <span>Download {f.public_id || `File ${idx + 1}`}</span>
-                          </a>
-                        </div>
-                      ))
-                    : (
-                      <a
-                        href={file?.uploadFiles?.url}
-                        download
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="hover:underline flex items-center gap-2"
+              <div className="mt-8 overflow-x-auto rounded-lg border border-gray-200">
+                <table className="min-w-full divide-y divide-gray-200">
+                  <thead className="bg-gray-50">
+                    <tr>
+                      <th className="px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider sm:px-4">
+                        Client
+                      </th>
+                      <th className="px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider sm:px-4">
+                        Freelancer
+                      </th>
+                      <th className="px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider sm:px-4">
+                        File
+                      </th>
+                      <th className="px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider sm:px-4">
+                        Download
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody className="bg-white divide-y divide-gray-200">
+                    {createdAllFiles?.map((file, index) => (
+                      <tr
+                        key={index}
+                        className="hover:bg-gray-50 transition-colors"
                       >
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          viewBox="0 0 24 24"
-                          fill="currentColor"
-                          className="w-4 h-4"
-                        >
-                          <path
-                            fillRule="evenodd"
-                            d="M12 2.25c-5.384 0-9.75 4.366-9.75 9.75s4.366 9.75 9.75 9.75 9.75-4.366 9.75-9.75S17.384 2.25 12 2.25ZM12.75 14.25a.75.75 0 00-1.5 0V7.88l-2.22 2.22a.75.75 0 001.06 1.06l3-3a.75.75 0 000-1.06l-3-3a.75.75 0 00-1.06 1.06l2.22 2.22h-6.38a.75.75 0 000 1.5h6.38v6.37Z"
-                            clipRule="evenodd"
-                          />
-                        </svg>
-                        <span>Download {file?.uploadFiles?.public_id}</span>
-                      </a>
-                    )}
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
-    </div>
-  </div>
-)}
+                        <td className="px-3 py-2 whitespace-nowrap text-sm text-gray-700 sm:px-4">
+                          {file?.taskCreatorId?.firstName}
+                        </td>
+                        <td className="px-3 py-2 whitespace-nowrap text-sm text-gray-700 sm:px-4">
+                          {file?.loginAuthId?.firstName}
+                        </td>
+                        <td className="px-3 py-2 whitespace-nowrap text-sm text-gray-700 sm:px-4">
+                          {Array.isArray(file.uploadFiles)
+                            ? file.uploadFiles.map((f, idx) => (
+                                <div key={idx}>
+                                  {f.public_id || `File ${idx + 1}`}
+                                </div>
+                              ))
+                            : file?.uploadFiles?.public_id}
+                        </td>
+                        <td className="px-3 py-2 whitespace-nowrap text-sm text-[#f78318] sm:px-4">
+                          {Array.isArray(file.uploadFiles) ? (
+                            file.uploadFiles.map((f, idx) => (
+                              <div key={idx}>
+                                <a
+                                  href={f.url}
+                                  download
+                                  target="_blank"
+                                  rel="noopener noreferrer"
+                                  className="hover:underline flex items-center gap-2"
+                                >
+                                  <svg
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    viewBox="0 0 24 24"
+                                    fill="currentColor"
+                                    className="w-4 h-4"
+                                  >
+                                    <path
+                                      fillRule="evenodd"
+                                      d="M12 2.25c-5.384 0-9.75 4.366-9.75 9.75s4.366 9.75 9.75 9.75 9.75-4.366 9.75-9.75S17.384 2.25 12 2.25ZM12.75 14.25a.75.75 0 00-1.5 0V7.88l-2.22 2.22a.75.75 0 001.06 1.06l3-3a.75.75 0 000-1.06l-3-3a.75.75 0 00-1.06 1.06l2.22 2.22h-6.38a.75.75 0 000 1.5h6.38v6.37Z"
+                                      clipRule="evenodd"
+                                    />
+                                  </svg>
+                                  <span>
+                                    Download {f.public_id || `File ${idx + 1}`}
+                                  </span>
+                                </a>
+                              </div>
+                            ))
+                          ) : (
+                            <a
+                              href={file?.uploadFiles?.url}
+                              download
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="hover:underline flex items-center gap-2"
+                            >
+                              <svg
+                                xmlns="http://www.w3.org/2000/svg"
+                                viewBox="0 0 24 24"
+                                fill="currentColor"
+                                className="w-4 h-4"
+                              >
+                                <path
+                                  fillRule="evenodd"
+                                  d="M12 2.25c-5.384 0-9.75 4.366-9.75 9.75s4.366 9.75 9.75 9.75 9.75-4.366 9.75-9.75S17.384 2.25 12 2.25ZM12.75 14.25a.75.75 0 00-1.5 0V7.88l-2.22 2.22a.75.75 0 001.06 1.06l3-3a.75.75 0 000-1.06l-3-3a.75.75 0 00-1.06 1.06l2.22 2.22h-6.38a.75.75 0 000 1.5h6.38v6.37Z"
+                                  clipRule="evenodd"
+                                />
+                              </svg>
+                              <span>
+                                Download {file?.uploadFiles?.public_id}
+                              </span>
+                            </a>
+                          )}
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        )}
 
         {/* create milestone pop up */}
         <Dialog

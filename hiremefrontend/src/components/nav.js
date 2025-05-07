@@ -467,6 +467,7 @@ const Nav = ({ userDetails, taskId,profileImage  }) => {
     };
 
     fetchProfile();
+    
   }, []);
 
   return (

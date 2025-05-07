@@ -157,6 +157,9 @@ const Gigs = () => {
 
   const [loading, setLoading] = useState(true);
 
+  const [isCategoryOpen, setIsCategoryOpen] = useState(false);
+  const [isSubCategoryOpen, setIsSubCategoryOpen] = useState(false);
+
   const handleNext = () => {
     setActiveStep((prevStep) => prevStep + 1);
   };
@@ -541,7 +544,7 @@ const Gigs = () => {
         });
       }
       const oldImageUrls = images
-        .filter((img) => !img.file && img.serviceImage) 
+        .filter((img) => !img.file && img.serviceImage)
         .map((img) => img.serviceImage);
 
       if (oldImageUrls.length) {
@@ -593,17 +596,36 @@ const Gigs = () => {
     }
   };
 
-  let data = "public";
-  const handlePublicData = async () => {
-    const response = await authConfig.put(
-      `update-service-public/${createServiceId}`,
-      {
-        in_pubhish: "public",
+  const handlePublicData = async (serviceId) => {
+    console.log(serviceId, "serid789");
+
+    try {
+      // Use the passed serviceId or fallback to createServiceId
+      const idToUse = serviceId || createServiceId;
+
+      if (!idToUse) {
+        toast.error("Service ID not found");
+        return;
       }
-    );
-    handleNext();
-    toast.success("your service has been public");
-    setpublicDataShow(true);
+
+      const response = await authConfig.put(
+        `update-service-public/${idToUse}`,
+        {
+          in_pubhish: "public",
+        }
+      );
+
+      if (response.status === 200) {
+        handleNext();
+        toast.success("Your service has been published");
+        setpublicDataShow(true);
+        // Refresh the service list
+        setUpdatedData(true);
+      }
+    } catch (error) {
+      console.error("Error publishing service:", error);
+      toast.error("Failed to publish service");
+    }
   };
 
   useEffect(() => {
@@ -644,6 +666,7 @@ const Gigs = () => {
     setOpenDropdown(openDropdown === index ? null : index);
   };
 
+  // cloudnary se image get ke liye
   function extractImageUrls(serviceImage) {
     let obj = serviceImage;
     // Unwrap single-item arrays and objects with only '0' key
@@ -747,12 +770,13 @@ const Gigs = () => {
     const selectedCategoryId = e.target.value;
     setCategoryId(selectedCategoryId);
     fetchSubCategories(selectedCategoryId);
+    setIsCategoryOpen(false); // Close category dropdown after selection
   };
-
+  
   const handleSubCategoryChange = (e) => {
     const selectedSubCategoryId = e.target.value;
     setSubCategoryId(selectedSubCategoryId);
-    fetchSubCategories(selectedSubCategoryId);
+    setIsSubCategoryOpen(false); // Close subcategory dropdown after selection
   };
 
   const dropdownRef = useRef(null);
@@ -776,7 +800,6 @@ const Gigs = () => {
 
   return (
     <div className="bg-[#eef2f8]">
-      
       <OtherNav />
 
       {loading ? (
@@ -891,7 +914,11 @@ const Gigs = () => {
                                         </li>
                                         <li>
                                           <button
-                                            onClick={handlePublicData}
+                                            onClick={() =>
+                                              handlePublicData(
+                                                serviceDetail._id
+                                              )
+                                            }
                                             className="block px-3 py-2 w-full text-left cursor-pointer hover:bg-gray-100"
                                           >
                                             Publish
@@ -1219,130 +1246,140 @@ const Gigs = () => {
                           prefix: "p",
                           type: "premium",
                         },
-                      ].map((pkg) => (
-                        console.log(pkg,"pkgsssssssss"),
-                        
-                        <div
-                          key={pkg?.label}
-                          className="bg-white rounded-xl shadow-md border border-gray-200 p-5 flex flex-col gap-4"
-                        >
-                          <h2 className="text-lg font-bold text-center text-[#f78318]">
-                            {pkg?.label} Package
-                          </h2>
-
-                          {/* Name */}
-                          <input
-                            type="text"
-                            className="p-2 border rounded-md text-sm"
-                            placeholder="Package Name"
-                            value={pkg?.state[`${pkg?.prefix}_Name`] || ""}
-                            onChange={(e) =>
-                              handlePriceChange(
-                                pkg?.type,
-                                `${pkg?.prefix}_Name`,
-                                e.target.value
-                              )
-                            }
-                          />
-
-                          {/* Description */}
-                          <textarea
-                            className="p-2 border rounded-md text-sm"
-                            rows={3}
-                            placeholder="Package Description"
-                            value={pkg.state[`${pkg?.prefix}_description`] || ""}
-                            onChange={(e) =>
-                              handlePriceChange(
-                                pkg?.type,
-                                `${pkg?.prefix}_description`,
-                                e.target.value
-                              )
-                            }
-                          />
-
-                          {/* Price */}
-                          <input
-                            type="number"
-                            className="p-2 border rounded-md text-sm"
-                            placeholder="Price ($)"
-                            value={pkg.state[`${pkg?.prefix}_price`] || ""}
-                            onChange={(e) =>
-                              handlePriceChange(
-                                pkg?.type,
-                                `${pkg?.prefix}_price`,
-                                e.target.value
-                              )
-                            }
-                          />
-
-                          {/* Revisions */}
-                          <input
-                            type="number"
-                            className="p-2 border rounded-md text-sm"
-                            placeholder="Revisions"
-                            value={pkg.state[`${pkg?.prefix}_revisions`] || ""}
-                            onChange={(e) =>
-                              handlePriceChange(
-                                pkg.type,
-                                `${pkg?.prefix}_revisions`,
-                                e.target.value
-                              )
-                            }
-                          />
-
-                          {/* Number of Concepts */}
-                          <input
-                            type="number"
-                            className="p-2 border rounded-md text-sm"
-                            placeholder="No. of Concepts"
-                            value={
-                              pkg.state[`${pkg.prefix}_number_of_concept`] || ""
-                            }
-                            onChange={(e) =>
-                              handlePriceChange(
-                                pkg.type,
-                                `${pkg.prefix}_number_of_concept`,
-                                e.target.value
-                              )
-                            }
-                          />
-
-                          {/* Toggles */}
-                          {[
-                            "vector_file",
-                            "printable_file",
-                            "mockup",
-                            "source_file",
-                            "social_media_kit",
-                          ].map((feature) => (
+                      ].map(
+                        (pkg) => (
+                          console.log(pkg, "pkgsssssssss"),
+                          (
                             <div
-                              key={feature}
-                              className="flex justify-between items-center"
+                              key={pkg?.label}
+                              className="bg-white rounded-xl shadow-md border border-gray-200 p-5 flex flex-col gap-4"
                             >
-                              <label className="text-sm capitalize">
-                                {feature.replace(/_/g, " ")}
-                              </label>
-                              <select
-                                className="text-sm border rounded-md px-2 py-1"
+                              <h2 className="text-lg font-bold text-center text-[#f78318]">
+                                {pkg?.label} Package
+                              </h2>
+
+                              {/* Name */}
+                              <input
+                                type="text"
+                                className="p-2 border rounded-md text-sm"
+                                placeholder="Package Name"
+                                value={pkg?.state[`${pkg?.prefix}_Name`] || ""}
+                                onChange={(e) =>
+                                  handlePriceChange(
+                                    pkg?.type,
+                                    `${pkg?.prefix}_Name`,
+                                    e.target.value
+                                  )
+                                }
+                              />
+
+                              {/* Description */}
+                              <textarea
+                                className="p-2 border rounded-md text-sm"
+                                rows={3}
+                                placeholder="Package Description"
                                 value={
-                                  pkg.state[`${pkg.prefix}_${feature}`] || ""
+                                  pkg.state[`${pkg?.prefix}_description`] || ""
+                                }
+                                onChange={(e) =>
+                                  handlePriceChange(
+                                    pkg?.type,
+                                    `${pkg?.prefix}_description`,
+                                    e.target.value
+                                  )
+                                }
+                              />
+
+                              {/* Price */}
+                              <input
+                                type="number"
+                                className="p-2 border rounded-md text-sm"
+                                placeholder="Price ($)"
+                                value={pkg.state[`${pkg?.prefix}_price`] || ""}
+                                onChange={(e) =>
+                                  handlePriceChange(
+                                    pkg?.type,
+                                    `${pkg?.prefix}_price`,
+                                    e.target.value
+                                  )
+                                }
+                              />
+
+                              {/* Revisions */}
+                              <input
+                                type="number"
+                                className="p-2 border rounded-md text-sm"
+                                placeholder="Revisions"
+                                value={
+                                  pkg.state[`${pkg?.prefix}_revisions`] || ""
                                 }
                                 onChange={(e) =>
                                   handlePriceChange(
                                     pkg.type,
-                                    `${pkg.prefix}_${feature}`,
+                                    `${pkg?.prefix}_revisions`,
                                     e.target.value
                                   )
                                 }
-                              >
-                                <option value="">Select</option>
-                                <option value="yes">Yes</option>
-                                <option value="no">No</option>
-                              </select>
+                              />
+
+                              {/* Number of Concepts */}
+                              <input
+                                type="number"
+                                className="p-2 border rounded-md text-sm"
+                                placeholder="No. of Concepts"
+                                value={
+                                  pkg.state[
+                                    `${pkg.prefix}_number_of_concept`
+                                  ] || ""
+                                }
+                                onChange={(e) =>
+                                  handlePriceChange(
+                                    pkg.type,
+                                    `${pkg.prefix}_number_of_concept`,
+                                    e.target.value
+                                  )
+                                }
+                              />
+
+                              {/* Toggles */}
+                              {[
+                                "vector_file",
+                                "printable_file",
+                                "mockup",
+                                "source_file",
+                                "social_media_kit",
+                              ].map((feature) => (
+                                <div
+                                  key={feature}
+                                  className="flex justify-between items-center"
+                                >
+                                  <label className="text-sm capitalize">
+                                    {feature.replace(/_/g, " ")}
+                                  </label>
+                                  <select
+                                    className="text-sm border rounded-md px-2 py-1"
+                                    value={
+                                      pkg.state[`${pkg.prefix}_${feature}`] ||
+                                      ""
+                                    }
+                                    onChange={(e) =>
+                                      handlePriceChange(
+                                        pkg.type,
+                                        `${pkg.prefix}_${feature}`,
+                                        e.target.value
+                                      )
+                                    }
+                                  >
+                                    <option value="">Select</option>
+                                    <option value="yes">Yes</option>
+                                    <option value="no">No</option>
+                                  </select>
+                                </div>
+                              ))}
                             </div>
-                          ))}
-                        </div>
-                      ))}
+                          )
+                        )
+                      )}
                     </div>
                   </div>
                 )}
@@ -1633,7 +1670,7 @@ const Gigs = () => {
                       </p>
 
                       <button
-                        onClick={handlePublicData}
+                        onClick={() => handlePublicData()}
                         type="submit"
                         className="mt-6 px-6 py-3 bg-[#f78318] hover:bg-[#d96c14] text-white font-semibold rounded-md text-sm transition"
                       >

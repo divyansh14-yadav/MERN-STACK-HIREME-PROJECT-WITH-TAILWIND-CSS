@@ -208,6 +208,7 @@ const BasicInfo = ({ setProfileImage }) => {
         const response = await authConfig.get(`found-profile/${authId}`);
         if (response.status === 200) {
           setUserDetails(response.data.auth_profile);
+          setImagePreview(response.data.auth_profile.authProfile || "");
           setLoading(false);
         } else {
           console.log("Error fetching user data");
@@ -234,12 +235,14 @@ const BasicInfo = ({ setProfileImage }) => {
         country: userDetails.country,
         tagline: userDetails.tagline,
         description: userDetails.description,
+        authProfile: userDetails.authProfile
       });
 
       if (response.status === 200) {
-        // alert("Data updated successfully");
         toast.success("Basic information updated successfully");
-        handleBasicInfoImages();
+        if (image) {
+          handleBasicInfoImages();
+        }
         setUpdatedImages(false);
       }
     } catch (error) {
