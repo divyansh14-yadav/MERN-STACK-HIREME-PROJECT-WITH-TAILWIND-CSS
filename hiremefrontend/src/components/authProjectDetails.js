@@ -449,7 +449,7 @@ const AuthProjectDetails = () => {
                                 <div className="h-[45px] w-[40px] ml-2">
                                   <img
                                     className="w-[100%] h-[40px] rounded-[45px]"
-                                    src={`{messages?.messagerId?.authProfile}`}
+                                    src={messages?.messagerId?.authProfile}
                                   />
                                 </div>
 

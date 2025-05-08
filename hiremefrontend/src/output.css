@@ -715,6 +715,12 @@
   .h-130 {
     height: calc(var(--spacing) * 130);
   }
+  .h-\[5\%\] {
+    height: 5%;
+  }
+  .h-\[10\%\] {
+    height: 10%;
+  }
   .h-\[20\%\] {
     height: 20%;
   }
@@ -876,6 +882,9 @@
   }
   .w-\[5\%\] {
     width: 5%;
+  }
+  .w-\[6\%\] {
+    width: 6%;
   }
   .w-\[7\%\] {
     width: 7%;
@@ -1417,6 +1426,10 @@
     border-style: var(--tw-border-style);
     border-width: 2px;
   }
+  .border-4 {
+    border-style: var(--tw-border-style);
+    border-width: 4px;
+  }
   .border-20 {
     border-style: var(--tw-border-style);
     border-width: 20px;
@@ -1643,6 +1656,9 @@
     @supports (color: color-mix(in lab, red, red)) {
       background-color: color-mix(in oklab, var(--color-gray-500) 75%, transparent);
     }
+  }
+  .bg-gray-600 {
+    background-color: var(--color-gray-600);
   }
   .bg-gray-800 {
     background-color: var(--color-gray-800);
@@ -3781,6 +3797,11 @@
   .xl\:w-\[53\.5\%\] {
     @media (width >= 80rem) {
       width: 53.5%;
+    }
+  }
+  .xl\:w-\[55\%\] {
+    @media (width >= 80rem) {
+      width: 55%;
     }
   }
   .xl\:w-\[60\%\] {

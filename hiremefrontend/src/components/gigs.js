@@ -499,23 +499,23 @@ const Gigs = () => {
     }
 
     try {
-      // if (validate && schema) {
-      //   await schema.validate(
-      //     {
-      //       title,
-      //       description,
-      //       categoryId,
-      //       sub_categoryId: subCategoryId,
-      //       searchTags,
-      //       requirement,
-      //       Basic_price,
-      //       Standard_price,
-      //       Premium_price,
-      //       FAQ,
-      //     },
-      //     { abortEarly: false }
-      //   );
-      // }
+      if (validate && schema) {
+        await schema.validate(
+          {
+            title,
+            description,
+            categoryId,
+            sub_categoryId: subCategoryId,
+            searchTags,
+            requirement,
+            Basic_price,
+            Standard_price,
+            Premium_price,
+            FAQ,
+          },
+          { abortEarly: false }
+        );
+      }
 
       // FormData prepare kar rahe hain
       const formData = new FormData();

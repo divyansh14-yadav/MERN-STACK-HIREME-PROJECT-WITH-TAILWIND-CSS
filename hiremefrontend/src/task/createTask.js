@@ -232,11 +232,12 @@ const CreateTask = () => {
     setTaskDescription(data?.taskDescription);
     setTask_Max_Budget(data?.Task_Max_Budget);
     setTask_Min_Budget(data?.Task_Min_Budget);
-    set_task_logo(data?.task_logo);
+    set_task_logo(data?.task_logo.url);
     setfixed_Task_type(data?.fixed_Task_type);
     setTask_Skill_Required(data?.task_Skill_Required);
     setTaskCategoryId(data?.taskCategoryId?._id);
     setOpenModalForCreateTask(true);
+    
   };
 
   const handleUpdateTask = async () => {
@@ -1290,8 +1291,8 @@ const CreateTask = () => {
                             </p>
                           </label>
                         </div>{" "}
-                        {uploadedFileName ? (
-                          uploadedFileName
+                        {task_logo ? (
+                          <img className="w-[5%] mt-8 border-4 border-neutral-200 rounded-md p-2" src={task_logo} alt="" />
                         ) : (
                           <p className="mt-8 text-[#A0A0A0]">
                             Images or documents that might be helpful in
@@ -1317,7 +1318,7 @@ const CreateTask = () => {
                     <button
                     type="submit"
                     onClick={handleUpdateTask}
-                    className="border-2 border-[#f78318] text-[1rem] pr-[15px] pl-[15px] xl:w-[15%] w-[50%] p-2 cursor-pointer font-bold text-white bg-[#f78318] rounded-md"
+                    className="border-2 border-[#f78318] text-[1rem] pr-[15px] pl-[15px] xl:w-[50%] w-[50%] p-2 cursor-pointer font-bold text-white bg-[#f78318] rounded-md"
                   >
                     Update
                   </button>
