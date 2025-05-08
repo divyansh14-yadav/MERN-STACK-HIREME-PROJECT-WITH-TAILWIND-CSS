@@ -870,7 +870,7 @@ const Gigs = () => {
                                     </td>
                                   </div>
                                   <td class="whitespace-nowrap px-6 py-4">
-                                    <p className="text-[#007bff] bg-[#d9ebff] text-center xl:w-[20%] w-[30%] rounded-full">
+                                    <p className="text-[#007bff] bg-[#d9ebff] text-center xl:w-[20%] w-[40%] rounded-full">
                                       0
                                     </p>
                                   </td>
@@ -886,10 +886,10 @@ const Gigs = () => {
                                     </p>
                                   </td>
                                   <div
-                                    className="border-2 border-[#0000001a] text-start w-[22%] m-auto rounded-full cursor-pointer"
+                                    className="border-2 border-[#0000001a] text-start xl:w-[18%] w-[22%] m-auto rounded-full cursor-pointer"
                                     onClick={() => toggleDropdown(index)}
                                   >
-                                    <td className="xl:px-3.5 px-1.5 py-1">
+                                    <td className="xl:px-3.4 px-1.5 py-1">
                                       <FontAwesomeIcon
                                         className="cursor-pointer text-[#0000001a]"
                                         icon={faEllipsisVertical}
@@ -987,7 +987,7 @@ const Gigs = () => {
                                   </td>
                                 </div>
                                 <td class="whitespace-nowrap px-6 py-4">
-                                  <p className="text-[#007bff] bg-[#d9ebff] text-center w-[20%] rounded-full">
+                                  <p className="text-[#007bff] bg-[#d9ebff] text-center w-[35%] rounded-full">
                                     0
                                   </p>
                                 </td>
@@ -995,7 +995,7 @@ const Gigs = () => {
                                   logo design
                                 </td>
                                 <td class="whitespace-nowrap px-6 py-4">
-                                  <p className="bg-[#12d00126] text-[#12d001] p-1 w-[35%] text-center font-semibold rounded-md">
+                                  <p className="bg-[#12d00126] text-[#12d001] p-1 xl:w-[35%] w-full text-center font-semibold rounded-md">
                                     {serviceDetail.in_pubhish}
                                   </p>
                                 </td>

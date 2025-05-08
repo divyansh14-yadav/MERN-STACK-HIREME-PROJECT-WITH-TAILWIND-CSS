@@ -1227,63 +1227,53 @@ const FeaturedTaskSubDetails = () => {
         )}
 
         {/* create milestone pop up */}
-        <Dialog
-          open={openModalForCreateMileStone}
-          onClose={() => setOpenModalForCreateMileStone(false)}
-          className="relative z-10"
-        >
-          <DialogBackdrop className="fixed inset-0 bg-gray-500/75" />
-          <div className="fixed inset-0 z-10 w-screen overflow-y-auto">
-            <div className="flex min-h-full items-end justify-center p-4 text-center sm:items-center sm:p-0">
-              <DialogPanel className="relative transform overflow-hidden rounded-lg bg-white text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-lg">
-                <div className="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
-                  <div className="sm:items-start">
-                    <div className="mt-3 text-center sm:mt-0  sm:text-left">
-                      <DialogTitle
-                        as="h3"
-                        className="text-base text-[1.2rem] font-bold text-gray-900"
-                      >
-                        Confirm Your Milestones!
-                      </DialogTitle>
-                      <p className="mt-2 font-semibold text-[#5c5c5c]">
-                        Description
-                      </p>
-                      <div className="w-[100%] mt-4">
-                        <textarea
-                          placeholder="Enter Milestone Description."
-                          className="w-full border-1 border-neutral-200 rounded-md h-25 p-2"
-                          value={mileDescription}
-                          onChange={(e) => setMileDescription(e.target.value)}
-                        ></textarea>
-                      </div>
-                      <p className="mt-2 font-semibold text-[#5c5c5c]">
-                        Amount
-                      </p>
-                      <div className="w-[100%] mt-2">
-                        <input
-                          type="number"
-                          placeholder="Milestone Amount."
-                          className="w-full border-1 border-neutral-200 rounded-md p-2"
-                          value={mileAmout}
-                          onChange={(e) => setMileAmount(e.target.value)}
-                        />
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                <div className="bg-gray-50 px-4 py-3 sm:flex sm:flex-row-reverse sm:px-6">
-                  <button
-                    type="button"
-                    onClick={handleCreateMilestones}
-                    className="inline-flex w-full justify-center rounded-md bg-[#f78318] px-3 py-2 text-sm font-semibold text-white cursor-pointer sm:ml-3 sm:w-auto"
-                  >
-                    Create
-                  </button>
-                </div>
-              </DialogPanel>
+        <Dialog open={openModalForCreateMileStone} onClose={setOpenModalForCreateMileStone} className="relative z-50">
+        <div className="fixed inset-0 bg-black/30" aria-hidden="true" />
+        <div className="fixed inset-0 flex items-center justify-center p-4">
+          <Dialog.Panel className="w-full max-w-lg transform overflow-hidden rounded-2xl bg-white p-6 text-left shadow-xl">
+            <Dialog.Title className="text-lg font-bold leading-6 text-gray-900 mb-4">
+              Confirm Your Milestones!
+            </Dialog.Title>
+
+            <div className="mb-4">
+              <label className="block text-sm font-semibold text-gray-600 mb-1">Description</label>
+              <textarea
+                placeholder="Enter Milestone Description."
+                className="w-full border border-gray-300 rounded-md p-2"
+                rows={4}
+                value={mileDescription}
+                onChange={(e) => setMileDescription(e.target.value)}
+              />
             </div>
-          </div>
-        </Dialog>
+
+            <div className="mb-4">
+              <label className="block text-sm font-semibold text-gray-600 mb-1">Amount</label>
+              <input
+                type="number"
+                placeholder="Milestone Amount"
+                className="w-full border border-gray-300 rounded-md p-2"
+                value={mileAmout}
+                onChange={(e) => setMileAmount(e.target.value)}
+              />
+            </div>
+
+            <div className="mt-6 flex justify-end gap-2">
+              <button
+                onClick={() => setOpenModalForCreateMileStone(false)}
+                className="px-4 py-2 bg-gray-200 text-gray-700 rounded-md"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={handleCreateMilestones}
+                className="px-4 py-2 bg-orange-500 text-white rounded-md"
+              >
+                Create
+              </button>
+            </div>
+          </Dialog.Panel>
+        </div>
+      </Dialog>
       </div>
       <Footer />
     </div>

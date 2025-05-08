@@ -26,6 +26,7 @@ const SignIn = () => {
       await LoginValidation.validate(
         {
           email: identifier,
+          firstName:identifier,
           password,
         },
         { abortEarly: false }

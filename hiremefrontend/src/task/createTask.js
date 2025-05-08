@@ -1306,13 +1306,22 @@ const CreateTask = () => {
 
               <div className="flex gap-[20px] justify-end mr-6 pb-5">
                 {taskIdForUpdatedTask ? (
+                <div className="flex justify-center gap-2">
                   <button
+                      type="submit"
+                      onClick={handleCloseModalForCreateTask}
+                      className="border-2 border-[#f78318] text-[1rem] pr-[15px] pl-[15px] xl:w-[50%] w-[50%] p-2 cursor-pointer font-bold text-white bg-[#f78318] rounded-md"
+                    >
+                      Cancle
+                    </button>
+                    <button
                     type="submit"
                     onClick={handleUpdateTask}
-                    className="border-2 border-[#f78318] text-[1rem] pr-[15px] pl-[15px] w-[15%] p-2 cursor-pointer font-bold text-white bg-[#f78318] rounded-md"
+                    className="border-2 border-[#f78318] text-[1rem] pr-[15px] pl-[15px] xl:w-[15%] w-[50%] p-2 cursor-pointer font-bold text-white bg-[#f78318] rounded-md"
                   >
                     Update
                   </button>
+                </div>
                 ) : (
                   <div className="flex justify-center gap-2">
                     <button

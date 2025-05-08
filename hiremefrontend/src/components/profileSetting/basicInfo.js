@@ -225,7 +225,7 @@ const BasicInfo = ({ setProfileImage }) => {
     e.preventDefault();
     try {
       const response = await authConfig.put(`update-profile-auth/${authId}`, {
-        firstName: userDetails.firstName,
+        firstName: userDetails.firstName.trim(" "),
         lastName: userDetails.lastName,
         mobile_number: userDetails.mobile_number,
         address: userDetails.address,

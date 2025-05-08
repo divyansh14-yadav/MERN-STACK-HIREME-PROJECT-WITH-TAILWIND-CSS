@@ -97,10 +97,10 @@ const DetaildService = () => {
   useEffect(() => {
     console.log("serviceDetaildList:", serviceDetaildList); // debug
     console.log("ID:", serviceDetaildList?._id);
-  
+
     const comparePackage = async () => {
       if (!serviceDetaildList?._id) return;
-  
+
       try {
         const response = await authConfig.get(
           `comparePackage/${serviceDetaildList._id}`
@@ -113,10 +113,9 @@ const DetaildService = () => {
         console.error("Error fetching compare packages details:", error);
       }
     };
-  
+
     comparePackage();
   }, [serviceDetaildList?._id]);
-  
 
   const CustomPrevArrow = ({ onClick }) => (
     <button
@@ -166,11 +165,10 @@ const DetaildService = () => {
   // const handleShowDeletePortfolio = (basic, standard, premium) => {
   //   // console.log(standard.
   //   //   s_price,"pre");
-    
+
   //   setPrice(basic);
   //   setOpenModalDeletePortfolio(true);
   // };
-
 
   const handleShowDeletePortfolio = (packageData) => {
     setPrice(packageData);
@@ -196,7 +194,7 @@ const DetaildService = () => {
         `createProject/${authId}/${serviceId}`,
         {
           order_quotes,
-          quotePrice:price?.b_price || price?.s_price || price?.p_price
+          quotePrice: price?.b_price || price?.s_price || price?.p_price,
         }
       );
 
@@ -582,7 +580,11 @@ const DetaildService = () => {
                               <td></td>
                               <td className="p-4">
                                 <button
-                                  onClick={()=>handleShowDeletePortfolio(comparePackages.basic[0])}
+                                  onClick={() =>
+                                    handleShowDeletePortfolio(
+                                      comparePackages.basic[0]
+                                    )
+                                  }
                                   className="bg-orange-500 text-white px-4 py-2 rounded hover:bg-orange-600"
                                 >
                                   Request To Order
@@ -591,7 +593,11 @@ const DetaildService = () => {
                               <td className="p-4">
                                 <button
                                   className="bg-orange-500 text-white px-4 py-2 rounded hover:bg-orange-600"
-                                  onClick={()=>handleShowDeletePortfolio(comparePackages.standard[0])}
+                                  onClick={() =>
+                                    handleShowDeletePortfolio(
+                                      comparePackages.standard[0]
+                                    )
+                                  }
                                 >
                                   Request To Order
                                 </button>
@@ -599,7 +605,11 @@ const DetaildService = () => {
                               <td className="p-4">
                                 <button
                                   className="bg-orange-500 text-white px-4 py-2 rounded hover:bg-orange-600"
-                                  onClick={()=>handleShowDeletePortfolio(comparePackages.premium[0])}
+                                  onClick={() =>
+                                    handleShowDeletePortfolio(
+                                      comparePackages.premium[0]
+                                    )
+                                  }
                                 >
                                   Request To Order
                                 </button>
@@ -644,6 +654,105 @@ const DetaildService = () => {
                       ))}
                     </div>
                   )}
+                </div>
+                <div className="bg-[#f9f9f9] pt-10">
+                  <div className="pb-20 w-full xl:full bg-[#f9f9f9]">
+                    <div className="pt-3 pb-3 px-4 bg-white rounded-xl">
+                      <div className="flex flex-col sm:flex-row sm:items-center justify-between border-b border-[#0000001a] pb-5">
+                        <h1 className="text-[1.5rem] text-[#3d3d3d] font-bold">
+                          Reviews
+                        </h1>
+                        <h1 className="text-[1rem] text-[#3d3d3d] font-bold mt-2 sm:mt-0">
+                          Total {serviceDetaildList.totalReview} reviews
+                        </h1>
+                      </div>
+
+                      {serviceDetaildList.ratings.length ? (
+                        serviceDetaildList.ratings.map(
+                          (reviewRating, index) => (
+                            <div
+                              key={index}
+                              className="flex items-start gap-4 border-b border-[#0000001a] mt-5 pb-5"
+                            >
+                              {/* Profile Image */}
+                              <img
+                                className="w-[50px] h-[50px] sm:w-[55px] sm:h-[55px] rounded-full object-cover"
+                                src={
+                                  reviewRating?.reviewerId?.authProfile ||
+                                  "https://th.bing.com/th/id/OIP.4Q7-yMnrlnqwR4ORH7c06AHaHa?w=209&h=209&c=7&r=0&o=5&dpr=1.3&pid=1.7"
+                                }
+                                alt="Reviewer"
+                              />
+
+                              {/* Text Content */}
+                              <div className="flex-1">
+                                <div className="flex gap-1 font-bold text-[1rem]">
+                                  <p>
+                                    {reviewRating?.reviewerId?.firstName ||
+                                      "User"}
+                                  </p>
+                                  <p>{reviewRating?.reviewerId?.lastName}</p>
+                                </div>
+
+                                <div className="flex flex-wrap items-center gap-2 mt-1 text-sm text-gray-700">
+                                  {starts.map((_, i) => (
+                                    <FontAwesomeIcon
+                                      key={i}
+                                      icon={faStar}
+                                      style={{
+                                        color:
+                                          i < reviewRating?.rating
+                                            ? "#f78318"
+                                            : "#ccc",
+                                      }}
+                                    />
+                                  ))}
+                                  <p className="font-semibold">
+                                    {reviewRating?.rating}
+                                  </p>
+                                  <div className="w-px h-4 bg-[#0000001a]"></div>
+                                  <p className="font-semibold">
+                                    {(() => {
+                                      const createdDate = new Date(
+                                        reviewRating.createdAt
+                                      );
+                                      const currentDate = new Date();
+                                      const yearDiff =
+                                        currentDate.getFullYear() -
+                                        createdDate.getFullYear();
+                                      const monthDiff =
+                                        currentDate.getMonth() -
+                                        createdDate.getMonth();
+                                      const totalMonthsAgo =
+                                        yearDiff * 12 + monthDiff;
+                                      return totalMonthsAgo === 0
+                                        ? "This month"
+                                        : `${totalMonthsAgo} months ago`;
+                                    })()}
+                                  </p>
+                                </div>
+
+                                <p className="text-start mt-2 text-[15px] text-[#333] leading-6">
+                                  {reviewRating.review}
+                                </p>
+                              </div>
+                            </div>
+                          )
+                        )
+                      ) : (
+                        <div className="pb-7 text-center">
+                          <img
+                            className="w-[80px] pt-10 mx-auto"
+                            src="https://script.viserlab.com/metalance/assets/templates/basic//images/empty_list.png"
+                            alt="No Reviews"
+                          />
+                          <h1 className="mt-3 text-[#cfcfcf]">
+                            No review found for this gig
+                          </h1>
+                        </div>
+                      )}
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
@@ -953,96 +1062,7 @@ const DetaildService = () => {
           </div>
         </div>
       </div>
-      <div className="bg-[#f9f9f9] pt-10">
-        <div className=" pb-20 xl:w-[53.5%] w-[90%] m-auto xl:ml-20 bg-[#f9f9f9] ">
-          <div className="pt-3 pb-3 pl-3 bg-white rounded-xl">
-            <div className="flex items-center justify-between border-b-1 border-[#0000001a] pb-5">
-              <h1 className="text-[1.5rem] ml-1 text-[#3d3d3d] font-bold">
-                Reviews
-              </h1>
-              <h1 className="text-[1rem] ml-1 text-[#3d3d3d] mr-4 font-bold">
-                Total {serviceDetaildList.totalReview} reviews
-              </h1>
-            </div>
-            <div>
-              {serviceDetaildList.ratings.length ? (
-                serviceDetaildList.ratings.map(
-                  (reviewRating, index) => (
-                    console.log(reviewRating, "rr"),
-                    (
-                      <div className="flex items-center border-b-1 border-[#0000001a] mt-5 pb-5">
-                        <div className="h-[50px] w-[80px]">
-                          <img
-                            className="xl:w-[80%] xl:h-[55px] w-[70%] h-[50px] rounded-[45px]"
-                            src={reviewRating?.reviewerId?.authProfile || "https://th.bing.com/th/id/OIP.4Q7-yMnrlnqwR4ORH7c06AHaHa?w=209&h=209&c=7&r=0&o=5&dpr=1.3&pid=1.7"}
-                          />
-                        </div>
 
-                        <div className="mt-4 ml-4">
-                          <div className="flex gap-2 font-bold ml-1">
-                            <p>{reviewRating?.reviewerId?.firstName || "User"}</p>
-                            <p>{reviewRating?.reviewerId?.lastName}</p>
-                          </div>
-                          <div className="flex mt-2 gap-2 items-center font-normal pb-3">
-                            {starts.map((star, index) => (
-                              <FontAwesomeIcon
-                                key={index}
-                                icon={faStar}
-                                style={{
-                                  color:
-                                    index < reviewRating?.rating
-                                      ? "#f78318"
-                                      : "#ccc",
-                                }}
-                              />
-                            ))}
-                            <p>{reviewRating?.rating}</p>
-
-                            <span className="border-1 border-[#0000001a] h-5"></span>
-                            <p className="font-semibold">
-                              {(() => {
-                                const createdDate = new Date(
-                                  reviewRating.createdAt
-                                );
-                                const currentDate = new Date();
-
-                                const yearDiff =
-                                  currentDate.getFullYear() -
-                                  createdDate.getFullYear();
-                                const monthDiff =
-                                  currentDate.getMonth() -
-                                  createdDate.getMonth();
-
-                                const totalMonthsAgo =
-                                  yearDiff * 12 + monthDiff;
-
-                                return totalMonthsAgo === 0
-                                  ? "This month"
-                                  : `${totalMonthsAgo} months ago`;
-                              })()}
-                            </p>
-                          </div>
-                          <p className="text-start">{reviewRating.review}</p>
-                        </div>
-                      </div>
-                    )
-                  )
-                )
-              ) : (
-                <div className="pb-7">
-                  <img
-                    className="w-[9%] pt-10  m-auto"
-                    src="https://script.viserlab.com/metalance/assets/templates/basic//images/empty_list.png"
-                  />
-                  <h1 className="mt-3 text-[#cfcfcf]">
-                    No review found for this gig
-                  </h1>
-                </div>
-              )}
-            </div>
-          </div>
-        </div>
-      </div>
       {/* for request to order popup */}
       <Dialog
         open={openModalDeletePortfolio}
@@ -1065,21 +1085,21 @@ const DetaildService = () => {
                   {/* Warning icon */}
                   {/* Dialog text content */}
                   <div className="mt-3 text-center sm:ml-4 sm:mt-0 sm:text-left">
-                <div className="flex justify-between items-center">
-                <Dialog.Title
-                      as="h3"
-                      className="text-lg font-semibold text-gray-900"
-                    >
-                      Confirm Your Order!
-                    </Dialog.Title>
+                    <div className="flex justify-between items-center">
+                      <Dialog.Title
+                        as="h3"
+                        className="text-lg font-semibold text-gray-900"
+                      >
+                        Confirm Your Order!
+                      </Dialog.Title>
 
-                    {/* <Dialog.Title
+                      {/* <Dialog.Title
                       as="h3"
                       className="text-lg font-semibold text-gray-900"
                     >
                      {packageType} Package Order  MATIC {price?.b_price || price?.s_price || price?.p_price}
                     </Dialog.Title> */}
-                </div>
+                    </div>
                     <div className="mt-2">
                       <p className="font-semibold text-gray-700">Order Quote</p>
                       <div className="mt-2">
